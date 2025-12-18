@@ -1,42 +1,53 @@
 /* prettier-ignore */
 @theme inline {
   /* Configure font families in `src/config/fonts.json` */
-  --leading-body: 1.8;
+  --leading-body: 1.45;
   --leading-inherit: inherit;
 
-  /* Colors */
-  --color-primary: #1f58eb;
-  --color-secondary: #BCD4FF;
-  --color-accent: #E4EA8C;
-  --color-body: #fff;
-  --color-border-light: #E5E5E5;
-  --color-theme-dark: #101E43;
-  --color-theme-light: #F9FBFF;
-  
-  --color-text-default: #2E2E2E;
-  --color-dark: #000E30; /* Heading colors */
-  --color-light: #565555;
+  /* Legacy ANL Colors - Brand */
+  --color-primary: #045bc1;      /* Primary Blue */
+  --color-secondary: #666666;    /* Gray-700 - Secondary text */
+  --color-accent: #00d6ff;       /* Cyan - Info/accent color */
+  --color-body: #fff;            /* White background */
+  --color-border-light: #e1e1e1; /* Gray-300 - Borders */
+  --color-theme-dark: #1c1c1c;  /* Gray-1100 - Dark theme */
+  --color-theme-light: #fafafa; /* Gray-100 - Light backgrounds */
+
+  /* Text Colors */
+  --color-text-default: #404040; /* Gray-900 - Body text */
+  --color-dark: #000;            /* Black - Headings */
+  --color-light: #949494;        /* Gray-500 - Muted text */
+
+  /* Additional Brand Colors */
+  --color-success: #7ed321;      /* Green */
+  --color-info: #00d6ff;         /* Cyan */
+  --color-warning: #f37f29;      /* Yellow/Orange */
+  --color-danger: #d0021b;       /* Red */
+
+  /* Hero Background */
+  --color-hero-bg: #a9c6ca;      /* Light blue-teal from legacy */
 
   /* Screen */
   --breakpoint-*: initial;
   --breakpoint-xs: 440px;
-  --breakpoint-sm: 540px;
+  --breakpoint-sm: 576px;        /* Updated to match legacy */
   --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1320px;
+  --breakpoint-lg: 992px;        /* Updated to match legacy */
+  --breakpoint-xl: 1200px;       /* Updated to match legacy */
+  --breakpoint-xxl: 1480px;      /* Updated to match legacy */
 
-  /* Typography */
+  /* Typography - Using modular scale from legacy (1.333 ratio) */
   --text-base: 1rem;
-  --text-base-scale: 1.22;
-  --text-base-sm: calc(var(--text-base) * 0.9);
+  --text-base-scale: 1.333;      /* Legacy used 1.333 ratio */
+  --text-base-sm: 0.75rem;       /* 12px */
   --text-base-xs: calc(var(--text-base) * 0.8);
 
-  --text-h1: calc(var(--text-base) * pow(var(--text-base-scale), 6));
-  --text-h2: calc(var(--text-base) * pow(var(--text-base-scale), 5));
-  --text-h3: calc(var(--text-base) * pow(var(--text-base-scale), 4));
-  --text-h4: calc(var(--text-base) * pow(var(--text-base-scale), 3));
-  --text-h5: calc(var(--text-base) * pow(var(--text-base-scale), 2));
-  --text-h6: calc(var(--text-base) * pow(var(--text-base-scale), 1));
+  --text-h1: 3.157rem;           /* 50.51px - from legacy */
+  --text-h2: 2.369rem;           /* 37.90px - from legacy */
+  --text-h3: 1.777rem;           /* 28.43px - from legacy */
+  --text-h4: 1.333rem;           /* 21.33px - from legacy */
+  --text-h5: 1rem;               /* 16px - from legacy */
+  --text-h6: 0.75rem;            /* 12px - from legacy */
 
   --text-h1-sm: calc(var(--text-h1) * 0.7);
   --text-h2-sm: calc(var(--text-h2) * 0.7);

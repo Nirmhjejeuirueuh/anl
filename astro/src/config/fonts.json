@@ -1,14 +1,14 @@
 [
   {
-    "name": "DM Sans",
+    "name": "Source Sans Pro",
     "variants": [
       {
         "style": "normal",
-        "weight": "400"
+        "weight": "300"
       },
       {
         "style": "normal",
-        "weight": "500"
+        "weight": "400"
       },
       {
         "style": "normal",
@@ -27,11 +27,19 @@
     "fallback": "sans-serif"
   },
   {
-    "name": "Syne",
+    "name": "Raleway",
     "variants": [
       {
         "style": "normal",
+        "weight": "600"
+      },
+      {
+        "style": "normal",
         "weight": "700"
+      },
+      {
+        "style": "normal",
+        "weight": "900"
       }
     ],
     "preload": false,
