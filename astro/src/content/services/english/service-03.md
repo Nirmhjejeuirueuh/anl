@@ -1,19 +1,19 @@
 ---
-title: "Strategic Planning"
-description: "Craft detailed strategic plans that align with your long-term business goals."
+title: "Cybersecurity Training"
+description: "Protect your organization with comprehensive cybersecurity training and awareness programs."
 
-image: "/images/services/3.jpg"
-icon: "ChartPie" # lucide icon name (https://lucide.dev/icons/?search=)
+image: "/images/services/cybersecurity.jpg"
+icon: "Shield" # lucide icon name (https://lucide.dev/icons/?search=)
 
 # Short intro about this service
 intro:
   enable: true
   image: "" # set value to override default service image
-  title: "Unify Your Voice. Stand Out From The Crowd. Drive Brand Recognition."
-  description: "In today's competitive market, a strong brand is your most valuable asset. We help you craft a clear and compelling brand positioning and messaging strategy that sets you apart from the competition and resonates deeply with your target audience."
+  title: "Strengthen Your Security Posture"
+  description: "In an increasingly digital world, cybersecurity is paramount. Our training programs equip your team with the knowledge and skills to identify, prevent, and respond to cyber threats effectively."
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Secure Your Team"
     url: "/contact"
     rel: ""
     target: ""
@@ -24,17 +24,17 @@ intro:
 # How This Service Help Customer
 details:
   enable: true
-  title: "Unleash the Power of Brand Positioning"
-  description: "We help you unlock the power of your customer data to gain a deeper understanding of who your customers are, what motivates them, and how they interact with your brand. Through sophisticated analytics and proven methodologies"
+  title: "Build a Security-First Culture"
+  description: "Our cybersecurity training covers everything from basic awareness to advanced technical skills. We help organizations develop comprehensive security strategies and implement best practices across all levels."
   # Check "services/-index.md" file for animation settings of below list
   list:
     - enable: true
-      image: "/images/services/service-details/1.jpg"
-      title: "Brand Discovery Workshop"
-      description: "Through collaborative workshops, we'll uncover your brand's core values, target audience."
+      image: "/images/services/service-details/awareness.jpg"
+      title: "Security Awareness Training"
+      description: "Educate employees on common threats like phishing, social engineering, and safe computing practices."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -43,12 +43,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/2.jpg"
-      title: "Competitive Analysis"
-      description: "We'll analyze your competitors' positioning to differentiate your brand."
+      image: "/images/services/service-details/certifications.jpg"
+      title: "Certification Programs"
+      description: "Prepare for industry-recognized certifications like CISSP, CISM, CEH, and CompTIA Security+."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -57,12 +57,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/3.jpg"
-      title: "Brand Positioning Statement"
-      description: "We'll develop a concise statement that captures the essence of your brand."
+      image: "/images/services/service-details/incident-response.jpg"
+      title: "Incident Response Training"
+      description: "Learn to effectively respond to security incidents and minimize damage through proper procedures."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -71,12 +71,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/4.jpg"
-      title: "Messaging Framework"
-      description: "We'll create a messaging framework from your website to social media."
+      image: "/images/services/service-details/risk-assessment.jpg"
+      title: "Risk Assessment & Management"
+      description: "Identify vulnerabilities and implement risk mitigation strategies for your organization."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -85,12 +85,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/5.jpg"
-      title: "Brand Voice & Tone Guide"
-      description: "We'll define your brand voice and tone, ensuring your communication resonates."
+      image: "/images/services/service-details/compliance.jpg"
+      title: "Compliance Training"
+      description: "Ensure adherence to standards like GDPR, HIPAA, PCI-DSS, and other regulatory requirements."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -101,15 +101,15 @@ details:
 # Impact of this service
 impact:
   enable: true
-  title: "The Impact of a Clear Brand Message"
-  description: "Effective messaging resonates with your customers, fostering trust and emotional connections. It's about speaking their language and understanding their needs."
+  title: "The Impact of Cybersecurity Training"
+  description: "Proper cybersecurity training significantly reduces the risk of breaches and builds a culture of security awareness throughout the organization."
   list:
-    - Increased Brand Awareness
-    - Improved Marketing ROI
-    - Stronger Employee Engagement
-    - Identify customer trends
-    - Improve customer lifetime value
-    - Competitive Advantage
+    - Reduced Security Incidents
+    - Improved Compliance
+    - Enhanced Threat Detection
+    - Better Incident Response
+    - Increased Employee Awareness
+    - Regulatory Compliance
 
   statsBlock:
     enable: true
@@ -119,39 +119,39 @@ impact:
           image: ""
         title:
           prependValue: ""
-          value: "71"
+          value: "95"
           appendValue: "%"
-        description: "Studies show that consistent brand messaging can lead to a 71% increase in brand recognition"
+        description: "Of breaches are caused by human error"
     md:
       - background:
           type: "image-overlay" # "light-color" | ""
           image: "/images/services/service-impact-stats-bg.jpg"
         title:
           prependValue: ""
-          value: "7 Times More"
-          appendValue: ""
-        description: "Customer Retention Rate"
+          value: "70"
+          appendValue: "%"
+        description: "Reduction in Phishing Success Rate"
     sm:
       - background:
           type: "light-color" # "light-color" | "image-overlay"
           image: ""
         title:
           prependValue: ""
-          value: "306"
+          value: "50"
           appendValue: "%"
-        description: "Customer Retention Rate"
+        description: "Faster Incident Response Time"
       - background:
           type: "light-color" # "light-color" | "image-overlay"
           image: ""
         title:
           prependValue: ""
-          value: "500"
+          value: "60"
           appendValue: "%"
-        description: "Target Your Messaging"
+        description: "Lower Breach Costs"
 
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Protect Your Organization"
     url: "/contact"
     rel: ""
     target: ""

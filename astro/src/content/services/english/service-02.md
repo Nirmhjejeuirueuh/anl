@@ -1,115 +1,115 @@
 ---
-title: "Competitive Analysis"
-description: "Understand your competitors' strengths and weaknesses."
+title: "DevOps Consulting"
+description: "Streamline your software delivery pipeline with expert DevOps consulting services."
 
-image: "/images/services/2.jpg"
-icon: "ChartNoAxesColumn" # lucide icon name (https://lucide.dev/icons/?search=)
+image: "/images/services/devops.jpg"
+icon: "Settings" # lucide icon name (https://lucide.dev/icons/?search=)
 
 # Short intro about this service
 intro:
   enable: true
   image: "" # set value to override default service image
-  title: "Unify Your Voice. Stand Out From The Crowd. Drive Brand Recognition."
-  description: "In today's competitive market, a strong brand is your most valuable asset. We help you craft a clear and compelling brand positioning and messaging strategy that sets you apart from the competition and resonates deeply with your target audience."
+  title: "Accelerate Delivery with DevOps Excellence"
+  description: "Bridge the gap between development and operations with our comprehensive DevOps consulting services. We help you implement CI/CD pipelines, automate infrastructure, and foster a culture of collaboration and continuous improvement."
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Get Started"
     url: "/contact"
     rel: ""
     target: ""
     showIcon: "true"
-    # variant: "outline" # "fill", "outline", "outline-white", "text"
+    variant: "outline" # "fill", "outline", "outline-white", "text"
     hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
 # How This Service Help Customer
 details:
   enable: true
-  title: "Unleash the Power of Brand Positioning"
-  description: "We help you unlock the power of your customer data to gain a deeper understanding of who your customers are, what motivates them, and how they interact with your brand. Through sophisticated analytics and proven methodologies"
+  title: "Transform Your Development Pipeline"
+  description: "Our DevOps consulting services cover the entire software delivery lifecycle, from planning and development to deployment and monitoring. We help you adopt industry best practices and tools to achieve faster, more reliable releases."
   # Check "services/-index.md" file for animation settings of below list
   list:
     - enable: true
-      image: "/images/services/service-details/1.jpg"
-      title: "Brand Discovery Workshop"
-      description: "Through collaborative workshops, we'll uncover your brand's core values, target audience."
+      image: "/images/services/service-details/ci-cd.jpg"
+      title: "CI/CD Pipeline Implementation"
+      description: "Design and implement automated pipelines for continuous integration and deployment."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
         showIcon: "true"
-        # variant: "outline" # "fill", "outline", "outline-white", "text"
+        variant: "outline" # "fill", "outline", "outline-white", "text"
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/2.jpg"
-      title: "Competitive Analysis"
-      description: "We'll analyze your competitors' positioning to differentiate your brand."
+      image: "/images/services/service-details/infrastructure.jpg"
+      title: "Infrastructure as Code"
+      description: "Automate infrastructure provisioning and management with IaC tools like Terraform and Ansible."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
         showIcon: "true"
-        # variant: "outline" # "fill", "outline", "outline-white", "text"
+        variant: "outline" # "fill", "outline", "outline-white", "text"
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/3.jpg"
-      title: "Brand Positioning Statement"
-      description: "We'll develop a concise statement that captures the essence of your brand."
+      image: "/images/services/service-details/monitoring.jpg"
+      title: "Monitoring & Observability"
+      description: "Implement comprehensive monitoring solutions to ensure system reliability and performance."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
         showIcon: "true"
-        # variant: "outline" # "fill", "outline", "outline-white", "text"
+        variant: "outline" # "fill", "outline", "outline-white", "text"
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/4.jpg"
-      title: "Messaging Framework"
-      description: "We'll create a messaging framework from your website to social media."
+      image: "/images/services/service-details/cloud-migration.jpg"
+      title: "Cloud Migration & Optimization"
+      description: "Migrate applications to cloud platforms and optimize for cost, performance, and scalability."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
         showIcon: "true"
-        # variant: "outline" # "fill", "outline", "outline-white", "text"
+        variant: "outline" # "fill", "outline", "outline-white", "text"
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/5.jpg"
-      title: "Brand Voice & Tone Guide"
-      description: "We'll define your brand voice and tone, ensuring your communication resonates."
+      image: "/images/services/service-details/security.jpg"
+      title: "DevSecOps Integration"
+      description: "Embed security practices throughout the development lifecycle for secure software delivery."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
         showIcon: "true"
-        # variant: "outline" # "fill", "outline", "outline-white", "text"
+        variant: "outline" # "fill", "outline", "outline-white", "text"
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
 # Impact of this service
 impact:
   enable: true
-  title: "The Impact of a Clear Brand Message"
-  description: "Effective messaging resonates with your customers, fostering trust and emotional connections. It's about speaking their language and understanding their needs."
+  title: "The Impact of DevOps Implementation"
+  description: "DevOps practices lead to faster deployment cycles, improved system reliability, and better collaboration between teams."
   list:
-    - Increased Brand Awareness
-    - Improved Marketing ROI
-    - Stronger Employee Engagement
-    - Identify customer trends
-    - Improve customer lifetime value
-    - Competitive Advantage
+    - Faster Time-to-Market
+    - Improved Deployment Frequency
+    - Reduced Failure Rates
+    - Enhanced Collaboration
+    - Cost Optimization
+    - Higher System Reliability
 
   statsBlock:
     enable: true
@@ -119,43 +119,43 @@ impact:
           image: ""
         title:
           prependValue: ""
-          value: "71"
-          appendValue: "%"
-        description: "Studies show that consistent brand messaging can lead to a 71% increase in brand recognition"
+          value: "46"
+          appendValue: "x"
+        description: "More frequent deployments with DevOps practices"
     md:
       - background:
           type: "image-overlay" # "light-color" | ""
           image: "/images/services/service-impact-stats-bg.jpg"
         title:
           prependValue: ""
-          value: "7 Times More"
-          appendValue: ""
-        description: "Customer Retention Rate"
+          value: "50"
+          appendValue: "%"
+        description: "Reduction in Deployment Failures"
     sm:
       - background:
           type: "light-color" # "light-color" | "image-overlay"
           image: ""
         title:
           prependValue: ""
-          value: "306"
+          value: "30"
           appendValue: "%"
-        description: "Customer Retention Rate"
+        description: "Faster Time-to-Market"
       - background:
           type: "light-color" # "light-color" | "image-overlay"
           image: ""
         title:
           prependValue: ""
-          value: "500"
+          value: "20"
           appendValue: "%"
-        description: "Target Your Messaging"
+        description: "Cost Reduction"
 
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Transform Your Pipeline"
     url: "/contact"
     rel: ""
     target: ""
     showIcon: "true"
-    # variant: "outline" # "fill", "outline", "outline-white", "text"
+    variant: "outline" # "fill", "outline", "outline-white", "text"
     hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 ---

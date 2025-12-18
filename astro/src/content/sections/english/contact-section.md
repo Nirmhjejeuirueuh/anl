@@ -10,13 +10,13 @@ contactList:
     # For icon names, see [Lucide Icons](https://lucide.dev/icons/?search=) (remember to capitalize the icon name)
     - icon: "Phone"
       label: "Call us now"
-      value: "+1-202-555-0190"
+      value: "+65 8843 9403"
     - icon: "Mail"
       label: "Email us"
-      value: "example@gmail.com"
-    - icon: "Send"
-      label: "Chat with us"
-      value: "@example"
+      value: "enquiry@agilenlite.com"
+    - icon: "MapPin"
+      label: "Visit us"
+      value: "AGILENLITE PTE LTD, Singapore"
 
 social:
   enable: true

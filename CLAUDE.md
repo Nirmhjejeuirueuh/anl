@@ -1,30 +1,95 @@
-# Project Guidelines: AgileN Lite Website Revamp
-
 ## Project Overview
-The goal of this project is to create a revamp of the AgileN Lite website. You can find reference to the old source code here: `old-anl-source-code` folder in the root path.
+Create a complete revamp of the AgileN Lite website by combining layout from Astro reference with content from the old Next.js site.
 
-This project is an Astro project.
+## Source Locations
+- **Layout & Structure Reference**: `/astro` folder (use this for site architecture)
+- **Content Reference**: `/old-anl-source-code` folder (Next.js site)
 
-## Good Coding Practices
+## Requirements
 
-### Most Important Practices
-1. **Use TypeScript**: Always prefer TypeScript over JavaScript for type safety and better developer experience.
-2. **Component Reusability**: Create reusable, composable components to maintain consistency and reduce code duplication.
-3. **SEO Optimization**: Implement proper meta tags, structured data, and semantic HTML for better search engine visibility.
-4. **Performance First**: Use lazy loading, image optimization, and minimize bundle size for fast loading times.
-5. **Accessibility**: Ensure all components are accessible with proper ARIA labels, keyboard navigation, and screen reader support.
-6. **Code Organization**: Follow Astro's file structure conventions (layouts, components, pages, etc.) and keep code modular.
-7. **Testing**: Write unit tests for components and integration tests for critical functionality.
+### 1. Layout & Architecture (from `/astro` folder)
+- Use the Astro folder's site structure and layout patterns
+- Follow the component organization from the Astro reference
+- Maintain the routing and page structure from Astro reference
+- **Single language only** - no multi-language support needed (we'll add later)
 
-### Additional Best Practices
-- Follow semantic versioning for releases
-- Use meaningful commit messages
-- Document complex logic and APIs
-- Implement proper error handling
-- Use environment variables for configuration
-- Optimize images and assets
-- Implement proper caching strategies
-- Follow web standards and best practices
+### 2. Content (from `/old-anl-source-code` folder)
+- Extract ALL content from the old Next.js site:
+  - Page copy and text
+  - Images and media assets
+  - Product descriptions
+  - Feature lists
+  - Testimonials
+  - Contact information
+  - Any other textual content
+
+### 3. Branding & Styling
+**New Brand Colors** (use these throughout):
+- Primary Cyan: `#8af3ff`
+- Primary Navy: `#00025d`
+- Accent Yellow: `#FFEB3B`
+- Accent Red: `#db2f22`
+- Accent Green: `#43b14b`
+- Dark Green: `#14342B`
+
+**Maintain from old site**:
+- Typography styles
+- Logo and brand assets
+- Visual design language
+- Brand voice and messaging
+
+### 4. Integration Approach
+1. Analyze both folders:
+   - Astro layout structure
+   - Next.js content organization
+   
+2. Map content from Next.js to Astro layout:
+   - Identify corresponding pages
+   - Extract content systematically
+   - Apply new color scheme
+   - Port to Astro components
+
+3. Ensure brand consistency with new colors
+
+## Deliverables
+- Fully functional Astro site (single language)
+- All content from Next.js site preserved
+- Astro folder's layout structure maintained
+- New color scheme applied consistently
+- Production-ready, optimized code
+
+## Critical Notes
+- **DO NOT** create new content - only use existing content from Next.js site
+- **DO NOT** implement multi-language support yet
+- **DO** use the new 6-color palette throughout
+- **DO** use Astro folder as the structural foundation
+- **DO** preserve all functionality from the original site
+
+# AgileN Lite Revamp - Development Guidelines
+
+## Color Palette
+```css
+:root {
+  --primary-cyan: #8af3ff;
+  --primary-navy: #00025d;
+  --accent-yellow: #FFEB3B;
+  --accent-red: #db2f22;
+  --accent-green: #43b14b;
+  --dark-green: #14342B;
+}
+```
+
+## Project Structure
+- Use `/astro` folder layout patterns
+- Extract content from `/old-anl-source-code`
+- Single language only (English)
+
+## Coding Standards
+- Use Astro best practices
+- Component-based architecture
+- Semantic HTML
+- Accessible markup
+- Optimized images
 
 ## File Modification Bug Workaround
 There's a file modification bug in Claude Code. The workaround is: always use complete absolute Windows paths with drive letters and backslashes for ALL file operations. Apply this rule going forward, not just for this file.

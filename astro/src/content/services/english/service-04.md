@@ -1,19 +1,19 @@
 ---
-title: "Market Analysis"
-description: "Gain insights into market trends, and potential opportunities to make business decisions."
+title: "Process Optimization"
+description: "Streamline your business processes for maximum efficiency and productivity."
 
-image: "/images/services/4.jpg"
-icon: "TrendingUp" # lucide icon name (https://lucide.dev/icons/?search=)
+image: "/images/services/process-optimization.jpg"
+icon: "Workflow" # lucide icon name (https://lucide.dev/icons/?search=)
 
 # Short intro about this service
 intro:
   enable: true
   image: "" # set value to override default service image
-  title: "Unify Your Voice. Stand Out From The Crowd. Drive Brand Recognition."
-  description: "In today's competitive market, a strong brand is your most valuable asset. We help you craft a clear and compelling brand positioning and messaging strategy that sets you apart from the competition and resonates deeply with your target audience."
+  title: "Optimize for Excellence"
+  description: "Inefficient processes can hinder growth and productivity. Our process optimization services help you identify bottlenecks, eliminate waste, and implement lean methodologies to achieve operational excellence."
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Optimize Now"
     url: "/contact"
     rel: ""
     target: ""
@@ -24,17 +24,17 @@ intro:
 # How This Service Help Customer
 details:
   enable: true
-  title: "Unleash the Power of Brand Positioning"
-  description: "We help you unlock the power of your customer data to gain a deeper understanding of who your customers are, what motivates them, and how they interact with your brand. Through sophisticated analytics and proven methodologies"
+  title: "Transform Your Operations"
+  description: "We analyze your current processes, identify inefficiencies, and implement proven methodologies like Lean, Six Sigma, and Kaizen to optimize workflows and maximize value delivery."
   # Check "services/-index.md" file for animation settings of below list
   list:
     - enable: true
-      image: "/images/services/service-details/1.jpg"
-      title: "Brand Discovery Workshop"
-      description: "Through collaborative workshops, we'll uncover your brand's core values, target audience."
+      image: "/images/services/service-details/lean.jpg"
+      title: "Lean Process Improvement"
+      description: "Eliminate waste and streamline processes using Lean principles to improve efficiency and quality."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -43,12 +43,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/2.jpg"
-      title: "Competitive Analysis"
-      description: "We'll analyze your competitors' positioning to differentiate your brand."
+      image: "/images/services/service-details/six-sigma.jpg"
+      title: "Six Sigma Implementation"
+      description: "Reduce defects and variation in processes using DMAIC methodology for quality improvement."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -57,12 +57,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/3.jpg"
-      title: "Brand Positioning Statement"
-      description: "We'll develop a concise statement that captures the essence of your brand."
+      image: "/images/services/service-details/automation.jpg"
+      title: "Process Automation"
+      description: "Automate repetitive tasks and workflows to increase speed and reduce human error."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -71,12 +71,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/4.jpg"
-      title: "Messaging Framework"
-      description: "We'll create a messaging framework from your website to social media."
+      image: "/images/services/service-details/bottleneck.jpg"
+      title: "Bottleneck Analysis"
+      description: "Identify and resolve process bottlenecks that slow down your operations and delivery."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -85,12 +85,12 @@ details:
         hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
     - enable: true
-      image: "/images/services/service-details/5.jpg"
-      title: "Brand Voice & Tone Guide"
-      description: "We'll define your brand voice and tone, ensuring your communication resonates."
+      image: "/images/services/service-details/kpi.jpg"
+      title: "Performance Metrics & KPIs"
+      description: "Establish key performance indicators to monitor process efficiency and drive continuous improvement."
       button:
         enable: true
-        label: "Start Now"
+        label: "Learn More"
         url: "/contact"
         rel: ""
         target: ""
@@ -101,15 +101,15 @@ details:
 # Impact of this service
 impact:
   enable: true
-  title: "The Impact of a Clear Brand Message"
-  description: "Effective messaging resonates with your customers, fostering trust and emotional connections. It's about speaking their language and understanding their needs."
+  title: "The Impact of Process Optimization"
+  description: "Optimized processes lead to significant improvements in efficiency, cost reduction, and customer satisfaction."
   list:
-    - Increased Brand Awareness
-    - Improved Marketing ROI
-    - Stronger Employee Engagement
-    - Identify customer trends
-    - Improve customer lifetime value
-    - Competitive Advantage
+    - Increased Efficiency
+    - Reduced Operational Costs
+    - Improved Quality
+    - Faster Delivery Times
+    - Better Resource Utilization
+    - Enhanced Customer Satisfaction
 
   statsBlock:
     enable: true
@@ -119,39 +119,39 @@ impact:
           image: ""
         title:
           prependValue: ""
-          value: "71"
+          value: "30"
           appendValue: "%"
-        description: "Studies show that consistent brand messaging can lead to a 71% increase in brand recognition"
+        description: "Average cost reduction through process optimization"
     md:
       - background:
           type: "image-overlay" # "light-color" | ""
           image: "/images/services/service-impact-stats-bg.jpg"
         title:
           prependValue: ""
-          value: "7 Times More"
-          appendValue: ""
-        description: "Customer Retention Rate"
+          value: "50"
+          appendValue: "%"
+        description: "Improvement in Process Efficiency"
     sm:
       - background:
           type: "light-color" # "light-color" | "image-overlay"
           image: ""
         title:
           prependValue: ""
-          value: "306"
+          value: "40"
           appendValue: "%"
-        description: "Customer Retention Rate"
+        description: "Reduction in Delivery Time"
       - background:
           type: "light-color" # "light-color" | "image-overlay"
           image: ""
         title:
           prependValue: ""
-          value: "500"
+          value: "25"
           appendValue: "%"
-        description: "Target Your Messaging"
+        description: "Increase in Customer Satisfaction"
 
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Streamline Your Processes"
     url: "/contact"
     rel: ""
     target: ""

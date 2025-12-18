@@ -14,47 +14,28 @@ button:
   hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
 list:
-  - enable: true # if this false then only background image will show
-    title: "Headquarters"
-    image: "/images/office/1.jpg"
-    backgroundImage: "/images/office/1.jpg"
+  - enable: true
+    title: "Singapore Office"
+    image: "/images/banner.jpg"
+    backgroundImage: "/images/banner.jpg"
     content: |
-      123 Lowe Street,
+      AGILENLITE PTE LTD
 
-      Green City, State, 12345
+      Singapore
 
-      Phone: (123) 456-7890
+      Phone: +65 8843 9403
 
-      Email: hq@looka.com
+      Email: enquiry@agilenlite.com
 
       Business Hours: Monday - Friday: 9:00 AM - 6:00 PM
-  - enable: false # if this false then only background image will show
-    title: "Headquarters"
+  - enable: false
+    title: "Office 2"
     image: ""
-    backgroundImage: "/images/office/2.jpg"
-    content: |
-      123 Lowe Street,
-
-      Green City, State, 12345
-
-      Phone: (123) 456-7890
-
-      Email: hq@looka.com
-
-      Business Hours: Monday - Friday: 9:00 AM - 6:00 PM
-
-  - enable: false # if this false then only background image will show
-    title: "Headquarters"
+    backgroundImage: ""
+    content: ""
+  - enable: false
+    title: "Office 3"
     image: ""
-    backgroundImage: "/images/office/3.jpg"
-    content: |
-      123 Lowe Street,
-
-      Green City, State, 12345
-
-      Phone: (123) 456-7890
-
-      Email: hq@looka.com
-
-      Business Hours: Monday - Friday: 9:00 AM - 6:00 PM
+    backgroundImage: ""
+    content: ""
 ---

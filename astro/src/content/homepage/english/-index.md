@@ -1,22 +1,19 @@
 ---
-title: ""
-metaDescription: "This is a example description"
+title: "AgilenLite - Agile Training & Consulting"
+metaDescription: "We partner with organisations to embrace the evolving technological landscape; inspire individuals with know-how to stay abreast of the changing trends."
 
 # Override Default Content of `/sections/services-section.md`
-# Uncomment key values that you wan to override
 servicesSection:
-  # enable: true # Control the visibility of this section across all services single
-  title: "Additional Services to Maximize Your Business Potential"
-  # subtitle: "Our Services"
+  enable: true
+  title: "Our Services"
+  subtitle: "What We Do"
 
-  creativeShape: # Background shape
+  creativeShape:
     enable: true
     position: "bottom"
 
-  # cta: "link" # "link" | "slider-nav" ( Define weather call to action button should be slider control or a link )
-  colorScheme: "dark" # "dark" | "light"; (default "dark"); weather to show services in light or dark color scheme
-  showServicesAs: "slider" # "slider" | "static"; (default "slider"); weather to show services as slider or static list
-  # limit: 3 # number / false (default "3"); Limit the number of services to be displayed (Only work if showServicesAs is static)
+  colorScheme: "dark"
+  showServicesAs: "slider"
 
   button:
     enable: true
@@ -25,56 +22,43 @@ servicesSection:
     rel: ""
     target: ""
     showIcon: "true"
-    variant: "outline-white" # "fill", "outline", "outline-white", "text"
-    hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
+    variant: "outline-white"
+    hoverEffect: "text-flip"
 
 # Override Default Content of `/sections/call-to-action.md`
-# Uncomment key values that you wan to override
 callToActionSection:
-  enable: true # Control the visibility of this section across all pages where it is used
-  # title: "Ready to Transform Your Business?"
-  # subtitle: "Business Goals"
-  # description: |
-  #   Partner with our team of experts to unlock your business’s full potential. Schedule your free consultation and discover how we can help you.
+  enable: true
+  title: "Ready to Transform Your Organization?"
+  subtitle: "Get Started"
+  description: |
+    Partner with AgilenLite to embrace the evolving technological landscape. Let us help you stay ahead of changing trends.
 
   button:
     enable: true
-    label: "Get A Free Consultation"
+    label: "Contact Us"
     url: "/contact/"
     rel: ""
     showIcon: "true"
-    variant: "outline" # "fill", "outline", "outline-white", "text"
-    hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
+    variant: "outline"
+    hoverEffect: "text-flip"
 
-  # ctaShapeOne: "/images/shapes/cta-shape-one.svg"
-  # ctaShapeTwo: "/images/shapes/cta-shape-two.svg"
+  rightContent: "stats"
 
-  rightContent: "stats" # Choose between "image" or "stats" for the content of the right side of the section
-
-
-  # imageBlock:
-  # image: "/images/call-to-action/image.png"
-  # experience:
-  #   label: "Years of Experience"
-  #   prependValue: ""
-  #   value: "12+"
-  #   appendValue: "+"
-
-  # statsBlock:
-  #   list:
-  #     - prependValue: ""
-  #       value: "98"
-  #       appendValue: "%"
-  #       title: "Satisfaction Rate"
-  #       description: "Our clients consistently report high levels of satisfaction"
-  #     - prependValue: ""
-  #       value: "200"
-  #       appendValue: "+"
-  #       title: "Successful Projects"
-  #       description: "our team of consultants brings a wealth of expertise."
-  #     - prependValue: ""
-  #       value: "25"
-  #       appendValue: "+"
-  #       title: "Years of Experience"
-  #       description: "Our strategies have generated over $50 million."
+  statsBlock:
+    list:
+      - prependValue: ""
+        value: "15"
+        appendValue: "+"
+        title: "Years of Experience"
+        description: "Delivering excellence in Agile transformation and DevOps consulting"
+      - prependValue: ""
+        value: "100"
+        appendValue: "+"
+        title: "Successful Projects"
+        description: "Helping organizations embrace technological change"
+      - prependValue: ""
+        value: "95"
+        appendValue: "%"
+        title: "Client Satisfaction"
+        description: "Our clients trust us to deliver results"
 ---

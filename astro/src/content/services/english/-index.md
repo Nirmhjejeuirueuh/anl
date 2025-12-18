@@ -1,6 +1,6 @@
 ---
-title: "Services"
-metaDescription: "This is a example description"
+title: "Our Services"
+metaDescription: "AgileN Lite offers comprehensive training and consulting services in Agile, DevOps, Cybersecurity, and Process Optimization."
 draft: false
 hasCustomLineAnimationBg: true
 

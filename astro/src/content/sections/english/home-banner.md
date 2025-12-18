@@ -17,37 +17,13 @@ infoBlock:
 mainBlock:
   disableSlider: false # if this is true then slider will be disabled and only first slide from below will be shown
   slides:
-    - title: "Innovative Solutions for Sustainable Success"
-      description: "You can use this slider as a static banner or as a slider. <br/> Corporate performance and ensure long-term success"
-      backgroundImage: "/images/banner/1.jpg"
+    - title: "Empowering Your <br /> Digital Transformation"
+      description: "We partner with organisations to embrace the evolving technological landscape; inspire individuals with know-how to stay abreast of the changing trends."
+      backgroundImage: "/images/banner.jpg" 
       button:
         enable: true
-        label: "Request a Consultation"
-        url: "/contact"
-        rel: ""
-        target: ""
-        showIcon: "true"
-        variant: "outline-white" # "fill", "outline", "outline-white", "text"
-        hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
-    - title: "Strategic Solutions for Dynamic Business Growth"
-      description: "You can use this slider as a static banner or as a slider. <br/> Corporate performance and ensure long-term success"
-      backgroundImage: "/images/banner/2.jpg"
-      button:
-        enable: true
-        label: "Get A Quote"
-        url: "/contact"
-        rel: ""
-        target: ""
-        showIcon: "true"
-        variant: "outline-white" # "fill", "outline", "outline-white", "text"
-        hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
-    - title: "Transforming Challenges into Opportunities"
-      description: "You can use this slider as a static banner or as a slider. <br/> Corporate performance and ensure long-term success"
-      backgroundImage: "/images/banner/3.jpg"
-      button:
-        enable: true
-        label: "Get Started Now"
-        url: "/contact"
+        label: "Our Services"
+        url: "/services"
         rel: ""
         target: ""
         showIcon: "true"
