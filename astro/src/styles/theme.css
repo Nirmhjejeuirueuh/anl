@@ -4,28 +4,28 @@
   --leading-body: 1.45;
   --leading-inherit: inherit;
 
-  /* Legacy ANL Colors - Brand */
-  --color-primary: #045bc1;      /* Primary Blue */
+  /* AgilenLite Brand Colors */
+  --color-primary: #00025d;      /* Primary Navy */
   --color-secondary: #666666;    /* Gray-700 - Secondary text */
-  --color-accent: #00d6ff;       /* Cyan - Info/accent color */
+  --color-accent: #8af3ff;       /* Primary Cyan - Accent color */
   --color-body: #fff;            /* White background */
   --color-border-light: #e1e1e1; /* Gray-300 - Borders */
-  --color-theme-dark: #1c1c1c;  /* Gray-1100 - Dark theme */
-  --color-theme-light: #fafafa; /* Gray-100 - Light backgrounds */
+  --color-theme-dark: #14342B;   /* Dark Green - Dark theme */
+  --color-theme-light: #fafafa;  /* Gray-100 - Light backgrounds */
 
   /* Text Colors */
   --color-text-default: #404040; /* Gray-900 - Body text */
-  --color-dark: #000;            /* Black - Headings */
+  --color-dark: #00025d;         /* Primary Navy - Headings */
   --color-light: #949494;        /* Gray-500 - Muted text */
 
   /* Additional Brand Colors */
-  --color-success: #7ed321;      /* Green */
-  --color-info: #00d6ff;         /* Cyan */
-  --color-warning: #f37f29;      /* Yellow/Orange */
-  --color-danger: #d0021b;       /* Red */
+  --color-success: #43b14b;      /* Accent Green */
+  --color-info: #8af3ff;         /* Primary Cyan */
+  --color-warning: #FFEB3B;      /* Accent Yellow */
+  --color-danger: #db2f22;       /* Accent Red */
 
   /* Hero Background */
-  --color-hero-bg: #a9c6ca;      /* Light blue-teal from legacy */
+  --color-hero-bg: #00025d;      /* Primary Navy */
 
   /* Screen */
   --breakpoint-*: initial;

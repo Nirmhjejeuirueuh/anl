@@ -1,8 +1,8 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "Contact Us for More Information"
-description: "Whether you're seeking expert assistance, our dedicated team is prepared to support you every step of the way."
-subtitle: "Contact"
+title: "Get In Touch"
+description: "Ready to transform your organization? Our team of experts is here to help you embrace the evolving technological landscape."
+subtitle: "Contact Us"
 
 contactList:
   enable: true
@@ -15,147 +15,83 @@ contactList:
       label: "Email us"
       value: "enquiry@agilenlite.com"
     - icon: "MapPin"
-      label: "Visit us"
-      value: "AGILENLITE PTE LTD, Singapore"
+      label: "Location"
+      value: "Singapore"
 
 social:
   enable: true
-  title: "Follow us on social media"
-  # # uncomment below list if you want to override `src/config/social.json` data
-  # list:
-  #   - enable: true
-  #     label: "facebook"
-  #     icon: "/images/icons/social/facebook.svg"
-  #     url: "/"
+  title: "Connect with us"
 
 # Check config.toml file for form action related settings
 form:
-  emailSubject: "New form submission from looka website" # Customized email subject (applicable when anyone submit form, form submission may receive by email depend on provider)
+  emailSubject: "New enquiry from AgilenLite website"
   submitButton:
-    label: "Submit Your Response"
+    label: "Send Message"
     showIcon: "true"
-    variant: "outline" # "fill", "outline", "outline-white", "text"
-    hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
-  # This note will show at the end of form
-  # note: |
-  #   Your data is safe with us. We respect your privacy and never share your information. <br /> Read our [Privacy Policy](/privacy-policy/).
+    variant: "fill"
+    hoverEffect: "text-flip"
   inputs:
     - label: ""
       placeholder: "Full Name"
-      name: "Full Name" # This is crucial. Its indicate under which name you want to receive this field data
+      name: "Full Name"
       required: true
       halfWidth: true
       defaultValue: ""
     - label: ""
       placeholder: "Email Address"
-      name: "Email Address" # This is crucial. Its indicate under which name you want to receive this field data
+      name: "Email Address"
       required: true
       type: "email"
       halfWidth: true
       defaultValue: ""
     - label: ""
       placeholder: "Phone Number"
-      name: "Phone Number" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
+      name: "Phone Number"
+      required: false
       type: "text"
       halfWidth: true
       defaultValue: ""
     - label: ""
       placeholder: "Company"
-      name: "Company" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
+      name: "Company"
+      required: false
       type: "text"
       halfWidth: true
       defaultValue: ""
     - label: ""
       placeholder: "Subject"
-      name: "Subject" # This is crucial. Its indicate under which name you want to receive this field data
+      name: "Subject"
       required: true
-      halfWidth: true
+      halfWidth: false
       dropdown:
-        type: "" # select | search - default is select
-        search: # if type is search then it will work
-          placeholder: ""
+        type: ""
         items:
-          - label: "Example 01"
-            value: "Example 01"
-          - label: "Example 02"
-            value: "Example 02"
-          - label: "Example 03"
-            value: "Example 03"
-    - label: ""
-      placeholder: "Subject With Search"
-      name: "Subject With Search" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
-      halfWidth: true
-      dropdown:
-        type: "search" # select | search - default is select
-        search: # if type is search then it will work
-          placeholder: "Subject With Search"
-        items:
-          - label: "Lowni Saiki"
-            value: "Lowni Saiki"
-          - label: "Sikow Pow"
-            value: "Sikow Pow"
-          - label: "Kenbi Shaktun"
-            value: "Kenbi Shaktun"
-          - label: "Aruyyo Kawn"
-            value: "Aruyyo Kawn"
-          - label: "Marong Lowbbi"
-            value: "Marong Lowbbi"
+          - label: "Training Enquiry"
+            value: "Training Enquiry"
+          - label: "Consulting Enquiry"
+            value: "Consulting Enquiry"
+          - label: "General Enquiry"
+            value: "General Enquiry"
     - label: ""
       tag: "textarea"
       defaultValue: ""
-      rows: "4" # Only work if tag is textarea
-      placeholder: "Enter your message."
-      name: "Message" # This is crucial. Its indicate under which name you want to receive this field data
+      rows: "4"
+      placeholder: "How can we help you?"
+      name: "Message"
       required: true
       halfWidth: false
-    - label: "Google Search" # only valid for type="checkbox" & type === "radio"
-      checked: false # only valid for type="checkbox" & type === "radio"
-      name: "User Source" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
-      groupLabel: "How did you hear about us?" # Radio Inputs Label
-      group: "source" # when you add group then it will omit space between the same group radio input
-      type: "radio"
-      halfWidth: true
-      defaultValue: ""
-    - label: "Social Media" # only valid for type="checkbox" & type === "radio"
-      name: "User Source" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
-      groupLabel: "" # Radio Inputs Label
-      group: "source" # when you add group then it will omit space between the same group radio input
-      type: "radio"
-      halfWidth: true
-      defaultValue: ""
-    - label: "Referral" # only valid for type="checkbox" & type === "radio"
-      name: "User Source" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
-      groupLabel: "" # Radio Inputs Label
-      group: "source" # when you add group then it will omit space between the same group radio input
-      type: "radio"
-      halfWidth: true
-      defaultValue: ""
-    - label: "Other" # only valid for type="checkbox" & type === "radio"
-      name: "User Source" # This is crucial. Its indicate under which name you want to receive this field data
-      required: true
-      groupLabel: "" # Radio Inputs Label
-      group: "source" # when you add group then it will omit space between the same group radio input
-      type: "radio"
-      halfWidth: true
-      defaultValue: ""
-    - label: "I agree to the terms and conditions and [privacy policy](/contact/)." # only valid for type="checkbox" & type === "radio"
-      name: "Agreed Privacy" # This is crucial. Its indicate under which name you want to receive this field data
-      value: "Agreed" # Value that will be submit (applicable for type="checkbox" & type === "radio")
-      checked: false # only valid for type="checkbox" & type === "radio"
+    - label: "I agree to the [privacy policy](/privacy-policy/)."
+      name: "Agreed Privacy"
+      value: "Agreed"
+      checked: false
       required: true
       type: "checkbox"
       halfWidth: false
       defaultValue: ""
-    - note: success # info | warning | success | deprecated | hint
+    - note: success
       parentClass: "hidden text-sm message success"
-      content: We have received your message! We'll get back to you as soon as possible.
-    - note: deprecated # info | warning | success | deprecated | hint
+      content: Thank you for your enquiry! We'll get back to you within 24 hours.
+    - note: deprecated
       parentClass: "hidden text-sm message error"
-      content: Something went wrong! please use this mail - [looka-astro-theme@gmail.com](mailto:looka-astro-theme@gmail.com) to submit a ticket!
+      content: Something went wrong! Please email us directly at [enquiry@agilenlite.com](mailto:enquiry@agilenlite.com)
 ---

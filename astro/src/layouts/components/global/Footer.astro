@@ -20,7 +20,7 @@ const copyrightText = copyright.text || t("footer.copyright") || "";
 const copyrightParts = splitProtectedText(copyrightText);
 ---
 
-<footer class="bg-theme-dark relative text-white">
+<footer class="bg-white relative text-black">
   <!-- Background Patterns -->
   <div
     class="pointer-events-none absolute top-0 left-0 z-10 h-40 w-44 opacity-30 md:opacity-100">
@@ -45,7 +45,7 @@ const copyrightParts = splitProtectedText(copyrightText);
     <div class="grid pt-16 md:pt-32 lg:grid-cols-2 xl:grid-cols-3">
       <!-- Logo, Description and Social -->
       <div class="flex flex-col gap-y-5 lg:pe-10">
-        <Logo src="/images/logo-white.svg" />
+        <Logo src="/images/logo.png" />
         {
           footerDescription && (
             <p class="opacity-90" set:html={markdownify(footerDescription)} />
@@ -147,7 +147,7 @@ const copyrightParts = splitProtectedText(copyrightText);
           </div>
           {
             subscription && subscription.enable && (
-              <div class="mt-8 border-t border-white/10 pt-5">
+              <div class="mt-8 border-t border-black/10 pt-5">
                 {t("subscription.label") && (
                   <p
                     class="mb-2.5"

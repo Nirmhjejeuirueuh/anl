@@ -1,15 +1,15 @@
 # Site Configuration
 [site]
-  title            = "Looka" # Shared title for SEO and OpenGraph
-  description      = "A highly customizable consulting & business astro theme built with Tailwind CSS and Astro Js" # Shared description for SEO and OpenGraph
-  tagline          = "Corporate Business & Consulting Astro Js Theme"
-  taglineSeparator = "" # default is " - " 
-  baseUrl          = "https://looka-astro.netlify.app" # Base URL for the site and used in OpenGraph meta tags.
-  logo             = "/images/logo.svg" # Path to the site's logo
+  title            = "AgilenLite" # Shared title for SEO and OpenGraph
+  description      = "We partner with organisations to embrace the evolving technological landscape; inspire individuals with know-how to stay abreast of the changing trends." # Shared description for SEO and OpenGraph
+  tagline          = "Agile Training & Consulting"
+  taglineSeparator = " - " # default is " - "
+  baseUrl          = "https://agilenlite.com" # Base URL for the site and used in OpenGraph meta tags.
+  logo             = "/images/logo.png" # Path to the site's logo (649x178px)
   logoAlternate    = "" # Path to the site's logo
-  logoText         = "Looka" # Text displayed next to the logo
-  logoWidth        = "29px" # Width of the logo
-  logoHeight       = "29px" # Height of the logo
+  logoText         = "" # Text displayed next to the logo
+  logoWidth        = "180px" # Width of the logo (auto calculated from height)
+  logoHeight       = "50px" # Height of the logo
 
   # Add a trailing slash at the end of URLs (e.g., https://example.com/, https://example.com/contact/)
   # Note: Manually restart your server when you change this value
@@ -25,8 +25,8 @@
 # Specific SEO configurations that complement the general site settings.
 # -----------------------------------------------------------------------------------------------------------------------------------
 [seo]
-  author   = "Getastrothemes"
-  keywords = ["business astro theme, consulting astro theme"] # SEO keywords
+  author   = "AgilenLite"
+  keywords = ["agile training", "consulting", "devops", "process optimisation", "project management", "IT management", "technology risk management", "cybersecurity"] # SEO keywords
   robots   = "index, follow" # Instructs search engines on how to crawl and index the pages.
 
   [seo.robotsTxt]
@@ -51,11 +51,11 @@
 
   pagination   = 4 # Number of posts displayed on each page blog list page
   stickyHeader = true # Enables or disable sticky feature of header
-  brandName    = "Looka" # Name to be displayed in the footer as big text
+  brandName    = "AgilenLite" # Name to be displayed in the footer as big text
 
   # docs - https://formspree.io/ | https://formsubmit.co/ | https://docs.netlify.com/forms/setup/
   # Form action URL for the contact form (For more settings related to form see "src/content/sections/contact-section.md")
-  contactFormAction = "https://formsubmit.co/temp.gats@gmail.com" # https://formspree.io/f/kweoweo | https://formsubmit.co/your@email.com | "/"
+  contactFormAction = "https://formsubmit.co/enquiry@agilenlite.com" # https://formspree.io/f/kweoweo | https://formsubmit.co/your@email.com | "/"
   # formspree | formsubmit.co | netlify (default is formsubmit.co)
   contactFormProvider = "formsubmit.co"
 

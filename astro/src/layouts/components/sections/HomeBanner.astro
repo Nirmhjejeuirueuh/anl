@@ -213,7 +213,7 @@ if (mainBlock.disableSlider) slides = [slides[0]];
       )
     }
   </div>
-  <VideoModal video={infoBlock.video} />
+  {infoBlock && infoBlock.enable && infoBlock.video && <VideoModal video={infoBlock.video} />}
 </section>
 
 <script>

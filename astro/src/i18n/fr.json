@@ -35,8 +35,8 @@
   "footer": {
     "legal": "Juridique",
     "resources": "Ressources",
-    "description": "Looka est une entreprise de design et de technologie basée à San Francisco, fondée en 2016. Leur mission est de démocratiser le design en rendant les outils de branding professionnels accessibles à tous.",
-    "copyright": "Droits d'auteur {{ year }} / Tous droits réservés par Looka / Construit avec amour [Astro Themes](https://getastrothemes.com/)",
+    "description": "AgilenLite est une entreprise de formation et de conseil en agilité basée à Singapour. Notre mission est d'accompagner les organisations dans leur transformation digitale et agile.",
+    "copyright": "Droits d'auteur {{ year }} / Tous droits réservés / Construit avec amour [Astro Themes](https://getastrothemes.com/)",
     "_comment": "We kindly appreciate it if you retain the theme copyright. Thank you for supporting Getastrothemes!"
   }
 }

@@ -1,20 +1,20 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "What They Say About Our Company"
-subtitle: "Testimonial"
+title: "**Trusted** by Industry Leaders"
+subtitle: "Client Success Stories"
 
 button:
   enable: true
-  label: "Get Started"
-  url: "/contact"
+  label: "Contact Us"
+  url: "/contact/"
   rel: ""
   target: ""
   showIcon: "true"
-  variant: "outline" # "fill", "outline", "outline-white", "text"
+  variant: "fill" # "fill", "outline", "outline-white", "text"
   hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
 # Set the maximum number of testimonial to display in this component instance
-limit: false # false / number
+limit: 6 # false / number
 
 marquee:
   marqueeElementWidth: "29.25rem"

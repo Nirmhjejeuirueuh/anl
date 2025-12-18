@@ -26,7 +26,7 @@
     "category": "Category"
   },
   "navigation": {
-    "buttonLabel": "Get Started"
+    "buttonLabel": "Contact Us"
   },
   "subscription": {
     "label": "Subscribe to our newsletter for the latest updates"
@@ -35,8 +35,8 @@
     "quickLinks": "Quick Links",
     "legal": "Legal",
     "resources": "Resources",
-    "description": "Looka is a San Francisco-based design and technology company founded in 2016. Their mission is to democratize design by making professional branding tools accessible to everyone.",
-    "copyright": "Copyright {{ year }} / All Rights Reserved By Looka / Built with love using [Astro Themes](https://getastrothemes.com/)",
+    "description": "We partner with organisations to embrace the evolving technological landscape; inspire individuals with know-how to stay abreast of the changing trends.",
+    "copyright": "Copyright {{ year }} AgilenLite Pte Ltd. All Rights Reserved.",
     "_comment": "We kindly appreciate it if you retain the theme copyright. Thank you for supporting Getastrothemes!"
   }
 }

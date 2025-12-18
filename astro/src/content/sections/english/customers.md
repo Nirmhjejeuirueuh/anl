@@ -1,6 +1,6 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-description: "We are honored to work alongside these distinguished partners."
+description: "Trusted by leading financial institutions and organizations across Asia-Pacific"
 
 marquee:
   marqueeElementWidth: "11.25rem"
@@ -8,17 +8,25 @@ marquee:
   marqueeElementWidthAuto: true
   marqueePauseOnHover: false
   marqueeReverse: "" # reverse / ""
-  marqueeDuration: "20s"
+  marqueeDuration: "30s"
 
 list:
-  - src: "/images/customers/1.png"
-    alt: "Quotient"
-  - src: "/images/customers/2.png"
-    alt: "Catalog"
-  - src: "/images/customers/3.png"
-    alt: "Sisphus"
-  - src: "/images/customers/4.png"
-    alt: "Hourglass"
-  - src: "/images/customers/5.png"
-    alt: "Layers"
+  - src: "/images/clients/logo-bnp.png"
+    alt: "BNP Paribas"
+  - src: "/images/clients/logo-citi.png"
+    alt: "Citibank"
+  - src: "/images/clients/logo-uob.png"
+    alt: "UOB"
+  - src: "/images/clients/logo-smbc.png"
+    alt: "SMBC"
+  - src: "/images/clients/logo-ibf.png"
+    alt: "IBF"
+  - src: "/images/clients/logo-sim.png"
+    alt: "SIM"
+  - src: "/images/clients/logo-cpa.png"
+    alt: "CPA Australia"
+  - src: "/images/partners/logo-smu.png"
+    alt: "SMU"
+  - src: "/images/partners/logo-dasa.png"
+    alt: "DASA"
 ---

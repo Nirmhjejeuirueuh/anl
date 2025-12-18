@@ -204,7 +204,7 @@ header {
 /* Show main logo in footer */
 footer {
   .logo-text {
-    @apply text-h5 text-white;
+    @apply text-h5 text-black;
   }
 
   .logo-alternate {
@@ -506,3 +506,180 @@ footer {
   width: 1em;
   height: 1em;
 }
+
+/* Header - White background */
+header,
+header.header,
+.header {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+header::before,
+header::after {
+  display: none !important;
+}
+
+header nav a,
+header a,
+header button,
+header span,
+header .btn,
+header [class*="btn"] {
+  color: #00025d !important;
+}
+
+header nav a:hover,
+header a:hover {
+  color: #db2f22 !important;
+}
+
+/* Contact Us button in header */
+header .btn,
+header [class*="btn"] {
+  background: #00025d !important;
+  color: white !important;
+  border-color: #00025d !important;
+  border-radius: 50px !important; /* Make it round */
+}
+
+header .btn:hover,
+header [class*="btn"]:hover {
+  background: #db2f22 !important;
+  border-color: #db2f22 !important;
+  color: white !important;
+}
+
+header .btn:hover,
+header .btn:hover *,
+header .btn:hover span,
+header .btn:hover svg,
+header [class*="btn"]:hover,
+header [class*="btn"]:hover *,
+header [class*="btn"]:hover span,
+header [class*="btn"]:hover svg,
+header button:hover,
+header button:hover *,
+header button:hover span,
+header a.btn:hover,
+header a.btn:hover *,
+header a.btn:hover span {
+  color: #000000 !important;
+  fill: #000000 !important;
+  stroke: #000000 !important;
+}
+
+header .btn-outline-white:hover,
+header .btn-outline-white:hover *,
+header .btn-outline-white:hover span {
+  color: #000000 !important;
+}
+
+/* Logo styling - AgileN Lite logo is 649x178 (wide) */
+.logo-wrapper {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.logo-wrapper .logo {
+  width: auto !important;
+  max-width: none !important;
+  height: 50px !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 768px) {
+  .logo-wrapper .logo {
+    height: 40px !important;
+  }
+}
+
+/* AgileN Lite Banner Customization */
+.banner {
+  position: relative;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+/* Show background image */
+.banner .swiper-banner-image {
+  display: block !important;
+  opacity: 1 !important;
+  z-index: 1 !important;
+}
+
+.banner .swiper-banner-image img {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.banner::before {
+  background: linear-gradient(135deg, rgba(0, 2, 93, 0.85) 0%, rgba(0, 2, 93, 0.75) 40%, rgba(26, 75, 168, 0.65) 70%, rgba(138, 243, 255, 0.4) 100%) !important;
+  opacity: 1 !important;
+  z-index: 3 !important;
+}
+
+.banner::after {
+  background: radial-gradient(ellipse 900px 700px at bottom left, rgba(219, 47, 34, 0.1) 0%, transparent 55%) !important;
+  opacity: 1 !important;
+  z-index: 2 !important;
+}
+
+/* Hero text styling for better contrast */
+.banner h1 {
+  color: white !important;
+  text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+}
+
+.banner h1 strong {
+  color: #8af3ff !important;
+}
+
+.banner p {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+  font-size: 1.125rem;
+}
+
+.banner .btn {
+  background: #db2f22 !important;
+  border-color: #db2f22 !important;
+  color: white !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.banner .btn:hover {
+  background: #ff4436 !important;
+  border-color: #ff4436 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(219, 47, 34, 0.4);
+}
+
+/* Services Section - Dark Blue Background */
+.services-section,
+section:has(.service-card),
+section:has([class*="service"]) {
+  background: #00025d !important;
+  color: white !important;
+}
+
+.services-section h2,
+.services-section h3,
+.services-section p,
+section:has(.service-card) h2,
+section:has(.service-card) h3,
+section:has(.service-card) p {
+  color: white !important;
+}
+
+/* NUCLEAR OPTION - Force black text on header button hover */
+header a:hover,
+header a:hover > *,
+header button:hover,
+header button:hover > * {
+  color: black !important;
+}
+

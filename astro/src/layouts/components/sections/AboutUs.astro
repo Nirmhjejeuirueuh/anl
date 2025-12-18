@@ -114,7 +114,7 @@ let {
           </div>
         )}
       </div>
-      <VideoModal video={banner.video} />
+      {banner && banner.enable && banner.video && <VideoModal video={banner.video} />}
     </section>
   )
 }
