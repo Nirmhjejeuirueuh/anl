@@ -5,8 +5,8 @@
   "author": "getastrothemes",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "npm run toml:watch & astro dev",
-    "build": "npm run toml:watch & astro build && npm run remove-draft-from-sitemap",
+    "dev": "concurrently \"npm run toml:watch\" \"astro dev\"",
+    "build": "concurrently \"npm run toml:watch\" \"astro build\" && npm run remove-draft-from-sitemap",
     "preview": "astro build && npm run remove-draft-from-sitemap && astro preview",
     "astro-check": "astro check",
     "toml:watch": "node scripts/toml-watcher.mjs",
@@ -55,6 +55,7 @@
     "astro": "5.15.2",
     "astro-auto-import": "^0.4.5",
     "astro-font": "^1.1.0",
+    "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "gray-matter": "^4.0.3",
     "ignore": "^7.0.5",
