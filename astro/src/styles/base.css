@@ -17,6 +17,44 @@ body {
   @apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:bg-white;
 }
 
+/* Modern Global Scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #6B7280 #F9FAFB;
+}
+
+html::-webkit-scrollbar,
+html::-webkit-scrollbar-track,
+html::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-corner {
+  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+}
+
+html::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #F9FAFB;
+  border: none;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #6B7280;
+  border: none;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
+}
+
+html::-webkit-scrollbar-corner {
+  background: #F9FAFB;
+}
+
 /* Global Section Spacing */
 main.has-section-spacing-md section,
 .has-call-to-action {

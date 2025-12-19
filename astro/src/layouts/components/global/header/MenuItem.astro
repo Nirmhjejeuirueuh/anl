@@ -34,7 +34,10 @@ const { pathname } = Astro.url;
             "nav-link",
             {
               "nav-link-active":
-                pathname === `${menu.url}/` || pathname === menu.url,
+                pathname === `${menu.url}/` || 
+                pathname === menu.url ||
+                pathname === menu.url?.replace(/\/$/, "") ||
+                pathname === `${menu.url?.replace(/\/$/, "")}/`,
             },
           ]}>
           {menu.badge && menu.badge.enable ? (

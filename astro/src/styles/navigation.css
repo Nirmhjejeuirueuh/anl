@@ -96,7 +96,7 @@
 
   .nav-dropdown {
     .hs-dropdown-toggle {
-      @apply cursor-pointer select-none;
+      @apply cursor-pointer select-none hover:text-red-700 hover:bg-red-500/10 transition duration-300 rounded-sm px-4 py-1.5 lg:py-2 xl:px-6;
 
       svg {
         @apply inline-block;
@@ -177,6 +177,12 @@
         @apply lg:text-primary lg:hover:text-red-700;
 
         @apply lg:hover:bg-white/5;
+      }
+    }
+
+    .nav-dropdown {
+      .hs-dropdown-toggle {
+        @apply lg:hover:text-red-700 lg:hover:bg-white/5;
       }
     }
   }

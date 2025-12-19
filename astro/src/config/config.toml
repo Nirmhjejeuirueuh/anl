@@ -1,7 +1,7 @@
 # Site Configuration
 [site]
   title            = "AgilenLite" # Shared title for SEO and OpenGraph
-  description      = "We partner with organisations to embrace the evolving technological landscape; inspire individuals with know-how to stay abreast of the changing trends." # Shared description for SEO and OpenGraph
+  description      = "We do Devops consulting, Training delivery and Business transformation" # Shared description for SEO and OpenGraph
   tagline          = "Agile Training & Consulting"
   taglineSeparator = " - " # default is " - "
   baseUrl          = "https://agilenlite.com" # Base URL for the site and used in OpenGraph meta tags.
@@ -18,7 +18,7 @@
   # Add your site logo in image path below and open your terminal and run "npm run generate-favicons" to generate favicons for different devices and platform (https://realfavicongenerator.net/checker)
   [site.favicon]
     path  = "/images/favicons" # favicon images path (No need to change it)
-    image = "/images/logo.svg" # Add your site logo path here and follow upper instruction
+    image = "/logo.png" # Add your site logo path here and follow upper instruction
 
 
 # SEO Metadata
@@ -26,7 +26,7 @@
 # -----------------------------------------------------------------------------------------------------------------------------------
 [seo]
   author   = "AgilenLite"
-  keywords = ["agile training", "consulting", "devops", "process optimisation", "project management", "IT management", "technology risk management", "cybersecurity"] # SEO keywords
+  keywords = ["Agilenlite", "Agile", "cybersecurity", "devops", "process optimisation", "training", "consulting", "scrum"] # SEO keywords
   robots   = "index, follow" # Instructs search engines on how to crawl and index the pages.
 
   [seo.robotsTxt]
@@ -104,7 +104,7 @@
 # Specific OpenGraph settings, using values from the [site] section where possible.
 # -----------------------------------------------------------------------------------------------------------------------------------
 [opengraph]
-  image       = "/images/og-image.png" # Image used in OpenGraph previews
+  image       = "/og-image.jpg" # Image used in OpenGraph previews
   ogLocale    = "en_US" # Locale setting for OpenGraph
   ogType      = "website" # Type of content for OpenGraph protocol
   twitter     = "" # Twitter handle for Twitter Card meta tags

@@ -1,50 +1,44 @@
 ---
 import config from ".astro/config.generated.json" with { type: "json" };
 
-let faviconPath = "/images/favicons";
-
 const favicons = [
   {
     rel: "apple-touch-icon",
     sizes: "180x180",
-    href: `${faviconPath}/apple-touch-icon.png`,
+    href: "/logo.png",
   },
   {
     rel: "icon",
     type: "image/png",
-    sizes: "96x96",
-    href: `${faviconPath}/favicon-96x96.png`,
+    sizes: "32x32",
+    href: "/logo.png",
   },
   {
     rel: "icon",
     type: "image/png",
-    sizes: "192x192",
-    href: `${faviconPath}/web-app-manifest-192x192.png`,
-  },
-  {
-    rel: "icon",
-    type: "image/png",
-    sizes: "512x512",
-    href: `${faviconPath}/web-app-manifest-512x512.png`,
-  },
-  {
-    rel: "icon",
-    type: "image/svg+xml",
-    href: `${faviconPath}/favicon.svg`,
+    sizes: "16x16",
+    href: "/favicon.ico",
   },
   {
     rel: "shortcut icon",
-    href: `${faviconPath}/favicon.ico`,
+    type: "image/x-icon",
+    href: "/favicon.ico",
   },
   {
-    rel: "manifest",
-    href: `${faviconPath}/site.webmanifest`,
+    name: "msapplication-TileImage",
+    content: "/logo.png",
   },
 ];
 
 const metaTags = [
-  { name: "msapplication-TileColor", content: "#2b5797" },
-  { name: "apple-mobile-web-app-title", content: config.site.title },
+  { name: "msapplication-navbutton-color", content: "#fff" },
+  { name: "theme-color", content: "#fff" },
+  { name: "mobile-web-app-capable", content: "AgilenLite" },
+  { name: "apple-mobile-web-app-capable", content: "AgilenLite" },
+  { name: "application-name", content: "AgilenLite" },
+  { name: "apple-mobile-web-app-title", content: "AgilenLite" },
+  { name: "apple-mobile-web-app-status-bar-style", content: "white" },
+  { name: "msapplication-starturl", content: "/" },
 ];
 ---
 
