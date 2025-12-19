@@ -29,13 +29,13 @@
     },
     {
       "enable": true,
-      "name": "Testimonials",
-      "url": "/testimonials/"
+      "name": "Courses",
+      "url": "/courses/"
     },
     {
       "enable": true,
-      "name": "Contact",
-      "url": "/contact/"
+      "name": "Resource Library",
+      "url": "/resource-library/"
     }
   ],
   "footerMenu": [

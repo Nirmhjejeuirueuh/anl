@@ -2,6 +2,11 @@
 .header {
   @apply relative z-30 w-full bg-white;
 
+  /* Apply red hover background to all dropdown links in header */
+  .hs-dropdown-menu a:hover {
+    @apply bg-red-500/10;
+  }
+
   &:not(.header-dark) {
     @apply bg-white;
   }
@@ -47,7 +52,7 @@
   @apply text-text-default relative;
 
   .language-switcher-button {
-    @apply flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-inherit uppercase;
+    @apply flex items-center gap-2 rounded-full border-primary border px-3.5 py-1.5 text-inherit uppercase;
 
     svg * {
       @apply stroke-current!;
@@ -58,7 +63,7 @@
     @apply border-border-light hs-dropdown-open:opacity-100 absolute top-[calc(100%+0.5rem)] right-0 min-w-32 rounded-md border bg-white p-1 opacity-0 transition-[opacity,margin];
 
     li a {
-      @apply text-primary hover:text-red-700 block rounded-lg bg-white px-3 py-1.5 text-center transition;
+      @apply text-primary hover:text-red-700 hover:bg-red-500/10 block rounded-lg bg-white px-3 py-1.5 text-center transition;
     }
   }
 }
@@ -108,7 +113,7 @@
 
       .nav-dropdown-item {
         .nav-dropdown-link {
-          @apply text-primary hover:text-red-700 px-2.5 py-1.5 transition lg:px-5;
+          @apply text-primary hover:text-red-700 hover:bg-red-500/10 px-2.5 py-1.5 transition lg:px-5;
         }
       }
     }

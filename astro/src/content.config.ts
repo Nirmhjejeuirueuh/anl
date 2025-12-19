@@ -16,7 +16,7 @@ export const sharedButton = z
       .enum(["text-flip", "creative-fill", "magnetic", "magnetic-text-flip"])
       .optional(),
     variant: z
-      .enum(["fill", "outline", "outline-white", "text", "text-white"])
+      .enum(["fill", "outline", "outline-white", "outline-danger", "text", "text-white", "danger"])
       .optional(),
   })
   .passthrough();

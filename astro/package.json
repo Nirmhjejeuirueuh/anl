@@ -6,10 +6,11 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "concurrently \"npm run toml:watch\" \"astro dev\"",
-    "build": "concurrently \"npm run toml:watch\" \"astro build\" && npm run remove-draft-from-sitemap",
-    "preview": "astro build && npm run remove-draft-from-sitemap && astro preview",
+    "build": "npm run toml:build && astro build && npm run remove-draft-from-sitemap",
+    "preview": "npm run toml:build && astro build && npm run remove-draft-from-sitemap && astro preview",
     "astro-check": "astro check",
     "toml:watch": "node scripts/toml-watcher.mjs",
+    "toml:build": "node scripts/toml-build.mjs",
     "generate-favicons": "node ./scripts/generate-favicons.mjs",
     "remove-multilingual": "node ./scripts/remove-multilingual.mjs",
     "remove-draft-from-sitemap": "node ./scripts/remove-draft-from-sitemap.mjs",
