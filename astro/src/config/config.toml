@@ -5,7 +5,7 @@
   tagline          = "Agile Training & Consulting"
   taglineSeparator = " - " # default is " - "
   baseUrl          = "https://agilenlite.com" # Base URL for the site and used in OpenGraph meta tags.
-  logo             = "/images/logo.png" # Path to the site's logo (649x178px)
+  logo             = "/logo.png" # Path to the site's logo (649x178px)
   logoAlternate    = "" # Path to the site's logo
   logoText         = "" # Text displayed next to the logo
   logoWidth        = "180px" # Width of the logo (auto calculated from height)
@@ -89,6 +89,7 @@
     label    = "" # Check src/i18n/en.json and src/i18n/fr.json for changing the navigation button label in different languages or directly add value here if you are not using internationalization feature
     url      = "/contact/"
     showIcon = "true" # "true" or "false"
+    variant  = "fill"
     # hoverEffect = "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
   [settings.markup.tableOfContents]

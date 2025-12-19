@@ -192,7 +192,7 @@ header {
     }
 
     .logo-text {
-      @apply text-white;
+      @apply text-primary;
     }
 
     .logo-alternate {
@@ -489,11 +489,11 @@ footer {
   /* https://github.com/HubSpot/odometer/issues/91 */
   &.odometer-animating-up .odometer-ribbon-inner,
   &.odometer-animating-down.odometer-animating .odometer-ribbon-inner {
-    -webkit-transition-duration: var(--odometer-duration, 2s) !important;
-    -moz-transition-duration: var(--odometer-duration, 2s) !important;
-    -ms-transition-duration: var(--odometer-duration, 2s) !important;
-    -o-transition-duration: var(--odometer-duration, 2s) !important;
-    transition-duration: var(--odometer-duration, 2s) !important;
+    -webkit-transition-duration: var(--odometer-duration, 2s);
+    -moz-transition-duration: var(--odometer-duration, 2s);
+    -ms-transition-duration: var(--odometer-duration, 2s);
+    -o-transition-duration: var(--odometer-duration, 2s);
+    transition-duration: var(--odometer-duration, 2s);
   }
 }
 
@@ -511,88 +511,44 @@ footer {
 header,
 header.header,
 .header {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  background-image: none !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.80);
+  background-image: none;
+  box-shadow: none;
 }
 
 header::before,
 header::after {
-  display: none !important;
+  display: none;
 }
 
-header nav a,
-header a,
-header button,
-header span,
-header .btn,
-header [class*="btn"] {
-  color: #00025d !important;
+/* Removed aggressive header button overrides - let buttons use their natural styles */
+header nav a:not([class*="btn"]),
+header a:not([class*="btn"]) {
+  color: var(--color-primary);
 }
 
-header nav a:hover,
-header a:hover {
-  color: #db2f22 !important;
-}
-
-/* Contact Us button in header */
-header .btn,
-header [class*="btn"] {
-  background: #00025d !important;
-  color: white !important;
-  border-color: #00025d !important;
-  border-radius: 50px !important; /* Make it round */
-}
-
-header .btn:hover,
-header [class*="btn"]:hover {
-  background: #db2f22 !important;
-  border-color: #db2f22 !important;
-  color: white !important;
-}
-
-header .btn:hover,
-header .btn:hover *,
-header .btn:hover span,
-header .btn:hover svg,
-header [class*="btn"]:hover,
-header [class*="btn"]:hover *,
-header [class*="btn"]:hover span,
-header [class*="btn"]:hover svg,
-header button:hover,
-header button:hover *,
-header button:hover span,
-header a.btn:hover,
-header a.btn:hover *,
-header a.btn:hover span {
-  color: #000000 !important;
-  fill: #000000 !important;
-  stroke: #000000 !important;
-}
-
-header .btn-outline-white:hover,
-header .btn-outline-white:hover *,
-header .btn-outline-white:hover span {
-  color: #000000 !important;
+header nav a:not([class*="btn"]):hover,
+header a:not([class*="btn"]):hover {
+  color: var(--color-danger);
 }
 
 /* Logo styling - AgileN Lite logo is 649x178 (wide) */
 .logo-wrapper {
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
 }
 
 .logo-wrapper .logo {
-  width: auto !important;
-  max-width: none !important;
-  height: 50px !important;
-  object-fit: contain !important;
+  width: auto;
+  max-width: none;
+  height: 50px;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
   .logo-wrapper .logo {
-    height: 40px !important;
+    height: 40px;
   }
 }
 
@@ -600,60 +556,60 @@ header .btn-outline-white:hover span {
 .banner {
   position: relative;
   overflow: hidden;
-  background: transparent !important;
+  background: transparent;
 }
 
 /* Show background image */
 .banner .swiper-banner-image {
-  display: block !important;
-  opacity: 1 !important;
-  z-index: 1 !important;
+  display: block;
+  opacity: 1;
+  z-index: 1;
 }
 
 .banner .swiper-banner-image img {
-  display: block !important;
-  opacity: 1 !important;
+  display: block;
+  opacity: 1;
 }
 
 .banner::before {
-  background: linear-gradient(135deg, rgba(0, 2, 93, 0.85) 0%, rgba(0, 2, 93, 0.75) 40%, rgba(26, 75, 168, 0.65) 70%, rgba(138, 243, 255, 0.4) 100%) !important;
-  opacity: 1 !important;
-  z-index: 3 !important;
+  background: linear-gradient(135deg, rgba(0, 2, 93, 0.85) 0%, rgba(0, 2, 93, 0.75) 40%, rgba(26, 75, 168, 0.65) 70%, rgba(138, 243, 255, 0.4) 100%);
+  opacity: 1;
+  z-index: 3;
 }
 
 .banner::after {
-  background: radial-gradient(ellipse 900px 700px at bottom left, rgba(219, 47, 34, 0.1) 0%, transparent 55%) !important;
-  opacity: 1 !important;
-  z-index: 2 !important;
+  background: radial-gradient(ellipse 900px 700px at bottom left, rgba(219, 47, 34, 0.1) 0%, transparent 55%);
+  opacity: 1;
+  z-index: 2;
 }
 
 /* Hero text styling for better contrast */
 .banner h1 {
-  color: white !important;
+  color: white;
   text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.4);
   font-weight: 700;
 }
 
 .banner h1 strong {
-  color: #8af3ff !important;
+  color: #8af3ff;
 }
 
 .banner p {
-  color: rgba(255, 255, 255, 0.95) !important;
+  color: rgba(255, 255, 255, 0.95);
   text-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
   font-size: 1.125rem;
 }
 
 .banner .btn {
-  background: #db2f22 !important;
-  border-color: #db2f22 !important;
-  color: white !important;
+  background: #db2f22;
+  border-color: #db2f22;
+  color: white;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
 .banner .btn:hover {
-  background: #ff4436 !important;
-  border-color: #ff4436 !important;
+  background: #ff4436;
+  border-color: #ff4436;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(219, 47, 34, 0.4);
 }
@@ -662,8 +618,8 @@ header .btn-outline-white:hover span {
 .services-section,
 section:has(.service-card),
 section:has([class*="service"]) {
-  background: #00025d !important;
-  color: white !important;
+  background: #00025d;
+  color: white;
 }
 
 .services-section h2,
@@ -672,14 +628,8 @@ section:has([class*="service"]) {
 section:has(.service-card) h2,
 section:has(.service-card) h3,
 section:has(.service-card) p {
-  color: white !important;
+  color: white;
 }
 
-/* NUCLEAR OPTION - Force black text on header button hover */
-header a:hover,
-header a:hover > *,
-header button:hover,
-header button:hover > * {
-  color: black !important;
-}
+/* Removed NUCLEAR OPTION - let buttons use their natural hover styles */
 

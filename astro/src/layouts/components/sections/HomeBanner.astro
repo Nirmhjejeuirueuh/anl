@@ -116,61 +116,6 @@ if (mainBlock.disableSlider) slides = [slides[0]];
           }
         </div>
       </div>
-
-      <!-- Slider Controls -->
-      {
-        !mainBlock.disableSlider && (
-          <div
-            data-aos-offset="0"
-            data-aos="fade-down-sm"
-            data-aos-duration="900"
-            data-aos-delay="600"
-            class="flex gap-16 pt-16 pb-6 lg:absolute lg:bottom-0 lg:z-40 lg:pt-20 lg:pb-12">
-            <button
-              title="Previous Slide"
-              class="banner-slider-btn-prev group/slider-control bg-secondary hover:bg-primary relative flex h-14 w-14 items-center justify-center rounded-full transition duration-300">
-              <svg
-                data-icon
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-primary group-hover/slider-control:text-secondary absolute left-1/3 h-16 w-16 stroke-1 transition duration-300 group-hover/slider-control:-translate-x-1">
-                <>
-                  <path d="M6 8L2 12L6 16" />
-                  <path d="M2 12H22" />
-                </>
-              </svg>
-            </button>
-            <button
-              title="Next Slide"
-              class="banner-slider-btn-next group/slider-control bg-secondary hover:bg-primary relative flex h-14 w-14 rotate-180 items-center justify-center rounded-full transition duration-300">
-              <svg
-                data-icon
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-primary group-hover/slider-control:text-secondary absolute left-1/3 h-16 w-16 stroke-1 transition duration-300 group-hover/slider-control:-translate-x-1">
-                <>
-                  <path d="M6 8L2 12L6 16" />
-                  <path d="M2 12H22" />
-                </>
-              </svg>
-            </button>
-          </div>
-        )
-      }
     </div>
 
     <!-- Short Information -->

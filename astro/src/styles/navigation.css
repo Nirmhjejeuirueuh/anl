@@ -1,9 +1,9 @@
 /* Header */
 .header {
-  @apply relative z-30 w-full;
+  @apply relative z-30 w-full bg-white;
 
   &:not(.header-dark) {
-    @apply bg-none!;
+    @apply bg-white;
   }
 
   &.sticky-header {
@@ -33,13 +33,13 @@
 }
 
 .header-dark {
-  @apply before:border-border-light/25 bg-theme-dark/20 backdrop-blur-sm before:border-b;
+  @apply before:border-border-light/25 bg-white/25 backdrop-blur-sm before:border-b;
 }
 
 .header-dark.scroll-up,
 .banner {
-  @apply before:bg-theme-dark before:absolute before:inset-0 before:-z-[09] before:h-full before:w-full before:opacity-35;
-  @apply after:from-theme-dark after:via-theme-dark/80 after:absolute after:inset-0 after:-z-10 after:h-full after:w-full after:bg-linear-to-r after:from-0% after:via-35% after:to-transparent;
+  @apply before:bg-primary before:absolute before:inset-0 before:-z-[09] before:h-full before:w-full before:opacity-20;
+  @apply after:from-primary after:via-primary/80 after:absolute after:inset-0 after:-z-10 after:h-full after:w-full after:bg-linear-to-r after:from-0% after:via-35% after:to-transparent;
 }
 
 /* Language Switcher */
@@ -58,13 +58,13 @@
     @apply border-border-light hs-dropdown-open:opacity-100 absolute top-[calc(100%+0.5rem)] right-0 min-w-32 rounded-md border bg-white p-1 opacity-0 transition-[opacity,margin];
 
     li a {
-      @apply text-text-default hover:bg-primary/10 hover:text-primary block rounded-lg bg-white px-3 py-1.5 text-center transition;
+      @apply text-primary hover:text-red-700 block rounded-lg bg-white px-3 py-1.5 text-center transition;
     }
   }
 }
 
 .header-dark .language-switcher {
-  @apply text-white;
+  @apply text-primary;
 }
 
 /* Navbar */
@@ -75,7 +75,7 @@
 
   .nav-item {
     .nav-link {
-      @apply hover:bg-primary/5 hover:text-primary text-text-default relative flex items-center rounded-sm px-4 py-1.5 transition duration-300 lg:py-2 xl:px-6;
+      @apply text-primary hover:text-red-700 relative flex items-center rounded-sm px-4 py-1.5 transition duration-300 lg:py-2 xl:px-6;
 
       /* Active Menu Style */
       &.nav-link-active {
@@ -108,7 +108,7 @@
 
       .nav-dropdown-item {
         .nav-dropdown-link {
-          @apply hover:bg-primary/5 hover:text-primary px-2.5 py-1.5 text-inherit transition lg:px-5;
+          @apply text-primary hover:text-red-700 px-2.5 py-1.5 transition lg:px-5;
         }
       }
     }
@@ -169,7 +169,7 @@
   .navbar {
     .nav-item {
       > .nav-link {
-        @apply lg:text-white;
+        @apply lg:text-primary lg:hover:text-red-700;
 
         @apply lg:hover:bg-white/5;
       }

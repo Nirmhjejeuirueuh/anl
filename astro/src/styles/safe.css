@@ -113,6 +113,6 @@ select:focus {
   }
 
   *[stop-color="#2562FF"] {
-    stop-color: var(--color-primary) !important;
+    stop-color: var(--color-primary);
   }
 }

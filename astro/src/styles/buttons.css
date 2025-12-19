@@ -17,6 +17,10 @@
   @apply bg-primary text-white;
 }
 
+@utility btn-danger {
+  @apply bg-danger text-white;
+}
+
 @utility btn-text {
   @apply text-primary border-b-primary rounded-none border-b p-0 pb-3;
 }
@@ -26,7 +30,11 @@
 }
 
 @utility btn-outline {
-  @apply border-primary text-primary border bg-white;
+  @apply border-primary text-primary border bg-transparent;
+}
+
+@utility btn-outline-danger {
+  @apply border-danger text-danger border bg-transparent;
 }
 
 @utility btn-outline-white {
@@ -56,6 +64,10 @@
 *[class*="btn-outline"] ~ .icons-wrapper {
   @apply bg-primary text-white;
 }
+*[class*="btn-danger"] ~ .icons-wrapper,
+*[class*="btn-outline-danger"] ~ .icons-wrapper {
+  @apply bg-danger text-white;
+}
 *[class*="btn-outline-white"] ~ .icons-wrapper {
   @apply text-text-default border bg-white;
 }
@@ -65,7 +77,26 @@
   transition: transform 0.2s ease;
   will-change: transform;
 }
-.creative-hover-anim:not([disabled="true"]) {
+
+/* Bottom to Top Fill Animation for outline-white buttons */
+.creative-hover-anim.btn-outline-white:not([disabled="true"]) {
+  @apply relative z-10 overflow-hidden transition-colors duration-500 ease-in-out;
+
+  .hover-bg {
+    @apply absolute bottom-0 left-0 right-0 -z-10 block h-0 w-full;
+    transition: height 0.5s ease-in-out;
+    background: white;
+  }
+
+  &:hover {
+    color: black;
+    .hover-bg {
+      height: 100%;
+    }
+  }
+}
+
+.creative-hover-anim:not([disabled="true"]):not(.btn-outline-white) {
   @apply relative z-10 overflow-hidden delay-100 duration-700 ease-in-out;
 
   .hover-bg {
@@ -83,14 +114,29 @@
     }
   }
   &.btn-primary .hover-bg {
-    @apply bg-theme-dark;
+    @apply bg-info;
+  }
+  &.btn-danger .hover-bg {
+    @apply bg-primary;
   }
   &.btn-outline .hover-bg {
     background: var(--color-primary);
   }
+  &.btn-outline-danger .hover-bg {
+    background: var(--color-danger);
+  }
+  &.btn-outline-white .hover-bg {
+    background: white;
+  }
   &:hover {
     &.btn-outline {
-      color: var(--color-white) !important;
+      color: var(--color-white);
+    }
+    &.btn-outline-danger {
+      color: var(--color-white);
+    }
+    &.btn-outline-white {
+      color: black;
     }
   }
 }
@@ -124,7 +170,17 @@
     }
   }
 
+  &.btn-outline-danger {
+    .text-flip-inner {
+      &::before,
+      &::after {
+        @apply text-danger;
+      }
+    }
+  }
+
   &.btn-primary,
+  &.btn-danger,
   &.btn-text-white,
   &.btn-outline-white {
     .text-flip-inner {
