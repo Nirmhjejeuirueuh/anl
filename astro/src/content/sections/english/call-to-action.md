@@ -1,13 +1,15 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "Ready to Transform Your Business?"
-subtitle: "Business Goals"
+title: "**Transform** Your Organization with Expert Guidance"
+subtitle: "Get Started Today"
 description: |
-  Partner with our team of experts to unlock your business’s full potential. Schedule your free consultation and discover how we can help you.
+  Partner with AgilenLite to navigate the evolving IT landscape with confidence. From Agile transformation to cybersecurity training, we provide practical solutions that deliver measurable results.
+
+  **Let's discuss how we can help you bridge the gap between current capabilities and future success.**
 
 button:
   enable: true
-  label: "Get A Free Consultation"
+  label: "Schedule a Free Consultation"
   url: "/contact/"
   rel: ""
   target: ""
@@ -18,7 +20,7 @@ button:
 ctaShapeOne: "/images/shapes/cta-shape-one.svg"
 ctaShapeTwo: "/images/shapes/cta-shape-two.svg"
 
-rightContent: "image" # Choose between "image" or "stats" for the content of the right side of the section
+rightContent: "stats" # Choose between "image" or "stats" for the content of the right side of the section
 
 imageBlock:
   image: "/images/call-to-action/image.png"
@@ -31,18 +33,18 @@ imageBlock:
 statsBlock:
   list:
     - prependValue: ""
-      value: "98"
-      appendValue: "%"
-      title: "Satisfaction Rate"
-      description: "Our clients consistently report high levels of satisfaction"
-    - prependValue: ""
-      value: "200"
+      value: "260"
       appendValue: "+"
-      title: "Successful Projects"
-      description: "our team of consultants brings a wealth of expertise."
+      title: "Professionals Trained"
+      description: "Through Career Conversion Programs in IT Security & Cybersecurity"
     - prependValue: ""
-      value: "25"
+      value: "2000"
       appendValue: "+"
-      title: "Years of Experience"
-      description: "Our strategies have generated over $50 million."
+      title: "Corporate Professionals"
+      description: "Trained in cybersecurity, fraud risk, AML, and cloud security"
+    - prependValue: ""
+      value: "15"
+      appendValue: "+"
+      title: "Years of Excellence"
+      description: "Delivering cutting-edge training and consulting solutions"
 ---

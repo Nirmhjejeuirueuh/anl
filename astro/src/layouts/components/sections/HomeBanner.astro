@@ -1,10 +1,10 @@
 ---
 import "swiper/css/bundle";
-import VideoModal from "@/components/widgets/VideoModal.astro";
+import VideoModal from "@/layouts/components/widgets/VideoModal.astro";
 import overrideObjects from "@/lib/utils/overrideObjects.ts";
 import { markdownify } from "@/lib/utils/textConverter";
 import type { Section, VideoConfig } from "@/types";
-import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import OptimizedImage from "@/layouts/components/utilities/OptimizedImage.astro";
 import { getEntryCTM } from "@/lib/contentParser.astro";
 import CustomButton from "../CustomButton.astro";
 import type { TypeOf } from "astro:schema";
@@ -93,14 +93,14 @@ if (mainBlock.disableSlider) slides = [slides[0]];
                 <div class="flex max-w-3xl flex-col items-start justify-center text-white">
                   {item.title && (
                     <h1
-                      class="anim anim-fade-up text-h2 mb-6 text-inherit capitalize [--duration:900ms] md:text-5xl/tight"
+                      class="anim anim-fade-up text-h1 mb-6 text-inherit capitalize [--duration:900ms] md:text-6xl/tight lg:text-7xl/tight"
                       set:html={markdownify(item.title)}
                     />
                   )}
                   {item.description && (
                     <div class="anim anim-fade-up overflow-hidden [--delay:200ms] [--duration:900ms]">
                       <p
-                        class="border-l pl-5 opacity-90"
+                        class="border-l pl-5 opacity-90 text-lg md:text-xl lg:text-2xl"
                         set:html={markdownify(item.description)}
                       />
                     </div>
@@ -200,57 +200,6 @@ if (mainBlock.disableSlider) slides = [slides[0]];
           disableOnInteraction: true,
         },
         loop: true,
-      });
-
-      const bannerSliderPrev = document.querySelector(
-        ".banner-slider-btn-prev",
-      ) as HTMLElement;
-      const bannerSliderNext = document.querySelector(
-        ".banner-slider-btn-next",
-      ) as HTMLElement;
-
-      bannerSliderPrev.addEventListener("click", () => {
-        // If the last slide is active, go to the first slide
-        if (bannerContentSwiper.realIndex === 0) {
-          bannerContentSwiper.slideToLoop(
-            bannerContentSwiper.slides.length - 1,
-          );
-        } else {
-          const targetIndex = bannerContentSwiper.realIndex - 1;
-
-          // Cancel any ongoing transition instantly
-          bannerContentSwiper.setTranslate(bannerContentSwiper.getTranslate());
-
-          // Slide with normal speed
-          bannerContentSwiper.slideToLoop(
-            targetIndex,
-            bannerContentSwiper.params.speed,
-            true,
-          );
-        }
-      });
-
-      bannerSliderNext.addEventListener("click", () => {
-        // If the last slide is active, go to the first slide
-        if (
-          bannerContentSwiper.realIndex ===
-          bannerContentSwiper.slides.length - 1
-        ) {
-          bannerContentSwiper.slideToLoop(0);
-        } else {
-          // Slide to the next slide
-          const targetIndex = bannerContentSwiper.realIndex + 1;
-
-          // Cancel any ongoing transition instantly
-          bannerContentSwiper.setTranslate(bannerContentSwiper.getTranslate());
-
-          // Slide with normal speed
-          bannerContentSwiper.slideToLoop(
-            targetIndex,
-            bannerContentSwiper.params.speed,
-            true,
-          );
-        }
       });
 
       bannerContentSwiper.controller.control = bannerImageSwiper;

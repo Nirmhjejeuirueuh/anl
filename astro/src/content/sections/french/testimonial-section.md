@@ -4,7 +4,7 @@ title: "Ce qu'ils disent de notre entreprise"
 subtitle: "Témoignage"
 
 button:
-  enable: true
+  enable: false
   label: "Commencer"
   url: "/contact"
   rel: ""

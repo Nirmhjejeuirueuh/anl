@@ -1,10 +1,10 @@
 ---
-title: "Cybersecurity Training Excellence"
-name: "Rick"
-designation: "Cybersecurity Professional"
-company: "Enterprise Risk Management"
+title: "Taking Cloud Security to the Next Level"
+name: "Adeline Wee"
+designation: "Group Risk Management"
+company: "OCBC"
 image: ""
-content: "The Managing Cybersecurity Risks training was exceptional. Amelia's deep understanding of cybersecurity frameworks and practical approach to risk management provided valuable insights for implementing robust security controls in our organization."
+content: "Attended Amelia's Taking Cloud Security to the next Level – her strong experience in this domain is demonstrated by the several use cases shared. Attended 101 on cloud security and witnessed the same high level of participation!"
 rating: 5
 featured: false
 ---

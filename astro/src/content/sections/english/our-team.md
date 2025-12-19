@@ -1,10 +1,10 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "A Diverse Group of Experienced Professionals"
+title: "Meet Our **Team**"
 subtitle: "Expert Team"
 
 button:
-  enable: true
+  enable: false
   label: "See All Members"
   url: "/team"
   rel: ""
@@ -14,5 +14,5 @@ button:
   hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
 # Set the maximum number of team members to display in this component instance
-limit: 4 # false / number
+limit: false # false / number
 ---

@@ -92,12 +92,24 @@ let {
                   ]}>
                   {item.number && (
                     <span
-                      class="text-h2 from-primary font-secondary relative mb-5 inline-block bg-linear-to-b via-white via-90% to-transparent bg-clip-text leading-tight font-bold text-transparent md:text-[4.0625rem]/none"
+                      class:list={[
+                        "text-h2 font-secondary relative mb-5 inline-block bg-linear-to-b via-white via-90% to-transparent bg-clip-text leading-tight font-bold text-transparent md:text-[4.0625rem]/none",
+                        { "from-primary": index === 0 },
+                        { "from-danger": index === 1 },
+                        { "from-[#14342B]": index === 2 }
+                      ]}
                       set:html={markdownify(item.number)}
                     />
                   )}
                   {item.title && (
-                    <h3 class="text-h4 mb-8" set:html={item.title} />
+                    <h3
+                      class:list={[
+                        "text-h4 mb-8",
+                        { "text-danger": index === 1 },
+                        { "text-[#14342B]": index === 2 }
+                      ]}
+                      set:html={item.title}
+                    />
                   )}
                   {item.description && (
                     <div
@@ -129,15 +141,19 @@ let {
                     class="has-inherited-colors text-primary inset-0 -z-10 h-full min-h-[250px] w-full min-w-full object-cover opacity-50 lg:absolute lg:min-h-full"
                   />
                 )}
-                {item.images &&
-                  item.images.src.map((image) => (
-                    <OptimizedImage
-                      class="translate-centered absolute h-full w-full object-contain"
-                      src={image}
-                      height={444}
-                      alt={item.images.alt}
-                    />
-                  ))}
+                <div class="relative h-full w-full min-h-[250px] lg:min-h-full">
+                  <div class="absolute inset-y-0 left-0 w-26 bg-gradient-to-r from-white via-white/100 to-transparent z-10 pointer-events-none"></div>
+                  <div class="absolute inset-y-0 right-0 w-26 bg-gradient-to-l from-white via-white/100 to-transparent z-10 pointer-events-none"></div>
+                  {item.images &&
+                    item.images.src.map((image) => (
+                      <OptimizedImage
+                        class="translate-centered absolute h-full w-full object-contain"
+                        src={image}
+                        height={444}
+                        alt={item.images.alt}
+                      />
+                    ))}
+                </div>
               </div>
             </div>
           ))}

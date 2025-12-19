@@ -68,11 +68,12 @@ services =
       "overflow-hidden":
         creativeShape?.enable && creativeShape?.position !== "top",
     },
+    "pt-16",
   ]}>
   <div
     class:list={[
-      "flex flex-col justify-start gap-12 md:gap-16",
-      { "bg-theme-dark py-16 md:py-28": colorScheme === "dark" },
+      "flex flex-col justify-start gap-12 md:gap-16 py-16 md:py-28",
+      { "bg-theme-dark": colorScheme === "dark" },
     ]}>
     <div class="container">
       <div

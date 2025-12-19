@@ -11,65 +11,44 @@ interface Props {
 
 const { content, imageSize = "lg", class: className, ...rest } = Astro.props;
 const { name, role, image, social } = content as TeamMember;
+
+// Create URL slug from name
+const memberSlug = name ? name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : '';
 ---
 
-<div
-  class:list={[
-    "group after:from-primary/80 after:via-primary/30 to-primary/0 relative overflow-hidden rounded-xl via-10% after:absolute after:inset-0 after:z-10 after:bg-linear-to-t after:transition-opacity",
-    className,
-  ]}
+<a
+  href={`/about/team/${memberSlug}`}
+  class="cursor-pointer block"
   {...rest}>
-  <OptimizedImage
-    class:list={[
-      "w-full rounded-xl object-cover",
-      imageSize === "lg" ? "h-101!" : "h-80!",
-    ]}
-    src={image}
-    alt={name}
-  />
-  <div
-    class="absolute bottom-0 left-0 z-20 w-full p-8 text-white transition-all duration-300 md:-bottom-14 group-hover:md:bottom-0">
-    {
-      name && (
-        <h3
-          class="text-lg/snug text-inherit opacity-90"
-          set:html={markdownify(name)}
-        />
-      )
-    }
-    {
-      role && (
-        <p
-          class="mt-2 text-sm text-inherit opacity-90"
-          set:html={markdownify(role)}
-        />
-      )
-    }
-    {
-      social && social.enable && (
-        <ul class="z-20 mt-6 flex gap-4 transition-all duration-300 md:opacity-0 md:group-hover:opacity-100">
-          {social.list.map((social) => (
-            <li>
-              <a
-                aria-label={social.label}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                class="group/link relative flex h-5 w-5 items-center justify-center transition duration-300">
-                <span class="sr-only">{social.label}</span>
-                {social.icon && (
-                  <OptimizedImage
-                    inlineSvg={true}
-                    src={social.icon}
-                    class="has-inherited-colors w-ful relative z-10 h-full text-white transition duration-300 group-hover/link:scale-110"
-                    alt={social.label}
-                  />
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )
-    }
+  <div class="group relative flex flex-col items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transform scale-100 hover:scale-105 transition-all duration-300 ease-out"
+       style="will-change: transform;">
+    <div class="relative">
+      <OptimizedImage
+        class:list={[
+          "rounded-full object-cover",
+          imageSize === "lg" ? "h-48 w-48" : "h-32 w-32",
+        ]}
+        src={image}
+        alt={name}
+      />
+    </div>
+    <div class="mt-4 text-center">
+      {
+        name && (
+          <h3
+            class="text-lg/snug text-inherit font-semibold"
+            set:html={markdownify(name)}
+          />
+        )
+      }
+      {
+        role && (
+          <p
+            class="mt-1 text-sm text-inherit opacity-80"
+            set:html={markdownify(role)}
+          />
+        )
+      }
+    </div>
   </div>
-</div>
+</a>

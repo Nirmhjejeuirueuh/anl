@@ -78,25 +78,78 @@
   will-change: transform;
 }
 
-/* Bottom to Top Fill Animation for outline-white buttons */
-.creative-hover-anim.btn-outline-white:not([disabled="true"]) {
+/* Bottom to Top Fill Animation for ALL outline variants (default behavior) */
+.btn-outline:not([disabled="true"]),
+.btn-outline-white:not([disabled="true"]),
+.btn-outline-danger:not([disabled="true"]) {
   @apply relative z-10 overflow-hidden transition-colors duration-500 ease-in-out;
 
   .hover-bg {
     @apply absolute bottom-0 left-0 right-0 -z-10 block h-0 w-full;
     transition: height 0.5s ease-in-out;
-    background: white;
+  }
+}
+
+/* Specific fill colors for each outline variant */
+.btn-outline:not([disabled="true"]) {
+  .hover-bg {
+    background: var(--color-primary);
   }
 
   &:hover {
-    color: black;
+    color: white !important;
+
+    .text-flip-inner::before,
+    .text-flip-inner::after {
+      color: white !important;
+    }
+
     .hover-bg {
       height: 100%;
     }
   }
 }
 
-.creative-hover-anim:not([disabled="true"]):not(.btn-outline-white) {
+.btn-outline-white:not([disabled="true"]) {
+  .hover-bg {
+    background: white;
+  }
+
+  &:hover {
+    color: black !important;
+
+    .text-flip-inner::before,
+    .text-flip-inner::after {
+      color: black !important;
+    }
+
+    .hover-bg {
+      height: 100%;
+    }
+  }
+}
+
+.btn-outline-danger:not([disabled="true"]) {
+  .hover-bg {
+    background: var(--color-danger);
+  }
+
+  &:hover {
+    color: white !important;
+
+    .text-flip-inner::before,
+    .text-flip-inner::after {
+      color: white !important;
+    }
+
+    .hover-bg {
+      height: 100%;
+    }
+  }
+}
+
+/* Circular expand animation for fill variants only */
+.creative-hover-anim:not([disabled="true"]):not(.btn-outline):not(.btn-outline-white):not(.btn-outline-danger) {
   @apply relative z-10 overflow-hidden delay-100 duration-700 ease-in-out;
 
   .hover-bg {
@@ -118,26 +171,6 @@
   }
   &.btn-danger .hover-bg {
     @apply bg-primary;
-  }
-  &.btn-outline .hover-bg {
-    background: var(--color-primary);
-  }
-  &.btn-outline-danger .hover-bg {
-    background: var(--color-danger);
-  }
-  &.btn-outline-white .hover-bg {
-    background: white;
-  }
-  &:hover {
-    &.btn-outline {
-      color: var(--color-white);
-    }
-    &.btn-outline-danger {
-      color: var(--color-white);
-    }
-    &.btn-outline-white {
-      color: black;
-    }
   }
 }
 

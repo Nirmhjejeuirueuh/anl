@@ -42,6 +42,16 @@ h6 {
   }
 }
 
+/* Ensure text size utilities also use secondary font for headings */
+.text-h1,
+.text-h2,
+.text-h3,
+.text-h4,
+.text-h5,
+.text-h6 {
+  @apply font-secondary;
+}
+
 h1,
 .h1 {
   @apply text-h1-md md:text-h1;

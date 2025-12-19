@@ -24,6 +24,7 @@ const homepage = await getEntryCTM("homepage", "-index", Astro.currentLocale);
   <Customers />
   <AboutUs />
   <ServicesSection content={homepage?.data.servicesSection} />
+  <HowItWorks />
   <Testimonial />
   <CallToAction content={homepage?.data.callToActionSection} />
 </Base>

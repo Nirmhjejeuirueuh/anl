@@ -41,6 +41,53 @@ let {
   marquee,
 } = actualContent as sectionType;
 
+// If no list is provided, automatically load all images from /images/about folder
+if (!list || list.length === 0) {
+  try {
+    // Try to dynamically load images from the about folder
+    const aboutImages = import.meta.glob('../../../../../public/images/about/*.{jpg,jpeg,png,gif,webp,svg}', {
+      eager: true,
+      as: 'url'
+    });
+
+    // Convert the imported modules to URLs
+    const imageUrls = Object.values(aboutImages).map((module: any) => {
+      // Extract the path relative to public
+      const fullPath = module.default || module;
+      return fullPath.replace(/^.*\/public/, '');
+    });
+
+    list = imageUrls.length > 0 ? imageUrls : [
+      "/images/about/Agile for Successful Project Implementation_20210505-06.jpg",
+      "/images/about/Anti-Money Laundering & its Ecosystem_20190830-Team Photo_Group 5.jpg",
+      "/images/about/Applying User Entity Behavioural Analytics_20210223_Photo 1.jpg",
+      "/images/about/Asean Cybersecurity Skilling Programme-20230523_Agenda.jpg",
+      "/images/about/Asean Cybersecurity Skilling Programme-20230523_Group Photo.jpeg",
+      "/images/about/Cloud Computing Essentials (for Financial Sector)_20191029_Photo 2.jpg",
+      "/images/about/Cloud In Finance_20210813_Group 1 Assignment.jpg",
+      "/images/about/Cloud In Finance_20210813_Group 3 Assignment.jpg",
+      "/images/about/Moderated the Fireside Chat with Piyush Gupta_20230323.jpeg",
+      "/images/about/TR-Confirmation Auditor & Banks Client Networking Event_20251114-Photo 2.jpeg",
+      "/images/about/TR-Confirmation Auditor & Banks Client Networking Event_20251114-Photo 3.jpeg"
+    ];
+  } catch (error) {
+    // Fallback to manual list if dynamic loading fails
+    list = [
+      "/images/about/Agile for Successful Project Implementation_20210505-06.jpg",
+      "/images/about/Anti-Money Laundering & its Ecosystem_20190830-Team Photo_Group 5.jpg",
+      "/images/about/Applying User Entity Behavioural Analytics_20210223_Photo 1.jpg",
+      "/images/about/Asean Cybersecurity Skilling Programme-20230523_Agenda.jpg",
+      "/images/about/Asean Cybersecurity Skilling Programme-20230523_Group Photo.jpeg",
+      "/images/about/Cloud Computing Essentials (for Financial Sector)_20191029_Photo 2.jpg",
+      "/images/about/Cloud In Finance_20210813_Group 1 Assignment.jpg",
+      "/images/about/Cloud In Finance_20210813_Group 3 Assignment.jpg",
+      "/images/about/Moderated the Fireside Chat with Piyush Gupta_20230323.jpeg",
+      "/images/about/TR-Confirmation Auditor & Banks Client Networking Event_20251114-Photo 2.jpeg",
+      "/images/about/TR-Confirmation Auditor & Banks Client Networking Event_20251114-Photo 3.jpeg"
+    ];
+  }
+}
+
 // Limit the number of items to be displayed
 list = limit && list ? list.slice(0, limit as number) : list;
 
@@ -71,11 +118,11 @@ const formattedTitle = markdownTitle.replace(
             )}
           </div>
           {description && (
-            <p
+            <div
               data-aos="fade-up-sm"
               data-aos-delay="200"
               set:html={markdownify(description)}
-              class="max-w-md opacity-80 xl:max-w-xl"
+              class="prose prose-lg max-w-2xl opacity-90 xl:max-w-3xl"
             />
           )}
         </div>

@@ -275,6 +275,9 @@ export const collections = {
   contact: defineCollection({}),
   faq: defineCollection({}),
   team: defineCollection({}),
+  "team-members": defineCollection({
+    schema: page,
+  }),
   pricing: defineCollection({}),
   homepage: defineCollection({}),
   author: defineCollection({}),

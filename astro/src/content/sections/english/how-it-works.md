@@ -1,43 +1,43 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "Unlocking Growth with Our Data-Driven Approach"
-subtitle: "How It Works"
+title: "**Secure Today, Agile Tomorrow** - Our Proven Approach"
+subtitle: "How We Work"
 bgPatternImage: "/images/line-pattern.svg"
 
 list:
-  - title: "Deep Dive - Market & Competitive Analysis"
+  - title: "Assess & Understand Your Needs"
     description: |
-      We begin by thoroughly analyzing your target market and understanding its size, demographics, trends, and growth potential.
+      We begin by conducting a thorough assessment of your organization's current capabilities, competency gaps, and strategic objectives.
 
-      We conduct a comprehensive competitive analysis to identify your key competitors, their strengths and weaknesses, and their market share.
+      Our team works closely with you to understand your unique challenges in cybersecurity, agile transformation, and digital readiness.
     images:
       src:
-        - "/images/how-it-works/1.png"
-      background: "/images/how-it-works/bg.svg"
-      alt: "Image explaing Market & Competitive Analysis"
+        - "/images/how-it-works/1.webp"
+      background: ""
+      alt: "Assessment and needs analysis"
     number: "01"
 
-  - title: "Collaborative Strategy Session"
+  - title: "Design Tailored Solutions"
     description: |
-      We work closely with you to understand your business goals, vision, and resources.
+      Leveraging insights from our assessment, we design customized training programs and consulting solutions aligned with industry standards and regulatory requirements.
 
-      Leveraging the insights from the market and competitive analysis, we facilitate a collaborative workshop to brainstorm and develop winning strategies.
+      Whether it's IBF-accredited courses, bespoke corporate training, or strategic consulting, we craft solutions that deliver measurable outcomes.
     images:
       src:
-        - "/images/how-it-works/2.png"
-      background: "/images/how-it-works/bg.svg"
-      alt: "Image explaing Market & Competitive Analysis"
+        - "/images/how-it-works/2.webp"
+      background: ""
+      alt: "Tailored training and consulting solutions"
     number: "02"
 
-  - title: "Crafting Your Action Plan"
+  - title: "Deliver & Transform"
     description: |
-      Based on the collaborative session, we translate strategies into a clear and actionable roadmap.
+      We implement our solutions through flexible delivery modes - from face-to-face workshops to blended learning and strategic advisory sessions.
 
-      This plan outlines specific steps, timelines, and performance metrics to track progress.
+      Our highly interactive, results-oriented approach ensures participants can immediately apply their learning to real-world challenges, driving sustainable transformation.
     images:
       src:
-        - "/images/how-it-works/3.png"
-      background: "/images/how-it-works/bg.svg"
-      alt: "Image explaing Market & Competitive Analysis"
+        - "/images/how-it-works/3.webp"
+      background: ""
+      alt: "Training delivery and transformation"
     number: "03"
 ---

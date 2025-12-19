@@ -6,8 +6,8 @@ description: "Ceci est un exemple de description m ta"
 # Uncomment key values that you want to override
 servicesSection:
   # enable: true # Control the visibility of this section across all services single
-  title: "Services supplémentaires pour maximiser votre"
-  # subtitle: "Nos services"
+  title: "Solutions Agile Complètes & Conseil d'Experts"
+  subtitle: "Transformez Votre Organisation avec une Expertise de Pointe"
 
   creativeShape: # Background shape
     enable: true

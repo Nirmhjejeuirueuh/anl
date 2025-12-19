@@ -51,13 +51,6 @@ let { members }: { members: TeamMember[] } = (
   await getEntryCTM("team", "-index", Astro.currentLocale)
 )?.data;
 
-// If leadershipTeam true, remove the regular members else remove the leadership team members from regular list
-if (leadershipTeam) {
-  members = members.filter((member) => member.leadershipTeam);
-} else {
-  members = members.filter((member) => !member.leadershipTeam);
-}
-
 // Limit the number of team members to be displayed
 members = limit && members ? members.slice(0, limit as number) : members;
 
@@ -111,7 +104,7 @@ const isHorizontal = layout === "horizontal";
               "grid gap-6",
               isHorizontal
                 ? "md:grid-cols-2 md:grid-rows-2 md:place-items-center"
-                : "mt-8 md:grid-cols-2 lg:mt-16 lg:grid-cols-4",
+                : "mt-8 md:grid-cols-2 lg:mt-16 lg:grid-cols-3",
             ]}>
             {members.map((item, index) => (
               <TeamCard

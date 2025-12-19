@@ -54,7 +54,7 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
         />
       )
     }
-    {description && <p set:html={description} />}
+    {description && <p class="text-text-default opacity-80" set:html={description} />}
     <CustomButton
       variant="text"
       label={t("common.readMore")}

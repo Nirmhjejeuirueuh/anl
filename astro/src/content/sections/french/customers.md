@@ -1,6 +1,6 @@
 ---
 enable: true # Contrôler la visibilité de cette section sur toutes les pages où elle est utilisée
-description: "Nous sommes honorés de travailler aux côtés de ces partenaires distingués."
+description: "Fiers de collaborer avec ces institutions financières et organisations leaders en Asie-Pacifique"
 
 marquee:
   marqueeElementWidth: "11.25rem"
@@ -8,17 +8,35 @@ marquee:
   marqueeElementWidthAuto: true
   marqueePauseOnHover: false
   marqueeReverse: "" # reverse / ""
-  marqueeDuration: "20s"
+  marqueeDuration: "30s"
 
 list:
-  - src: "/images/customers/1.png"
-    alt: "Quotient"
-  - src: "/images/customers/2.png"
-    alt: "Catalog"
-  - src: "/images/customers/3.png"
-    alt: "Sisphus"
-  - src: "/images/customers/4.png"
-    alt: "Hourglass"
-  - src: "/images/customers/5.png"
-    alt: "Layers"
+  - src: "/images/clients/logo-allianz.png"
+    alt: "Allianz"
+  - src: "/images/clients/logo-avaloq.png"
+    alt: "Avaloq"
+  - src: "/images/clients/logo-bnp.png"
+    alt: "BNP Paribas"
+  - src: "/images/clients/logo-boc.png"
+    alt: "Bank of China"
+  - src: "/images/clients/logo-cic.png"
+    alt: "CIC"
+  - src: "/images/clients/logo-cpa.png"
+    alt: "CPA Australia"
+  - src: "/images/clients/logo-emc.png"
+    alt: "EMC"
+  - src: "/images/clients/logo-hsbc.png"
+    alt: "HSBC"
+  - src: "/images/clients/logo-ocbc.png"
+    alt: "OCBC"
+  - src: "/images/clients/logo-prudential.png"
+    alt: "Prudential"
+  - src: "/images/clients/logo-sci.png"
+    alt: "SCI"
+  - src: "/images/clients/logo-sim.png"
+    alt: "SIM"
+  - src: "/images/clients/logo-ubs.png"
+    alt: "UBS"
+  - src: "/images/clients/logo-uob.png"
+    alt: "UOB"
 ---

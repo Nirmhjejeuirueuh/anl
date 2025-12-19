@@ -1,10 +1,10 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "**Trusted** by Industry Leaders"
-subtitle: "Client Success Stories"
+title: "What They Say About **Our Company**"
+subtitle: "Testimonials"
 
 button:
-  enable: true
+  enable: false
   label: "Contact Us"
   url: "/contact/"
   rel: ""
@@ -28,113 +28,85 @@ list:
   - enable: true
     rating: 5
     content: |
-      Your strategic planning process helped us identify new market opportunities and develop a clear roadmap for growth. We've seen a significant increase in sales and market share within the past year.
+      Amelia is really an experienced trainer who share real life experiences which is very applicable in real life.
     source:
-      logo: "/images/icons/svg/colored/facebook.svg"
+      logo: ""
       url: ""
     customer:
-      image: "/images/customers/avatar/1.jpg"
-      name: "James Wilson"
-      role: "CEO"
+      image: ""
+      name: "Rachel Yau"
+      role: "Accounting & Finance"
       company:
-        logo: "/images/customers/company-logo/acme.png"
-        name: "Acme Inc."
+        logo: ""
+        name: "JP Morgan Chase Bank, N.A."
   - enable: true
     rating: 5
     content: |
-      We were facing operational inefficiencies that were hindering our productivity. Your team's analysis and recommendations streamlined our processes, leading to cost savings and improved efficiency.
+      Amelia's training program on Managing Internal Fraud through systems, culture and controls was comprehensive, well-structured, and aligned with current regulatory expectations. The practical examples and real-life scenario-based discussions significantly enhanced understanding.
     source:
-      url: "https://www.google.com/example/"
-      logo: "/images/icons/svg/colored/google.svg"
+      url: ""
+      logo: ""
     customer:
-      image: "/images/customers/avatar/2.jpg"
-      name: "David Lee"
-      role: "VP of Operations"
+      image: ""
+      name: "Jerome Chan"
+      role: "Head of Internal Audit"
       company:
-        logo: "/images/customers/company-logo/coo-tech.png"
-        name: "Coo Tech Ltd."
+        logo: ""
+        name: "Great Eastern Life Assurance Co Ltd"
   - enable: true
     rating: 5
     content: |
-      Your strategic planning helped us streamline operations and unlock new market opportunities. We've seen a remarkable 25% increase in revenue within the last year.
+      The course trainer, Amelia Ching, was very approachable, lively and engaging. The whole course was well-organised, well structured, and informative, making it easy to understand. The case study for the group assignment was meaningful and practical, allowing us to apply what we had learned in practice.
     source:
-      url: "https://www.twitter.com/example/"
-      logo: "/images/icons/svg/colored/twitter-x.svg"
+      url: ""
+      logo: ""
     customer:
-      image: "/images/customers/avatar/3.jpg"
-      name: "Michael Thompson"
-      role: "CEO"
+      image: ""
+      name: "Johanna Sng"
+      role: "AML/KYC"
       company:
-        logo: "/images/customers/company-logo/acme.png"
-        name: "Acme Inc."
+        logo: ""
+        name: "IQ-EQ Singapore"
   - enable: true
     rating: 5
     content: |
-      The data-driven approach of your team was instrumental in optimizing our production processes. We've achieved significant cost savings while maintaining sustainability goals
+      Attended Amelia's Taking Cloud Security to the next Level – her strong experience in this domain is demonstrated by the several use cases shared. Attended 101 on cloud security and witnessed the same high level of participation!
     source:
-      url: "https://www.facebook.com/example/"
-      logo: "/images/icons/svg/colored/facebook.svg"
+      url: ""
+      logo: ""
     customer:
-      image: "/images/customers/avatar/1.jpg"
-      name: "Sarah Jones"
-      role: "Head of Engineering"
+      image: ""
+      name: "Adeline Wee"
+      role: "Group Risk Management"
       company:
-        logo: "/images/customers/company-logo/technovation.png"
-        name: "Technovation Inc."
+        logo: ""
+        name: "OCBC"
   - enable: true
     rating: 5
     content: |
-      Your strategic planning process helped us identify new market opportunities and develop a clear roadmap for growth. We've seen a significant increase in sales and market share within the past year.
+      It was a real pleasure attending your session today at SMU. I truly enjoyed the insights you shared, and your approach gave me a lot of valuable takeaways. I'd love to stay connected, as I greatly value your perspective and would like to keep in touch for potential opportunities to learn from you further in the future.
     source:
-      url: "https://www.facebook.com/example/"
-      logo: "/images/icons/svg/colored/facebook.svg"
+      url: ""
+      logo: ""
     customer:
-      image: "/images/customers/avatar/1.jpg"
-      name: "James Wilson"
-      role: "CEO"
+      image: ""
+      name: "Aruna Namasivayam"
+      role: "Financial/Insurance Services Manager"
       company:
-        logo: "/images/customers/company-logo/acme.png"
-        name: "Acme Inc."
+        logo: ""
+        name: "Deloitte & Touche Financial Advisory"
   - enable: true
     rating: 5
     content: |
-      We were facing operational inefficiencies that were hindering our productivity. Your team's analysis and recommendations streamlined our processes, leading to cost savings and improved efficiency.
+      Attended training on Agile for Successful Project Implementation. Amelia is a very passionate trainer with a strong sharing disposition. If you wish to learn more about IT matters regarding Agile, just go for her training - you will be wasting time trying to find other providers.
     source:
-      url: "https://www.google.com/example/"
-      logo: "/images/icons/svg/colored/google.svg"
+      url: ""
+      logo: ""
     customer:
-      image: "/images/customers/avatar/2.jpg"
-      name: "David Lee"
-      role: "VP of Operations"
+      image: ""
+      name: "James Chew"
+      role: "Project Manager"
       company:
-        logo: "/images/customers/company-logo/coo-tech.png"
-        name: "Coo Tech Ltd."
-  - enable: true
-    rating: 5
-    content: |
-      Your strategic planning helped us streamline operations and unlock new market opportunities. We've seen a remarkable 25% increase in revenue within the last year.
-    source:
-      url: "https://www.twitter.com/example/"
-      logo: "/images/icons/svg/colored/twitter-x.svg"
-    customer:
-      image: "/images/customers/avatar/3.jpg"
-      name: "Michael Thompson"
-      role: "CEO"
-      company:
-        logo: "/images/customers/company-logo/acme.png"
-        name: "Acme Inc."
-  - enable: true
-    rating: 5
-    content: |
-      The data-driven approach of your team was instrumental in optimizing our production processes. We've achieved significant cost savings while maintaining sustainability goals
-    source:
-      url: "https://www.facebook.com/example/"
-      logo: "/images/icons/svg/colored/facebook.svg"
-    customer:
-      image: "/images/customers/avatar/1.jpg"
-      name: "Sarah Jones"
-      role: "Head of Engineering"
-      company:
-        logo: "/images/customers/company-logo/technovation.png"
-        name: "Technovation Inc."
+        logo: ""
+        name: "TYS Consultancy Pte Ltd"
 ---

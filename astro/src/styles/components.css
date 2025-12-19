@@ -204,11 +204,36 @@ header {
 /* Show main logo in footer */
 footer {
   .logo-text {
-    @apply text-h5 text-black;
+    display: none;
+  }
+
+  .responsive-brand-text {
+    display: none;
   }
 
   .logo-alternate {
     @apply hidden;
+  }
+
+  /* Add gray circle background to LinkedIn icon */
+  a[href*="linkedin"] {
+    background: #e5e7eb !important;
+    border-radius: 50% !important;
+  }
+
+  /* Make LinkedIn icon and container bigger */
+  a[href*="linkedin"] {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  a[href*="linkedin"] svg {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  a[href*="linkedin"]:hover svg {
+    color: #db2f22 !important;
   }
 }
 
@@ -440,22 +465,7 @@ footer {
 }
 
 /* Brand Text Located in Footer */
-.responsive-brand-text {
-  font-size: clamp(4.5rem, 1rem + (1.5vw - 0.2rem) * 28.6567, 25rem);
-
-  /* Safari resize fix */
-  min-height: 0vw;
-
-  @media screen and (max-width: 103.6875rem) {
-    /* 4.5rem(72px) @ 20rem(320px) increasing to 25rem(400px) @ 103.75rem(1660px) */
-    font-size: clamp(
-      4.5rem,
-      1rem + (1.5vw - 0.2rem) * 28.6567,
-      calc(25vw - 100%)
-    );
-    /* Where: 28.6567 = 100 * font-size_difference / viewport_width_difference */
-  }
-}
+/* Moved to footer rule to avoid @apply issues */
 
 /* Text Highlight */
 .has-text-highlight > strong {
@@ -557,6 +567,7 @@ header a:not([class*="btn"]):hover {
   position: relative;
   overflow: hidden;
   background: transparent;
+  min-height: 100vh;
 }
 
 /* Show background image */
@@ -578,7 +589,7 @@ header a:not([class*="btn"]):hover {
 }
 
 .banner::after {
-  background: radial-gradient(ellipse 900px 700px at bottom left, rgba(219, 47, 34, 0.1) 0%, transparent 55%);
+  background: radial-gradient(ellipse 900px 700px at bottom left, rgba(138, 243, 255, 0.1) 0%, transparent 55%);
   opacity: 1;
   z-index: 2;
 }
@@ -614,22 +625,7 @@ header a:not([class*="btn"]):hover {
   box-shadow: 0 6px 20px rgba(219, 47, 34, 0.4);
 }
 
-/* Services Section - Dark Blue Background */
-.services-section,
-section:has(.service-card),
-section:has([class*="service"]) {
-  background: #00025d;
-  color: white;
-}
-
-.services-section h2,
-.services-section h3,
-.services-section p,
-section:has(.service-card) h2,
-section:has(.service-card) h3,
-section:has(.service-card) p {
-  color: white;
-}
+/* Services Section - Removed blue background to allow component-level styling */
 
 /* Removed NUCLEAR OPTION - let buttons use their natural hover styles */
 

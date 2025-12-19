@@ -44,12 +44,13 @@ leadershipTeam:
     hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 
   # Set the maximum number of team members to display in this component instance
-  limit: 3 # false / number
+  limit: false # false / number
 
 members:
-  - image: "/images/team/1.jpg"
-    name: "Sarah Johnson"
-    role: "CEO & Founder"
+  - image: "/images/team/AmeliaChing.png"
+    name: "Amelia Ching"
+    role: "CEO and Founder"
+    description: "Amelia, with 25+ years in banking, has trained 3,000+ professionals in cybersecurity, cloud security, and IT risk. Author of \"The Art of Cyber Resilience,\" she's known for practical, engaging training with immediate workplace impact."
     leadershipTeam: true
     social:
       enable: true
@@ -58,13 +59,10 @@ members:
           label: "Linkedin"
           icon: "/images/icons/social/linkedin.svg"
           url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
-  - image: "/images/team/2.jpg"
-    name: "Jane Smith"
-    role: "Chief Financial Officer"
+  - image: "/images/team/JaneLee.png"
+    name: "Jane Lee"
+    role: "Agile Program Manager"
+    description: "Jane Lee has over 30 years in banking, finance, and training consultancy, with experience in project management, data governance, and information security. Background includes compliance, risk control, and Agile practices, supported by strong stakeholder and team leadership."
     leadershipTeam: true
     social:
       enable: true
@@ -73,13 +71,10 @@ members:
           label: "Linkedin"
           icon: "/images/icons/social/linkedin.svg"
           url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
-  - image: "/images/team/3.jpg"
-    name: "Robert Brown"
-    role: "Chief Operating Officer"
+  - image: "/images/team/EngKiat.png"
+    name: "Low Eng Kiat"
+    role: "Technology Manager"
+    description: "Eng Kiat Low is a seasoned technology and operations leader with over 20 years' experience across banking, aviation, and tech. He has led global teams delivering mission-critical platforms in digital banking, payments, and secure technologies. Previously, he co-founded Secur3DP+ and held senior roles at IDEMIA, NCS, and Singapore Airlines. With a foundation in accountancy from NTU, Eng Kiat blends financial insight with technical expertise and people-focused leadership, known for driving innovation, operational resilience, and large-scale transformation."
     leadershipTeam: true
     social:
       enable: true
@@ -88,13 +83,11 @@ members:
           label: "Linkedin"
           icon: "/images/icons/social/linkedin.svg"
           url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
-  - image: "/images/team/4.jpg"
-    name: "Mark Thompson"
-    role: "Chief Engineer"
+  - image: "/images/team/KinWei.png"
+    name: "Soh Kin Wei"
+    role: "Advisor"
+    description: "With 30+ years in digital leadership, Kin Wei has shaped global transformations while mentoring future leaders. Recognised as Tech Talent Builder of the Year 2023, he empowers organisations to innovate and build a future-ready digital workforce."
+    leadershipTeam: true
     social:
       enable: true
       list:
@@ -102,13 +95,11 @@ members:
           label: "Linkedin"
           icon: "/images/icons/social/linkedin.svg"
           url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
-  - image: "/images/team/5.jpg"
-    name: "Michael Davis"
-    role: "Marketing"
+  - image: "/images/team/SeanLow.png"
+    name: "Sean Low"
+    role: "Advisor"
+    description: "Sean Low, a seasoned advisor with 20+ years' experience, has guided C-suites, multinationals, and governments in digital transformation, deep tech, and global partnerships, driving measurable growth, innovation, and responsible adoption."
+    leadershipTeam: true
     social:
       enable: true
       list:
@@ -116,13 +107,11 @@ members:
           label: "Linkedin"
           icon: "/images/icons/social/linkedin.svg"
           url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
-  - image: "/images/team/6.jpg"
-    name: "Linda White"
-    role: "Sales"
+  - image: "/images/team/TimothyChan.png"
+    name: "Timothy Chan"
+    role: "Advisor"
+    description: "With 20+ years in IT leadership, Timothy bridges business and technology through a human-centred approach, fostering high-performing teams, advancing cybersecurity resilience, and guiding organisations through digital change."
+    leadershipTeam: true
     social:
       enable: true
       list:
@@ -130,23 +119,4 @@ members:
           label: "Linkedin"
           icon: "/images/icons/social/linkedin.svg"
           url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
-
-  - image: "/images/team/7.jpg"
-    name: "Jessica Harris"
-    role: "Design"
-    social:
-      enable: true
-      list:
-        - enable: true
-          label: "Linkedin"
-          icon: "/images/icons/social/linkedin.svg"
-          url: "https://www.linkedin.com/"
-        - enable: true
-          label: "x-twitter"
-          icon: "/images/icons/social/twitter.svg"
-          url: "https://twitter.com/"
 ---
