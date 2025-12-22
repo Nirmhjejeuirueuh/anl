@@ -55,7 +55,8 @@ html::-webkit-scrollbar-corner {
   background: #F9FAFB;
 }
 
-/* Global Section Spacing */
+/* Global Section Spacing - REMOVED */
+/*
 main.has-section-spacing-none section,
 .has-call-to-action {
   @apply pt-0;
@@ -70,6 +71,7 @@ main.has-section-spacing-lg > section,
 .has-call-to-action {
   @apply pt-16 md:pt-28;
 }
+*/
 
 h1,
 h2,

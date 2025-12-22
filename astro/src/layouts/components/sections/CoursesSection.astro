@@ -159,7 +159,7 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
             {courses && showCoursesAs === "static" ? (
               <>
                 <div class="bg-white rounded-lg p-6 shadow-sm">
-                  <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 pt-4 courses-container" id="courses-grid">
+                  <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 py-4 courses-container" id="courses-grid">
                   {courses.slice(0, COURSES_PER_PAGE).map((item, index) => (
                     <ServiceCard
                       data-aos="fade-up-sm"
@@ -168,6 +168,7 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
                         "box-shadow-primary": colorScheme === "light",
                       }}
                       content={item as any}
+                      showImage={false}
                     />
                   ))}
                   </div>
@@ -179,8 +180,8 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
                       class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled
                     >
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                      <svg class="w-5 h-5 pagination-arrow" fill="none" viewBox="0 0 24 24" stroke="#ffffff">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" stroke="#ffffff"></path>
                       </svg>
                     </button>
 
@@ -208,8 +209,8 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
                       }`}
                       disabled={totalPages <= 1}
                     >
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      <svg class="w-5 h-5 pagination-arrow" fill="none" viewBox="0 0 24 24" stroke="#ffffff">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" stroke="#ffffff"></path>
                       </svg>
                     </button>
                     </div>
@@ -232,6 +233,7 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
                     "box-shadow-primary": colorScheme === "light",
                   }}
                   content={item as any}
+                  showImage={false}
                 />
               ))}
               </div>
@@ -254,9 +256,13 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
       function updatePaginationButtons() {
         if (prevBtn) {
           prevBtn.disabled = currentPage === 1;
+          const svg = prevBtn.querySelector('svg path');
+          if (svg) svg.style.stroke = 'white';
         }
         if (nextBtn) {
           nextBtn.disabled = currentPage === totalPages;
+          const svg = nextBtn.querySelector('svg path');
+          if (svg) svg.style.stroke = 'white';
         }
 
         // Update page number buttons
@@ -343,6 +349,23 @@ const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "st
 
       // Initialize
       updatePaginationButtons();
+      
+      // Force white stroke on pagination arrows
+      document.querySelectorAll('.pagination-arrow, .pagination-arrow path').forEach(el => {
+        el.setAttribute('stroke', '#ffffff');
+      });
     </script>
+
+    <style>
+      .pagination-arrow,
+      .pagination-arrow path {
+        stroke: #ffffff !important;
+      }
+      
+      #prev-page:hover .pagination-arrow path,
+      #next-page:hover .pagination-arrow path {
+        stroke: #3b82f6 !important;
+      }
+    </style>
   )}
 </section>

@@ -294,6 +294,8 @@ const courseCollection = defineCollection({
       favorite: z.boolean().optional(),
       hyperlink: z.string().optional(),
       status: z.string().optional(),
+      trainingTime: z.string().optional(),
+      trainingDate: z.string().optional(),
       hasCustomLineAnimationBg: z.boolean().optional(),
       courseDetailsMarquee: marqueeConfig.optional(),
       coursesSection: courseSection.optional(),

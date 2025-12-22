@@ -12,9 +12,10 @@ import type { CollectionEntry } from "astro:content";
 interface Props {
   content: CollectionEntry<"services">;
   class?: string;
+  showImage?: boolean;
 }
 
-const { content, class: className, ...rest } = Astro.props;
+const { content, class: className, showImage = true, ...rest } = Astro.props;
 const t = await useTranslations(Astro.currentLocale as string);
 const { image, icon, title, description } = content.data;
 
@@ -24,7 +25,7 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
 <div class:list={["bg-white h-full flex flex-col", className]} {...rest}>
   <div class="relative">
     {
-      image && (
+      image && showImage && (
         <OptimizedImage
           src={image}
           alt={toSentenceCase("Image about " + title)}
@@ -34,27 +35,29 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
         />
       )
     }
-    {
-      icon && (
-        <div class="bg-primary absolute -bottom-9 left-8 flex h-20 w-20 items-center justify-center rounded-full fill-white transition duration-300">
-          <Icons
-            icon={icon as any}
-            class="h-10 w-10 stroke-1 text-white transition duration-300"
-          />
-        </div>
-      )
-    }
   </div>
-  <div class="px-8 pt-16 pb-10 flex flex-col h-full">
-    {
-      title && (
-        <h3
-          class="text-h4 after:bg-primary relative mb-4 inline-block pb-2 opacity-80 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-10"
-          set:html={title}
-        />
-      )
-    }
-    {description && <p class="text-text-default opacity-80 flex-1" set:html={description} />}
+  <div class="px-8 pt-10 pb-10 flex flex-col h-full">
+    <div class="flex items-center gap-3 mb-4">
+      {
+        icon && (
+          <div class="bg-primary flex h-12 w-12 items-center justify-center rounded-full fill-white transition duration-300 flex-shrink-0">
+            <Icons
+              icon={icon as any}
+              class="h-6 w-6 stroke-1 text-white transition duration-300"
+            />
+          </div>
+        )
+      }
+      {
+        title && (
+          <h3
+            class="text-h4 after:bg-primary relative inline-block pb-2 opacity-80 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-10"
+            set:html={title}
+          />
+        )
+      }
+    </div>
+    {description && <p class="text-text-default opacity-80 flex-1" set:html={description.length > 200 ? description.substring(0, 200) + '...' : description} />}
     <div class="mt-auto pt-4">
       <CustomButton
         variant="text"
