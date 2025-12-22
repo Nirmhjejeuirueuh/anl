@@ -104,7 +104,6 @@ const coursesData = courses.map(course => ({
         <option value="duration-asc">Duration (Shortest)</option>
         <option value="duration-desc">Duration (Longest)</option>
         <option value="category-asc">Category (A-Z)</option>
-        <option value="favorite-first">Favorites First</option>
       </select>
     </div>
 
@@ -119,7 +118,7 @@ const coursesData = courses.map(course => ({
       >
         <option value="">All Audiences</option>
         {targetAudiences.map(audience => (
-          <option value={audience}>{audience.length > 50 ? audience.substring(0, 50) + '...' : audience}</option>
+          <option value={audience}>{audience && audience.length > 50 ? audience.substring(0, 50) + '...' : audience}</option>
         ))}
       </select>
     </div>
@@ -132,7 +131,7 @@ const coursesData = courses.map(course => ({
     </div>
     <button
       id="clear-filters"
-      class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors hidden"
+      class="px-4 py-2 text-sm text-[#db2f22] hover:text-white border border-[#db2f22] rounded-md hover:bg-[#db2f22] transition-colors hidden"
     >
       Clear All Filters
     </button>
@@ -145,25 +144,32 @@ const coursesData = courses.map(course => ({
     constructor() {
       this.courses = coursesData;
       this.filteredCourses = [...this.courses];
-      this.currentView = 'grid';
 
       this.searchInput = document.getElementById('course-search');
       this.categoryFilter = document.getElementById('category-filter');
       this.durationFilter = document.getElementById('duration-filter');
       this.audienceFilter = document.getElementById('audience-filter');
       this.sortSelect = document.getElementById('sort-select');
-      this.viewSelect = document.getElementById('view-select');
       this.clearFiltersBtn = document.getElementById('clear-filters');
       this.activeFiltersContainer = document.getElementById('active-filters');
       this.courseCount = document.getElementById('course-count');
       this.courseContainer = document.querySelector('.courses-container');
 
+      this.loadFiltersFromStorage();
       this.init();
     }
 
     init() {
       // Store initial state - don't interfere with initial layout
       this.hasInteracted = false;
+
+      // Check if all required elements exist
+      if (!this.searchInput || !this.categoryFilter || !this.durationFilter ||
+          !this.audienceFilter || !this.sortSelect ||
+          !this.clearFiltersBtn || !this.activeFiltersContainer || !this.courseCount) {
+        console.error('CourseFilters: Some required elements are missing');
+        return;
+      }
 
       // Event listeners - only activate filtering when user interacts
       this.searchInput.addEventListener('input', () => {
@@ -186,15 +192,23 @@ const coursesData = courses.map(course => ({
         this.hasInteracted = true;
         this.sortAndRenderCourses();
       });
-      this.viewSelect.addEventListener('change', (e) => {
-        this.hasInteracted = true;
-        this.changeView(e.target.value);
-        // Force re-render when view changes
-        this.sortAndRenderCourses();
-      });
       this.clearFiltersBtn.addEventListener('click', () => {
         this.hasInteracted = false;
         this.clearAllFilters();
+      });
+
+      // Event delegation for filter remove buttons
+      this.activeFiltersContainer.addEventListener('click', (e) => {
+        const removeBtn = e.target.closest('.filter-remove-btn');
+        if (removeBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          const index = parseInt(removeBtn.getAttribute('data-filter-index'), 10);
+          if (!isNaN(index) && this.activeFilters && this.activeFilters[index]) {
+            const filter = this.activeFilters[index];
+            this.removeFilter(filter.type);
+          }
+        }
       });
 
       // Just update count initially - don't modify layout
@@ -232,6 +246,7 @@ const coursesData = courses.map(course => ({
 
       this.updateActiveFilters();
       this.sortAndRenderCourses();
+      this.saveFiltersToStorage();
     }
 
     sortCourses(courses) {
@@ -249,10 +264,6 @@ const coursesData = courses.map(course => ({
             return (b.trainingDays || 0) - (a.trainingDays || 0);
           case 'category-asc':
             return (a.category || '').localeCompare(b.category || '');
-          case 'favorite-first':
-            if (a.favorite && !b.favorite) return -1;
-            if (!a.favorite && b.favorite) return 1;
-            return a.title.localeCompare(b.title);
           default:
             return 0;
         }
@@ -263,12 +274,13 @@ const coursesData = courses.map(course => ({
       const sortedCourses = this.sortCourses(this.filteredCourses);
       this.renderCourses(sortedCourses);
       this.updateCourseCount();
+      this.saveFiltersToStorage();
     }
 
     renderCourses(courses) {
       if (!this.courseContainer) return;
 
-      // Only replace content if user has interacted with filters
+      // Only filter/render if user has interacted with filters
       if (!this.hasInteracted) return;
 
       // Clear existing courses
@@ -293,84 +305,48 @@ const coursesData = courses.map(course => ({
         const courseElement = this.createCourseElement(course, index);
         this.courseContainer.appendChild(courseElement);
       });
+
+      // Initialize lucide icons for newly rendered content
+      this.initLucideIcons();
     }
 
     createCourseElement(course, index) {
       const div = document.createElement('div');
-      div.className = this.currentView === 'grid'
-        ? 'course-card'
-        : 'course-card-list';
-
-      // Add animation delay
+      div.className = 'bg-white h-full flex flex-col';
       div.style.animationDelay = `${(index % 9) * 100}ms`;
 
-      const favoriteIcon = course.favorite
-        ? '<svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>'
-        : '';
+      // Create course slug for URL
+      const courseSlug = course.id.replace(/\.mdx?|\.md/g, "").split("/").pop();
 
-      if (this.currentView === 'grid') {
-        div.innerHTML = `
-          <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden h-full">
-            ${course.image ? `<img src="${course.image}" alt="${course.title}" class="w-full h-48 object-cover">` : ''}
-            <div class="p-6">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  ${course.icon ? `<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">${course.icon}</div>` : ''}
-                  ${favoriteIcon}
-                </div>
-                ${course.trainingDays ? `<span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">${course.trainingDays} day${course.trainingDays > 1 ? 's' : ''}</span>` : ''}
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">${course.title}</h3>
-              ${course.category ? `<p class="text-sm text-primary font-medium mb-2">${course.category}</p>` : ''}
-              <p class="text-gray-600 text-sm line-clamp-3 mb-4">${course.description}</p>
-              <div class="flex items-center justify-between">
-                <a href="/courses/${course.id.replace('.md', '')}" class="text-primary hover:text-primary-dark font-medium text-sm">
-                  Learn More →
-                </a>
-                ${course.moduleCode ? `<span class="text-xs text-gray-400">${course.moduleCode}</span>` : ''}
-              </div>
-            </div>
+      div.innerHTML = `
+        <div class="px-8 pt-10 pb-10 flex flex-col h-full">
+          <div class="flex items-center gap-3 mb-4">
+            ${course.icon ? `<div class="bg-primary flex h-12 w-12 items-center justify-center rounded-full fill-white transition duration-300 flex-shrink-0"><div data-lucide="${course.icon}" class="h-6 w-6 stroke-1 text-white transition duration-300"></div></div>` : ''}
+            <h3 class="text-h4 after:bg-primary relative inline-block pb-2 opacity-80 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-10">${course.title}</h3>
           </div>
-        `;
-      } else {
-        // List view
-        div.innerHTML = `
-          <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-            <div class="flex">
-              ${course.image ? `<img src="${course.image}" alt="${course.title}" class="w-32 h-32 object-cover flex-shrink-0">` : ''}
-              <div class="flex-1 p-6">
-                <div class="flex items-start justify-between mb-3">
-                  <div class="flex items-center gap-3">
-                    ${course.icon ? `<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm">${course.icon}</div>` : ''}
-                    <h3 class="text-xl font-semibold text-gray-900">${course.title}</h3>
-                    ${favoriteIcon}
-                  </div>
-                  ${course.trainingDays ? `<span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded whitespace-nowrap">${course.trainingDays} day${course.trainingDays > 1 ? 's' : ''}</span>` : ''}
-                </div>
-                ${course.category ? `<p class="text-primary font-medium mb-2">${course.category}</p>` : ''}
-                <p class="text-gray-600 mb-4 line-clamp-2">${course.description}</p>
-                <div class="flex items-center justify-between">
-                  <a href="/courses/${course.id.replace('.md', '')}" class="text-primary hover:text-primary-dark font-medium">
-                    Learn More →
-                  </a>
-                  ${course.moduleCode ? `<span class="text-xs text-gray-400">${course.moduleCode}</span>` : ''}
-                </div>
-              </div>
+
+          ${course.category || course.moduleCode || course.trainingDays ? `
+            <div class="flex flex-wrap gap-3 mb-3 text-xs">
+              ${course.category ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#00025d]/10 text-[#00025d] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>${course.category}</span>` : ''}
+              ${course.moduleCode ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#FFEB3B]/10 text-[#14342B] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>${course.moduleCode}</span>` : ''}
+              ${course.trainingDays ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#43b14b]/10 text-[#43b14b] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${course.trainingDays} day${course.trainingDays > 1 ? 's' : ''}</span>` : ''}
             </div>
+          ` : ''}
+
+          <p class="text-text-default opacity-80 flex-1">${course.description && course.description.length > 200 ? course.description.substring(0, 200) + '...' : course.description}</p>
+
+          <div class="mt-auto pt-4">
+            <a href="/courses/${courseSlug}" class="text-primary hover:text-primary/80 font-medium text-sm capitalize">
+              Read More →
+            </a>
           </div>
-        `;
-      }
+        </div>
+      `;
 
       return div;
     }
 
-    changeView(view) {
-      this.currentView = view;
-      this.courseContainer.className = view === 'grid'
-        ? 'grid gap-5 md:grid-cols-2 lg:grid-cols-3 courses-container'
-        : 'space-y-4 courses-container';
-      this.sortAndRenderCourses();
-    }
+
 
     updateActiveFilters() {
       const activeFilters = [];
@@ -391,10 +367,13 @@ const coursesData = courses.map(course => ({
         activeFilters.push({ type: 'audience', value: this.audienceFilter.value, label: `Audience: ${this.audienceFilter.value.length > 30 ? this.audienceFilter.value.substring(0, 30) + '...' : this.audienceFilter.value}` });
       }
 
-      this.activeFiltersContainer.innerHTML = activeFilters.map(filter => `
-        <span class="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+      // Store current active filters for removal
+      this.activeFilters = activeFilters;
+
+      this.activeFiltersContainer.innerHTML = activeFilters.map((filter, index) => `
+        <span class="inline-flex items-center gap-1 px-3 py-1 bg-[#43b14b]/10 text-[#43b14b] rounded-full text-sm filter-tag border border-[#43b14b]/20">
           ${filter.label}
-          <button class="hover:bg-primary/20 rounded-full p-0.5" onclick="courseFilters.removeFilter('${filter.type}', '${filter.value}')">
+          <button class="hover:bg-[#43b14b]/20 rounded-full p-0.5 filter-remove-btn transition-colors" type="button" data-filter-index="${index}">
             <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
@@ -405,7 +384,7 @@ const coursesData = courses.map(course => ({
       this.clearFiltersBtn.classList.toggle('hidden', activeFilters.length === 0);
     }
 
-    removeFilter(type, value) {
+    removeFilter(type) {
       switch (type) {
         case 'search':
           this.searchInput.value = '';
@@ -420,6 +399,7 @@ const coursesData = courses.map(course => ({
           this.audienceFilter.value = '';
           break;
       }
+      this.hasInteracted = true;
       this.filterCourses();
     }
 
@@ -429,7 +409,50 @@ const coursesData = courses.map(course => ({
       this.durationFilter.value = '';
       this.audienceFilter.value = '';
       this.hasInteracted = false;
+      localStorage.removeItem('courseFilters');
       this.filterCourses();
+    }
+
+    async initLucideIcons() {
+      // Call the global initLucide function
+      if (typeof window.initLucide === 'function') {
+        await window.initLucide();
+      }
+    }
+
+    loadFiltersFromStorage() {
+      try {
+        const savedFilters = localStorage.getItem('courseFilters');
+        if (savedFilters) {
+          const filters = JSON.parse(savedFilters);
+          
+          if (filters.search) this.searchInput.value = filters.search;
+          if (filters.category) this.categoryFilter.value = filters.category;
+          if (filters.duration) this.durationFilter.value = filters.duration;
+          if (filters.audience) this.audienceFilter.value = filters.audience;
+          if (filters.sort) this.sortSelect.value = filters.sort;
+          
+          // Mark as interacted if any filters were loaded
+          this.hasInteracted = !!(filters.search || filters.category || filters.duration || filters.audience);
+        }
+      } catch (error) {
+        console.error('Failed to load filters from storage:', error);
+      }
+    }
+
+    saveFiltersToStorage() {
+      try {
+        const filters = {
+          search: this.searchInput.value,
+          category: this.categoryFilter.value,
+          duration: this.durationFilter.value,
+          audience: this.audienceFilter.value,
+          sort: this.sortSelect.value
+        };
+        localStorage.setItem('courseFilters', JSON.stringify(filters));
+      } catch (error) {
+        console.error('Failed to save filters to storage:', error);
+      }
     }
 
     updateCourseCount() {

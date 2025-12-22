@@ -1,6 +1,6 @@
 ---
-title: "Tutoriels & Guides"
-description: "Ceci est un exemple de description m ta"
+title: "Analyses & Mises à Jour"
+description: "Restez informé avec les dernières analyses sur la technologie, la finance, la cybersécurité et les tendances du secteur de l'équipe d'experts d'AgileN Lite."
 
 disableTagline: true
 draft: false

@@ -21,9 +21,7 @@ const response = handleDraftPage(contactIndex?.data);
 if (response) return response;
 ---
 
-<Base fitToScreen={false} {...contactIndex?.data}>
+<Base fitToScreen={false} {...contactIndex?.data} class="py-12">
   <ContactSection />
-  <div class="!mt-0">
     <CallToAction />
-  </div>
 </Base>

@@ -1,6 +1,6 @@
 ---
-title: "Tutorials & Guides"
-metaDescription: "This is a example description"
+title: "Insights & Updates"
+metaDescription: "Stay informed with the latest insights on technology, finance, cybersecurity, and industry trends from AgileN Lite's expert team."
 
 disableTagline: true
 draft: false

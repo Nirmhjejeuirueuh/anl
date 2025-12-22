@@ -21,11 +21,12 @@
   --color-dark: #00025d;         /* Primary Navy - Headings */
   --color-light: #949494;        /* Gray-500 - Muted text */
 
-  /* Additional Brand Colors */
+  /* Additional Brand Colors from CLAUDE.md */
   --color-success: #43b14b;      /* Accent Green */
   --color-info: #8af3ff;         /* Primary Cyan */
   --color-warning: #FFEB3B;      /* Accent Yellow */
   --color-danger: #db2f22;       /* Accent Red */
+  --color-dark-green: #14342B;   /* Dark Green */
 
   /* Hero Background */
   --color-hero-bg: #00025d;      /* Primary Navy */
