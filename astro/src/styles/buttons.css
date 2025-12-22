@@ -44,6 +44,11 @@
   @apply border border-white bg-transparent text-white;
 }
 
+/* Override rounded corners for ghost buttons */
+.btn.btn--ghost.btn--sm {
+  @apply rounded-none;
+}
+
 *[class*="btn"] {
   & ~ .icons-wrapper {
     @apply flex h-12 w-12 items-center justify-center rounded-full;

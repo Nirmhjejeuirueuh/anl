@@ -31,7 +31,8 @@ let { sectionSpacing = "lg", structuredData } = Astro.props;
 
 // Section spacing class
 const sectionSpacingClass =
-  sectionSpacing === "md" ? "has-section-spacing-md" : "has-section-spacing-lg";
+  sectionSpacing === "md" ? "has-section-spacing-md" :
+  sectionSpacing === "none" ? "has-section-spacing-none" : "has-section-spacing-lg";
 ---
 
 <!doctype html>

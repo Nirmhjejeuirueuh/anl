@@ -47,6 +47,7 @@
   # - "src/content.config.ts" collection object
   blogFolder      = "blog" # Folder where blog posts are stored
   servicesFolder  = "services" # Folder where services are stored
+  coursesFolder   = "courses" # Folder where courses are stored
   portfolioFolder = "case-studies" # Folder where case-studies or projects or portfolio are stored
 
   pagination   = 4 # Number of posts displayed on each page blog list page

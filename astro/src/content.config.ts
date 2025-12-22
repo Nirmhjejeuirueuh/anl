@@ -263,11 +263,63 @@ export const portfolioCollection = defineCollection({
   ),
 });
 
+// Course collection schema
+const courseSection = z.object({
+  enable: z.boolean().optional(),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  creativeShape: z
+    .object({
+      enable: z.boolean(),
+      position: z.enum(["top", "bottom"]),
+    })
+    .optional(),
+  cta: z.enum(["link", "slider-nav"]).optional(),
+  colorScheme: z.enum(["dark", "light"]).optional(),
+  showCoursesAs: z.enum(["slider", "static"]).optional(),
+  limit: z.union([z.number(), z.literal(false)]).optional(),
+  button: sharedButtonTag.optional(),
+});
+
+const courseCollection = defineCollection({
+  schema: page.merge(
+    z.object({
+      icon: z.string().optional(),
+      category: z.string().optional(),
+      moduleCode: z.string().optional(),
+      trainingDays: z.number().optional(),
+      primaryOwner: z.string().optional(),
+      secondaryOwner: z.string().optional(),
+      targetAudience: z.string().optional(),
+      favorite: z.boolean().optional(),
+      hyperlink: z.string().optional(),
+      status: z.string().optional(),
+      hasCustomLineAnimationBg: z.boolean().optional(),
+      courseDetailsMarquee: marqueeConfig.optional(),
+      coursesSection: courseSection.optional(),
+      indexCoursesSection: courseSection.optional(),
+      faqSection: z
+        .object({
+          enable: z.boolean().optional(),
+          title: z.string().optional(),
+          sectionLayout: z.enum(["horizontal", "vertical"]).optional(),
+          minimalFaqLayout: z.boolean().optional(),
+          faqLayoutOnly: z.boolean().optional(),
+          showCategories: z.boolean().optional(),
+          subtitle: z.string().optional(),
+          button: sharedButtonTag.optional(),
+        })
+        .optional(),
+    }),
+  ),
+});
+
 // Export collections
 export const collections = {
   blog: blogCollection,
   services: serviceCollection,
   "case-studies": portfolioCollection,
+  courses: courseCollection,
 
   pages: pagesCollection,
   sections: defineCollection({}),

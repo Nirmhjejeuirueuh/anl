@@ -1,0 +1,348 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import ServiceCard from "@/layouts/components/cards/ServiceCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import config from ".astro/config.generated.json" assert { type: "json" };
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import CustomButton from "../CustomButton.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Icons from "@/helpers/Icons.astro";
+
+// Type for course section data
+export type sectionType = Section & {
+  limit?: number | boolean;
+  cta?: "link" | "slider-nav";
+  colorScheme?: "light" | "dark";
+  showCoursesAs?: "slider" | "static";
+  creativeShape?: { enable: boolean; position: "top" | "bottom" };
+};
+type Props = {
+  content?: sectionType;
+};
+
+
+// Fetching the default content for the course section
+let defaultContent = (
+  await getEntryCTM("sections", "courses-section", Astro.currentLocale)
+)?.data as sectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as sectionType;
+
+// Extracting required values from 'content' object
+let {
+  cta,
+  limit,
+  title,
+  enable,
+  button,
+  subtitle,
+  colorScheme,
+  creativeShape,
+  showCoursesAs: originalShowCoursesAs,
+} = actualContent as sectionType;
+
+// Force static display and disable navigation
+const showCoursesAs = "static";
+const finalCta = "link";
+
+if (!enable) return;
+
+let courses = await getCollectionCTM(
+  "courses" as any,
+  Astro.currentLocale,
+) as CollectionEntry<"courses">[];
+
+// Limit the number of courses to be displayed
+courses = limit ? courses.slice(0, limit as number) : courses;
+
+// Pagination setup
+const COURSES_PER_PAGE = 9;
+const totalPages = Math.ceil(courses.length / COURSES_PER_PAGE);
+const hasPagination = courses.length > COURSES_PER_PAGE && showCoursesAs === "static";
+---
+
+<section
+  class:list={[
+    "-mt-4 md:-mt-6 relative overflow-hidden",
+    {
+      "overflow-hidden":
+        creativeShape?.enable && creativeShape?.position !== "top",
+    },
+  ]}>
+  {/* Background Patterns */}
+  <div class="pointer-events-none absolute top-0 left-0 z-0 h-40 w-44 opacity-30 md:opacity-100">
+    <OptimizedImage
+      inlineSvg={true}
+      class="text-primary h-full w-full object-cover"
+      src="/images/shapes/footer-bg-pattern-1.svg"
+      alt="pattern"
+    />
+  </div>
+  <div class="pointer-events-none absolute top-20 right-0 z-0 h-40 w-40 opacity-30 md:opacity-100">
+    <OptimizedImage
+      inlineSvg={true}
+      class="text-secondary h-full w-full object-cover"
+      src="/images/shapes/footer-bg-pattern-1.svg"
+      alt="pattern"
+    />
+  </div>
+  <div
+    class:list={[
+      "flex flex-col justify-start gap-6 md:gap-8 pt-0 pb-16 md:pb-18",
+      { "bg-theme-dark": colorScheme === "dark", "bg-theme-light": colorScheme === "light" },
+    ]}>
+      <div class="container relative z-10">
+        <div
+          class="flex flex-col flex-wrap justify-between gap-8 lg:flex-row lg:items-center">
+        <div class="shrink-0 lg:lg:max-w-2xl" data-aos="fade-up-sm">
+          {
+            subtitle && (
+              <span
+                class:list={[
+                  "mb-2.5 inline-block rounded-full border px-5 py-px",
+                  colorScheme === "dark"
+                    ? "border-white/5 bg-white/5 text-white"
+                    : "bg-primary/5 border-secondary text-primary",
+                ]}
+                set:html={markdownify(subtitle)}
+              />
+            )
+          }
+          {
+            title && (
+              <h2
+                class:list={[
+                  "text-h3",
+                  colorScheme === "dark" ? "text-white" : "text-dark",
+                ]}
+                set:html={markdownify(title)}
+              />
+            )
+          }
+        </div>
+
+        {
+          button?.enable && cta === "link" ? (
+            // CTA button
+            <div data-aos="fade-up-sm" data-aos-delay="200">
+              <CustomButton {...button} />
+            </div>
+          ) : null
+        }
+      </div>
+    </div>
+    {
+      creativeShape?.enable ? (
+        <div
+          class:list={[
+            "has-light-shape relative after:absolute after:inset-x-0 after:h-screen after:w-full",
+            {
+              "after:top-68.25 after:bg-stone-50 after:md:top-72":
+                creativeShape?.position === "bottom",
+            },
+            {
+              "after:bg-theme-light after:bottom-[calc(100%-18rem)] after:-z-20":
+                creativeShape?.position === "top",
+            },
+          ]}>
+          <div class="relative z-10 container">
+            {courses && showCoursesAs === "static" ? (
+              <>
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                  <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 pt-4 courses-container" id="courses-grid">
+                  {courses.slice(0, COURSES_PER_PAGE).map((item, index) => (
+                    <ServiceCard
+                      data-aos="fade-up-sm"
+                      data-aos-delay={((index % 3) + 1) * 100}
+                      class:list={{
+                        "box-shadow-primary": colorScheme === "light",
+                      }}
+                      content={item as any}
+                    />
+                  ))}
+                  </div>
+
+                  {hasPagination && (
+                    <div class="flex justify-center items-center gap-2 mt-12" id="courses-pagination">
+                    <button
+                      id="prev-page"
+                      class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                      </svg>
+                    </button>
+
+                    <div class="flex gap-1" id="page-numbers">
+                      {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => (
+                        <button
+                          class={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
+                            i === 0
+                              ? 'bg-primary text-white'
+                              : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                          }`}
+                          data-page={i + 1}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      id="next-page"
+                      class={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                        totalPages > 1
+                          ? 'bg-primary text-white hover:bg-primary/80'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                      disabled={totalPages <= 1}
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </button>
+                    </div>
+                  )}
+                  </div>
+              </>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <div class="container relative z-10">
+          {courses && showCoursesAs === "static" ? (
+            <div class="bg-white rounded-lg p-6 shadow-sm">
+              <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 pt-4 courses-container">
+              {courses.map((item, index) => (
+                <ServiceCard
+                  data-aos="fade-up-sm"
+                  data-aos-delay={((index % 3) + 1) * 100}
+                  class:list={{
+                    "box-shadow-primary": colorScheme === "light",
+                  }}
+                  content={item as any}
+                />
+              ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )
+    }
+  </div>
+
+  {hasPagination && (
+    <script is:inline define:vars={{ courses, totalPages, COURSES_PER_PAGE }}>
+      let currentPage = 1;
+
+      const coursesGrid = document.getElementById('courses-grid');
+      const prevBtn = document.getElementById('prev-page');
+      const nextBtn = document.getElementById('next-page');
+      const pageNumbers = document.getElementById('page-numbers');
+
+      function updatePaginationButtons() {
+        if (prevBtn) {
+          prevBtn.disabled = currentPage === 1;
+        }
+        if (nextBtn) {
+          nextBtn.disabled = currentPage === totalPages;
+        }
+
+        // Update page number buttons
+        if (pageNumbers) {
+          const pageBtns = pageNumbers.querySelectorAll('button');
+          pageBtns.forEach((btn, index) => {
+            const pageNum = index + 1;
+            btn.className = `w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
+              pageNum === currentPage
+                ? 'bg-primary text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+            }`;
+          });
+        }
+      }
+
+      function renderCourses(page) {
+        const startIndex = (page - 1) * COURSES_PER_PAGE;
+        const endIndex = startIndex + COURSES_PER_PAGE;
+        const pageCourses = courses.slice(startIndex, endIndex);
+
+        if (coursesGrid) {
+          coursesGrid.innerHTML = pageCourses.map((course, index) => `
+          <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 h-full flex flex-col"
+               data-aos="fade-up-sm" data-aos-delay="${((index % 3) + 1) * 100}ms">
+            <div class="flex flex-col h-full">
+            ${course.image ? `<img src="${course.image}" alt="${course.title}" class="w-full h-48 object-cover">` : ''}
+            <div class="px-6 pt-4 pb-6 flex-1 flex flex-col h-full">
+              ${course.category ? `<span class="mb-2 inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-primary">${course.category}</span>` : ''}
+              <h3 class="text-lg font-semibold text-dark mb-3 line-clamp-2 leading-tight">${course.title}</h3>
+              ${course.description ? `<p class="text-text-default opacity-80 text-sm line-clamp-3 mb-4 flex-1">${course.description}</p>` : ''}
+              ${course.trainingDays ? `<div class="mb-4 flex items-center gap-2 text-xs text-text-default opacity-70"><svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>${course.trainingDays} day${course.trainingDays > 1 ? 's' : ''}</span></div>` : ''}
+              <div class="mt-auto pt-4">
+                <a href="/courses/${course.id.replace('.md', '')}" class="text-primary hover:text-primary/80 font-medium text-sm">
+                  Learn More →
+                </a>
+              </div>
+            </div>
+            </div>
+          </div>
+        `).join('');
+
+        // Re-initialize AOS for new elements
+        if (typeof window !== 'undefined' && window.AOS) {
+          window.AOS.refresh();
+        }
+        }
+      }
+
+      // Event listeners
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderCourses(currentPage);
+          updatePaginationButtons();
+        }
+      });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderCourses(currentPage);
+          updatePaginationButtons();
+        }
+      });
+      }
+
+      if (pageNumbers) {
+        pageNumbers.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.tagName === 'BUTTON') {
+          const pageAttr = target.getAttribute('data-page');
+          if (pageAttr) {
+            currentPage = parseInt(pageAttr);
+            renderCourses(currentPage);
+            updatePaginationButtons();
+          }
+        }
+      });
+      }
+
+      // Initialize
+      updatePaginationButtons();
+    </script>
+  )}
+</section>

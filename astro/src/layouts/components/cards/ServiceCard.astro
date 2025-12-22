@@ -21,7 +21,7 @@ const { image, icon, title, description } = content.data;
 let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
 ---
 
-<div class:list={["bg-white", className]} {...rest}>
+<div class:list={["bg-white h-full flex flex-col", className]} {...rest}>
   <div class="relative">
     {
       image && (
@@ -45,7 +45,7 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
       )
     }
   </div>
-  <div class="px-8 pt-16 pb-10">
+  <div class="px-8 pt-16 pb-10 flex flex-col h-full">
     {
       title && (
         <h3
@@ -54,12 +54,14 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
         />
       )
     }
-    {description && <p class="text-text-default opacity-80" set:html={description} />}
-    <CustomButton
-      variant="text"
-      label={t("common.readMore")}
-      url={slug}
-      class="text-base-sm mt-8 capitalize md:text-base"
-    />
+    {description && <p class="text-text-default opacity-80 flex-1" set:html={description} />}
+    <div class="mt-auto pt-4">
+      <CustomButton
+        variant="text"
+        label={t("common.readMore")}
+        url={slug}
+        class="text-base-sm capitalize md:text-base"
+      />
+    </div>
   </div>
 </div>

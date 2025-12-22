@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.7.4",
+    "@georgedoescode/generative-utils": "^2.0.1",
     "@lucide/astro": "^0.548.0",
     "@popperjs/core": "^2.11.8",
     "@preline/accordion": "^3.2.3",

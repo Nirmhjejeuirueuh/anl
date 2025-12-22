@@ -56,6 +56,11 @@ html::-webkit-scrollbar-corner {
 }
 
 /* Global Section Spacing */
+main.has-section-spacing-none section,
+.has-call-to-action {
+  @apply pt-0;
+}
+
 main.has-section-spacing-md section,
 .has-call-to-action {
   @apply pt-20;
