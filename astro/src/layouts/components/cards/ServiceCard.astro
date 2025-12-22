@@ -17,7 +17,12 @@ interface Props {
 
 const { content, class: className, showImage = true, ...rest } = Astro.props;
 const t = await useTranslations(Astro.currentLocale as string);
-const { image, icon, title, description, category, moduleCode, trainingDays } = content.data;
+const { image, icon, title, description } = content.data;
+
+// Only courses have category, moduleCode, and trainingDays
+const category = 'category' in content.data ? content.data.category : undefined;
+const moduleCode = 'moduleCode' in content.data ? content.data.moduleCode : undefined;
+const trainingDays = 'trainingDays' in content.data ? content.data.trainingDays : undefined;
 
 let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
 ---

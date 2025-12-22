@@ -56,6 +56,9 @@ if (content === "portfolio") {
 
 let posts = content === "blog" ? list : [];
 
+// Filter out items without data
+list = list.filter((item) => item && item.data);
+
 // Filter content list based on category (If provided)
 if (filter?.name) {
   list = list.filter((item) =>

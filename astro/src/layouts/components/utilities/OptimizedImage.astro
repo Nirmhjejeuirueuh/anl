@@ -46,6 +46,12 @@ let {
   ...rest
 } = Astro.props;
 
+// Return null if src is undefined or null
+if (!src) {
+  console.error("OptimizedImage: src is undefined or null");
+  return null;
+}
+
 const isRemoteImage = src.startsWith("http://") || src.startsWith("https://");
 let image = src as any;
 let SVG = "" as any;

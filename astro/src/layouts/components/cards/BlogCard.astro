@@ -28,6 +28,13 @@ const t = await useTranslations(Astro.currentLocale as string);
 const { blogFolder } = config.settings;
 
 let { content, options, class: className, ...rest } = Astro.props;
+
+// Check if content and content.data exist
+if (!content || !content.data) {
+  console.error("BlogCard: Missing content or content.data");
+  return null;
+}
+
 let { title, description, image, author, date, categories } = content.data;
 
 // Get author information
@@ -180,7 +187,7 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
           </h2>
         )}
         <div class="flex flex-wrap-reverse justify-between gap-x-8 gap-y-6">
-          {author && (
+          {author && authorEntry && authorEntry.image && (
             <div class="flex items-center gap-4">
               <OptimizedImage
                 alt={author}
