@@ -7,7 +7,8 @@
  * @returns {Response | undefined} A 404 Response if draft is true; otherwise undefined.
  */
 function handleDraftPage(pageData: any): Response | undefined {
-  if (pageData.draft && import.meta.env.PROD) {
+  // Check if pageData exists and has draft property
+  if (pageData && pageData.draft && import.meta.env.PROD) {
     // Return a 404 response to exclude the page from `dist` folder output
     return new Response(null, {
       status: 404,
