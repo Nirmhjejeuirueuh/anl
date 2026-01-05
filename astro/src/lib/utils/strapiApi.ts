@@ -125,15 +125,62 @@ export async function getFeaturedBlogs(): Promise<StrapiBlog[]> {
 }
 
 /**
+ * Fetch unique categories from Strapi CMS
+ */
+export async function getCategories(): Promise<{ name: string; slug: string; count: number }[]> {
+  try {
+    const blogs = await getBlogs();
+    const categoryMap = new Map<string, number>();
+
+    // Count occurrences of each category
+    blogs.forEach(blog => {
+      if (blog.categories) {
+        const categories = blog.categories.split(',').map(cat => cat.trim());
+        categories.forEach(category => {
+          if (category) {
+            categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+          }
+        });
+      }
+    });
+
+    // Convert to array format expected by Categories component
+    return Array.from(categoryMap.entries()).map(([name, count]) => ({
+      name,
+      slug: name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      count,
+    }));
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
+
+/**
  * Fetch blogs by category from Strapi CMS
  */
 export async function getBlogsByCategory(category: string): Promise<StrapiBlog[]> {
   try {
-    const response = await fetch(`${STRAPI_URL}/api/blogs?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    console.log('getBlogsByCategory: Searching for category:', category);
+    // First try exact match
+    let response = await fetch(`${STRAPI_URL}/api/blogs?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
     if (!response.ok) {
       throw new Error(`Failed to fetch blogs by category: ${response.status}`);
     }
-    const data: StrapiResponse<StrapiBlog> = await response.json();
+    let data: StrapiResponse<StrapiBlog> = await response.json();
+    
+    // If no results, try case-insensitive search by fetching all and filtering
+    if (data.data.length === 0) {
+      console.log('getBlogsByCategory: No exact matches, trying case-insensitive search');
+      const allBlogs = await getBlogs();
+      data.data = allBlogs.filter(blog => {
+        if (!blog.categories) return false;
+        const blogCategories = blog.categories.split(',').map(cat => cat.trim().toLowerCase());
+        return blogCategories.includes(category.toLowerCase());
+      });
+    }
+    
+    console.log('getBlogsByCategory: Found', data.data.length, 'blogs for category:', category);
     return data.data;
   } catch (error) {
     console.error('Error fetching blogs by category:', error);
@@ -149,10 +196,15 @@ export function convertStrapiBlogToAstro(blog: StrapiBlog) {
   let date: Date;
   try {
     const dateString = blog.publishDate || blog.publishedAt || blog.createdAt;
-    date = new Date(dateString);
-    // Check if date is valid
-    if (isNaN(date.getTime())) {
-      // Fallback to current date if invalid
+    if (dateString) {
+      date = new Date(dateString);
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        // Fallback to current date if invalid
+        date = new Date();
+      }
+    } else {
+      // No date available, use current date
       date = new Date();
     }
   } catch (error) {

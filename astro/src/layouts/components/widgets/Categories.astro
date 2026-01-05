@@ -1,8 +1,7 @@
 ---
 import Icons from "@/helpers/Icons.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
-import { getCollectionCTM } from "@/lib/contentParser.astro";
-import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { getCategories } from "@/lib/utils/strapiApi";
 import {
   getLocaleUrlCTM,
   useTranslations,
@@ -18,22 +17,9 @@ interface Props {
   class?: string;
 }
 
-const posts = await getCollectionCTM(
-  config.settings.blogFolder as "blog",
-  Astro.currentLocale,
-);
-
-let categories = (await getTaxonomy(
-  config.settings.blogFolder as "blog",
-  "categories",
-  Astro.currentLocale as string,
-)) as Category[];
+let categories = await getCategories();
 
 categories = categories.map((category) => {
-  const count = posts.filter((post) =>
-    post.data.categories.includes(category.name),
-  ).length;
-
   const slug = getLocaleUrlCTM(
     category.slug,
     Astro.currentLocale,
@@ -42,7 +28,6 @@ categories = categories.map((category) => {
 
   return {
     ...category,
-    count,
     slug,
   };
 });

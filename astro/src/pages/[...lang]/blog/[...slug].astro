@@ -10,11 +10,41 @@ import config from ".astro/config.generated.json" assert { type: "json" };
 import dateFormat from "@/lib/utils/dateFormat";
 
 // Enable SSR for dynamic Strapi content
-export const prerender = false;
+export const prerender = true;
 
-// Return empty array since we're handling all routes dynamically via SSR
+// Generate static paths for all blogs
 export async function getStaticPaths() {
-  return [];
+  try {
+    const { getBlogs } = await import("@/lib/utils/strapiApi");
+    const blogs = await getBlogs();
+    
+    const { supportedLanguages } = await import("@/lib/utils/i18nUtils.ts");
+    const config = await import(".astro/config.generated.json");
+    const { defaultLanguage, showDefaultLangInUrl } = config.default.settings.multilingual;
+    
+    const paths = [];
+    
+    for (const lang of supportedLanguages) {
+      for (const blog of blogs) {
+        const langCode = lang.languageCode === defaultLanguage && !showDefaultLangInUrl 
+          ? undefined 
+          : lang.languageCode;
+          
+        paths.push({
+          params: {
+            lang: langCode,
+            slug: blog.slug
+          },
+          props: { blog }
+        });
+      }
+    }
+    
+    return paths;
+  } catch (error) {
+    console.error('Error generating blog paths:', error);
+    return [];
+  }
 }
 
 const { lang, slug } = Astro.params;
@@ -107,7 +137,9 @@ console.log('🚀 BLOG ROUTE: Parsed content preview:', parsedContent.substring(
               <ul class="mb-2 flex items-center justify-center gap-2">
                 {categories.map((category: string) => (
                   <li class="inline-block text-sm font-medium tracking-wider">
-                    {category}
+                    <a href={`/${lang}/blog/category/${encodeURIComponent(category.toLowerCase().replace(/\s+/g, '-'))}`} class="hover:text-primary transition-colors">
+                      {category}
+                    </a>
                   </li>
                 ))}
                 <li>·</li>

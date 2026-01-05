@@ -55,8 +55,17 @@ if (content === "portfolio") {
 } else if (content === "blog") {
   // Fetch blogs from Strapi API
   console.log('ContentListStrapi: Starting to fetch blogs from Strapi API');
+  console.log('ContentListStrapi: Filter provided:', filter);
   try {
-    const strapiBlogs = await getBlogs();
+    let strapiBlogs;
+    if (filter?.name) {
+      // If category filter is provided, fetch blogs by category
+      console.log('ContentListStrapi: Fetching blogs by category:', filter.name);
+      strapiBlogs = await getBlogsByCategory(filter.name);
+    } else {
+      // Otherwise fetch all blogs
+      strapiBlogs = await getBlogs();
+    }
     console.log('ContentListStrapi: Received blogs from Strapi:', strapiBlogs?.length || 0);
     console.log('ContentListStrapi: First blog sample:', strapiBlogs?.[0] ? {
       title: strapiBlogs[0].title,
@@ -83,7 +92,7 @@ let posts = content === "blog" ? list : [];
 // Filter out items without data
 list = list.filter((item) => item && item.data);
 
-// Filter content list based on category (If provided) - for Strapi this is already handled above
+// Filter content list based on category (only for non-Strapi content)
 if (filter?.name && content !== "blog") {
   list = list.filter((item) =>
     item.data.categories

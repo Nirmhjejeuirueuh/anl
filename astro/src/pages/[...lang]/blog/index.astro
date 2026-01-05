@@ -25,8 +25,8 @@ const response = handleDraftPage(postIndex?.data);
 if (response) return response;
 ---
 
-<Base {...postIndex?.data} fitToScreen={false}>
-  <PageHeader {...postIndex?.data} />
+<Base title="Insights & Updates" fitToScreen={false}>
+  <PageHeader title="Insights & Updates" subtitle="Stay updated with our latest insights and industry updates" />
   <BlogListPage />
   <CallToAction />
 </Base>

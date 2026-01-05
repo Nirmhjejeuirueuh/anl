@@ -1,6 +1,6 @@
 ---
 import config from ".astro/config.generated.json" assert { type: "json" };
-import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getBlogs, convertStrapiBlogToAstro } from "@/lib/utils/strapiApi";
 import BlogCard from "../cards/BlogCard.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { useTranslations } from "@/lib/utils/i18nUtils";
@@ -9,10 +9,10 @@ interface Props {
   class?: string;
 }
 
-let posts = await getCollectionCTM(
-  config.settings.blogFolder as "blog",
-  Astro.currentLocale,
-);
+let posts = await getBlogs();
+
+// Convert Strapi blogs to Astro format
+posts = posts.map(convertStrapiBlogToAstro);
 
 const t = await useTranslations(Astro.currentLocale as string);
 
