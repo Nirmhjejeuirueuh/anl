@@ -10,42 +10,7 @@ import config from ".astro/config.generated.json" assert { type: "json" };
 import dateFormat from "@/lib/utils/dateFormat";
 
 // Enable SSR for dynamic Strapi content
-export const prerender = true;
-
-// Generate static paths for all blogs
-export async function getStaticPaths() {
-  try {
-    const { getBlogs } = await import("@/lib/utils/strapiApi");
-    const blogs = await getBlogs();
-    
-    const { supportedLanguages } = await import("@/lib/utils/i18nUtils.ts");
-    const config = await import(".astro/config.generated.json");
-    const { defaultLanguage, showDefaultLangInUrl } = config.default.settings.multilingual;
-    
-    const paths = [];
-    
-    for (const lang of supportedLanguages) {
-      for (const blog of blogs) {
-        const langCode = lang.languageCode === defaultLanguage && !showDefaultLangInUrl 
-          ? undefined 
-          : lang.languageCode;
-          
-        paths.push({
-          params: {
-            lang: langCode,
-            slug: blog.slug
-          },
-          props: { blog }
-        });
-      }
-    }
-    
-    return paths;
-  } catch (error) {
-    console.error('Error generating blog paths:', error);
-    return [];
-  }
-}
+export const prerender = false;
 
 const { lang, slug } = Astro.params;
 
@@ -55,10 +20,7 @@ if (!slug) {
   return Astro.redirect('/404');
 }
 
-console.log('🚀 BLOG ROUTE: Route matched! Slug from URL:', slug);
-console.log('🚀 BLOG ROUTE: Lang from URL:', lang);
-console.log('🚀 BLOG ROUTE: Full Astro.params:', JSON.stringify(Astro.params, null, 2));
-console.log('🚀 BLOG ROUTE: Current URL:', Astro.url.href);
+console.log('BLOG ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch blog from Strapi by slug
 let blog = null;
@@ -77,6 +39,15 @@ if (!blog) {
   console.log('No blog found, redirecting to 404');
   return Astro.redirect('/404');
 }
+
+// Format publish date
+const publishDate = blog.publishDate ? new Date(blog.publishDate) : new Date();
+
+// Parse markdown content to HTML
+const parsedContent = await marked.parse(blog.content || '');
+
+// Format categories
+const categories = blog.categories ? blog.categories.split(',').map(cat => cat.trim()) : [];
 
 // Extract headings from markdown content for table of contents
 function extractHeadings(content: string) {

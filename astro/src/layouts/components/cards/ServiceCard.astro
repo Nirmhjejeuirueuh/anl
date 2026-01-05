@@ -24,7 +24,7 @@ const category = 'category' in content.data ? content.data.category : undefined;
 const moduleCode = 'moduleCode' in content.data ? content.data.moduleCode : undefined;
 const trainingDays = 'trainingDays' in content.data ? content.data.trainingDays : undefined;
 
-let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
+let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection);
 ---
 
 <div class:list={["bg-white h-full flex flex-col", className]} {...rest}>
