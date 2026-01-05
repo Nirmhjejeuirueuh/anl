@@ -30,3 +30,4 @@ Money laundering incidents are on the rise in terms of both frequency and comple
 - Learn about the measures undertaken by financial institutions to deter money laundering and terrorist financing
 - Know the relevant AML regulations
 
+

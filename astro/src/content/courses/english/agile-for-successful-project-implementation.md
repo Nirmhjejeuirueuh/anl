@@ -30,3 +30,4 @@ At the end of the course, participants should be able to:
 - Know the various Agile methodologies and understand the Scrum framework through a simulation
 - Understand how and what it takes to get organized and develop your own Agile roadmap
 
+
