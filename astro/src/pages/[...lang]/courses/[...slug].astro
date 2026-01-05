@@ -1,163 +1,114 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getEntryCTM, getCollectionCTM } from "@/lib/contentParser.astro";
-import handleDraftPage from "@/lib/utils/handleDraftPage";
+import { getCourseBySlug } from "@/lib/utils/strapiApi";
 import CallToAction from "@/layouts/components/sections/CallToAction.astro";
-import CoursesSection from "@/layouts/components/sections/CoursesSection.astro";
-import FaqSection from "@/layouts/components/sections/FaqSection.astro";
-import PageHeader from "@/components/widgets/PageHeader.astro";
+import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
-import { getSupportedLanguages } from "@/lib/utils/i18nUtils.ts";
 import { markdownify } from "@/lib/utils/textConverter";
+import { marked } from "marked";
+import OptimizedImage from "@/layouts/components/utilities/OptimizedImage.astro";
 
-export async function getStaticPaths() {
-  const supportedLanguages = getSupportedLanguages();
-  const { defaultLanguage, showDefaultLangInUrl } = config.settings.multilingual;
+// Enable SSR for dynamic Strapi content
+export const prerender = false;
 
-  const allPaths = [];
+const { lang, slug } = Astro.params;
 
-  for (const lang of supportedLanguages) {
-    const courses = await getCollectionCTM(
-      config.settings.coursesFolder as "courses",
-      lang.languageCode
-    );
-
-    const paths = courses.map((course) => ({
-      params: {
-        lang:
-          lang.languageCode === defaultLanguage && !showDefaultLangInUrl
-            ? undefined
-            : lang.languageCode,
-        slug: course.id
-          .replace(/\.mdx?|\.md/g, "")
-          .split("/")
-          .pop(),
-      },
-      props: { course },
-    }));
-
-    allPaths.push(...paths);
-  }
-
-  return allPaths;
+// Handle missing slug parameter
+if (!slug) {
+  console.log('No slug provided, redirecting to 404');
+  return Astro.redirect('/404');
 }
 
-const { course } = Astro.props;
-const { data, id } = course;
+console.log('COURSE ROUTE: Route matched! Slug from URL:', slug);
 
-// Remove drafts pages in production
-const response = handleDraftPage(data);
-if (response) return response;
+// Fetch course from Strapi by slug
+let course = null;
+try {
+  console.log('Fetching Strapi course by slug:', slug);
+  course = await getCourseBySlug(slug);
+  if (!course) {
+    console.log('Strapi course not found for slug:', slug);
+  }
+} catch (error) {
+  console.error('Error fetching Strapi course:', error);
+}
 
-const entry = await getEntryCTM("courses", "-index", Astro.currentLocale);
-const coursesSection = entry?.data?.coursesSection;
+// Handle 404 if course not found
+if (!course) {
+  console.log('No course found, redirecting to 404');
+  return Astro.redirect('/404');
+}
 
-// Render the course content
-const { Content } = await course.render();
+// Format publish date
+const publishDate = course.publishDate ? new Date(course.publishDate) : new Date();
 
-const {
-  title,
-  metaDescription,
-  draft,
-  hasCustomLineAnimationBg,
-  description,
-  category,
-  trainingDays,
-  targetAudience,
-  moduleCode,
-  trainingTime,
-  trainingDate,
-  hyperlink,
-  ...rest
-} = data;
+// Parse markdown content to HTML
+const parsedContent = await marked.parse(course.content || '');
+
+// Format categories
+const categories = course.categories ? course.categories.split(',').map(cat => cat.trim()) : [];
+
+console.log('COURSE ROUTE: About to render course:', course.title);
 ---
 
 <Base
-  title={title}
-  metaDescription={metaDescription}
-  draft={draft}
-  sectionSpacing="lg"
-  className={hasCustomLineAnimationBg ? "has-custom-line-animation-bg" : ""}
+  title={course.title}
+  description={course.excerpt}
+  image={course.image ? `${'http://localhost:1337'}${course.image.url}` : undefined}
 >
-  <PageHeader title={title} />
-
-  <!-- Course Content -->
-  <section class="py-16">
+  <section class="py-12">
     <div class="container">
-      <div class="max-w-4xl mx-auto prose prose-lg">
-        <Content />
-      </div>
-    </div>
-  </section>
-
-  <!-- Target Audience & Schedule -->
-  {(targetAudience || trainingTime || trainingDate) && (
-    <section class="py-16 bg-gray-50">
-      <div class="container">
-        <div class="max-w-4xl mx-auto">
-          <div class="grid md:grid-cols-2 gap-12">
-            <!-- Target Audience -->
-            {targetAudience && (
-              <div>
-                <h2 class="text-3xl font-bold mb-8">Target Audience</h2>
-                <div class="prose prose-lg" set:html={markdownify(targetAudience)}></div>
+      <div class="grid grid-cols-1 justify-items-center space-y-12">
+        <!-- Course Meta -->
+        <div class="max-w-full space-y-8 text-center lg:max-w-3xl">
+          <div>
+            {categories && categories.length > 0 && (
+              <ul class="mb-2 flex items-center justify-center gap-2">
+                {categories.map((category: string) => (
+                  <li class="inline-block text-sm font-medium tracking-wider">
+                    <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                      {category}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <h1 class="text-h3 md:text-h2">{course.title}</h1>
+            {course.excerpt && <p class="text-muted">{course.excerpt}</p>}
+            {course.instructor && (
+              <div class="mt-4">
+                <p class="text-sm text-muted">Instructor: {course.instructor}</p>
               </div>
             )}
-
-            <!-- Schedule -->
-            {(trainingTime || trainingDate) && (
-              <div>
-                <h2 class="text-3xl font-bold mb-8">Schedule</h2>
-                <div class="space-y-4">
-                  {trainingTime && (
-                    <div class="flex items-center gap-3">
-                      <span class="font-semibold">Time:</span>
-                      <span class="text-text-default">{trainingTime}</span>
-                    </div>
-                  )}
-                  {trainingDate && (
-                    <div class="flex items-center gap-3">
-                      <span class="font-semibold">Training Date:</span>
-                      <span class="text-text-default">{trainingDate}</span>
-                    </div>
-                  )}
-                </div>
+            {(course.duration || course.level) && (
+              <div class="mt-4 flex justify-center gap-4 text-sm text-muted">
+                {course.duration && <span>Duration: {course.duration}</span>}
+                {course.level && <span>Level: {course.level}</span>}
               </div>
             )}
           </div>
         </div>
-      </div>
-    </section>
-  )}
 
-  <!-- Brochure -->
-  {hyperlink && (
-    <section class="py-6 pb-30 bg-gray-50">
-      <div class="container">
-        <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl font-bold mb-8">Brochure</h2>
-          <a 
-            href={hyperlink}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            View Course Brochure
-          </a>
+        <!-- Course Image -->
+        {course.image && (
+          <OptimizedImage
+            src={`${'http://localhost:1337'}${course.image.url}`}
+            width={896}
+            height={384}
+            alt={course.title}
+            class="h-96 w-full object-cover lg:max-w-4xl"
+          />
+        )}
+
+        <div class="w-full max-w-full space-y-8 lg:max-w-4xl">
+          <!-- Main Content -->
+          <div class="prose-styles content">
+            <div set:html={parsedContent} />
+          </div>
         </div>
       </div>
-    </section>
-  )}
-
-  <div class="">
-    <CoursesSection content={coursesSection} />
-  </div>
-  <div class="">
-
+    </div>
+  </section>
 
   <CallToAction />
-</div>
 </Base>

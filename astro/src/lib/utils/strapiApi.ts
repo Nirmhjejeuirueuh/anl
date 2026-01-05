@@ -44,6 +44,49 @@ export interface StrapiBlog {
   };
 }
 
+export interface StrapiCourse {
+  id?: number;
+  documentId?: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content?: string;
+  instructor?: string;
+  duration?: string;
+  level?: string;
+  categories?: string;
+  tags?: string;
+  publishedAt: string;
+  featured?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  image?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    formats: {
+      thumbnail: StrapiImageFormat;
+      medium: StrapiImageFormat;
+      small: StrapiImageFormat;
+    };
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+}
+
 export interface StrapiImageFormat {
   name: string;
   hash: string;
@@ -77,6 +120,7 @@ export async function getBlogs(): Promise<StrapiBlog[]> {
     console.log('getBlogs: Starting API call to Strapi');
     // Ultra-optimized: only fields actually used in BlogCard component
     const response = await fetch(`${STRAPI_URL}/api/blogs?populate=image&fields=title,slug,author,categories,publishDate`);
+    // const response = await fetch(`${STRAPI_URL}/api/blogs?populate=*`);
     console.log('getBlogs: Response status:', response.status);
     if (!response.ok) {
       throw new Error(`Failed to fetch blogs: ${response.status}`);
@@ -157,6 +201,62 @@ export async function getCategories(): Promise<{ name: string; slug: string; cou
 }
 
 /**
+ * Fetch all courses from Strapi CMS
+ */
+export async function getCourses(): Promise<StrapiCourse[]> {
+  try {
+    console.log('getCourses: Starting API call to Strapi');
+    const response = await fetch(`${STRAPI_URL}/api/courses?populate=image&fields=title,slug,instructor,duration,level,categories,publishedAt`);
+    console.log('getCourses: Response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch courses: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiCourse> = await response.json();
+    console.log('getCourses: Received data:', data.data?.length || 0, 'courses');
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch a single course by slug from Strapi CMS
+ */
+export async function getCourseBySlug(slug: string): Promise<StrapiCourse | null> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/courses?filters[slug][$eq]=${slug}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch course: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiCourse> = await response.json();
+    return data.data[0] || null;
+  } catch (error) {
+    console.error('Error fetching course by slug:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch courses by category from Strapi CMS
+ */
+export async function getCoursesByCategory(category: string): Promise<StrapiCourse[]> {
+  try {
+    console.log('getCoursesByCategory: Searching for category:', category);
+    const response = await fetch(`${STRAPI_URL}/api/courses?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch courses by category: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiCourse> = await response.json();
+    console.log('getCoursesByCategory: Found', data.data.length, 'courses for category:', category);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching courses by category:', error);
+    return [];
+  }
+}
+
+/**
  * Fetch blogs by category from Strapi CMS
  */
 export async function getBlogsByCategory(category: string): Promise<StrapiBlog[]> {
@@ -189,7 +289,55 @@ export async function getBlogsByCategory(category: string): Promise<StrapiBlog[]
 }
 
 /**
- * Convert Strapi blog to Astro-compatible format
+ * Convert Strapi course to Astro-compatible format
+ */
+export function convertStrapiCourseToAstro(course: StrapiCourse) {
+  // Safely parse date with fallbacks
+  let date: Date;
+  try {
+    const dateString = course.publishedAt || course.createdAt;
+    if (dateString) {
+      date = new Date(dateString);
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        // Fallback to current date if invalid
+        date = new Date();
+      }
+    } else {
+      // No date available, use current date
+      date = new Date();
+    }
+  } catch (error) {
+    // Fallback to current date if parsing fails
+    date = new Date();
+  }
+
+  return {
+    id: course.documentId,
+    slug: course.slug,
+    collection: "courses",
+    data: {
+      title: course.title,
+      image: course.image ? `${STRAPI_URL}${course.image.url}` : undefined,
+      date: date,
+      instructor: course.instructor,
+      duration: course.duration,
+      level: course.level,
+      categories: course.categories ? course.categories.split(',').map(cat => cat.trim()) : [],
+      draft: false,
+      excerpt: course.excerpt,
+      tags: course.tags ? course.tags.split(',').map(tag => tag.trim()) : [],
+      featured: course.featured,
+    },
+    body: course.content,
+    rendered: {
+      html: course.content,
+    },
+  };
+}
+
+/**
+ * Convert Strapi blog to Astro collection entry format
  */
 export function convertStrapiBlogToAstro(blog: StrapiBlog) {
   // Safely parse date with fallbacks
@@ -215,21 +363,21 @@ export function convertStrapiBlogToAstro(blog: StrapiBlog) {
   return {
     id: blog.documentId,
     slug: blog.slug,
-    collection: "blog", // Add collection property for URL generation
+    collection: "blogs",
     data: {
       title: blog.title,
       image: blog.image ? `${STRAPI_URL}${blog.image.url}` : undefined,
       date: date,
       author: blog.author,
       categories: blog.categories ? blog.categories.split(',').map(cat => cat.trim()) : [],
-      draft: false, // Strapi handles draft/publish separately
+      draft: false,
       excerpt: blog.excerpt,
       tags: blog.tags ? blog.tags.split(',').map(tag => tag.trim()) : [],
       featured: blog.featured,
     },
     body: blog.content,
     rendered: {
-      html: blog.content, // This would need markdown processing
+      html: blog.content,
     },
   };
 }

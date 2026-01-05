@@ -475,18 +475,21 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    category: Schema.Attribute.String;
+    categories: Schema.Attribute.String;
     content: Schema.Attribute.RichText & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
     duration: Schema.Attribute.String;
+    excerpt: Schema.Attribute.Text;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    hyperlink: Schema.Attribute.String;
     icon: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'>;
     instructor: Schema.Attribute.String;
     learningObjectives: Schema.Attribute.Text;
+    level: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -513,6 +516,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     status: Schema.Attribute.Enumeration<['enable', 'disable']> &
       Schema.Attribute.DefaultTo<'enable'>;
+    tags: Schema.Attribute.String;
     targetAudience: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     trainingDate: Schema.Attribute.String;

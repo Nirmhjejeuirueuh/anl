@@ -38,7 +38,19 @@
       "type": "string",
       "required": false
     },
-    "category": {
+    "excerpt": {
+      "type": "text",
+      "required": false
+    },
+    "level": {
+      "type": "string",
+      "required": false
+    },
+    "categories": {
+      "type": "string",
+      "required": false
+    },
+    "tags": {
       "type": "string",
       "required": false
     },
@@ -79,6 +91,10 @@
     },
     "targetAudience": {
       "type": "text",
+      "required": false
+    },
+    "hyperlink": {
+      "type": "string",
       "required": false
     },
     "trainingTime": {

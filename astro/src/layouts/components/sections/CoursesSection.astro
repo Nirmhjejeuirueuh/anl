@@ -24,8 +24,10 @@ export type sectionType = Section & {
     currentPage: number;
   };
 };
+
 type Props = {
   content?: sectionType;
+  courses?: CollectionEntry<"courses">[] | any[];
 };
 
 
@@ -63,7 +65,8 @@ const finalCta = "link";
 
 if (!enable) return;
 
-let courses = await getCollectionCTM(
+// Use courses from props if provided, otherwise fetch from collections
+let courses = Astro.props.courses || await getCollectionCTM(
   "courses" as any,
   Astro.currentLocale,
 ) as CollectionEntry<"courses">[];
@@ -75,7 +78,7 @@ courses = limit && (!pagination || !pagination.enable)
 
 // Pagination setup
 const COURSES_PER_PAGE = 9;
-let allCourses = await getCollectionCTM(
+let allCourses = Astro.props.courses || await getCollectionCTM(
   "courses" as any,
   Astro.currentLocale,
 ) as CollectionEntry<"courses">[];
