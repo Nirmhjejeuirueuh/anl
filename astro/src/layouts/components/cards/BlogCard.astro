@@ -31,9 +31,11 @@ let { content, options, class: className, ...rest } = Astro.props;
 
 // Check if content and content.data exist
 if (!content || !content.data) {
-  console.error("BlogCard: Missing content or content.data");
+  console.error("BlogCard: Missing content or content.data", { content, hasContent: !!content, hasData: !!(content && content.data) });
   return null;
 }
+
+console.log("BlogCard: Rendering blog", { title: content.data.title, hasImage: !!content.data.image });
 
 let { title, description, image, author, date, categories } = content.data;
 
@@ -60,7 +62,7 @@ const categoriesArray = categories?.map((category: string) => ({
   slug: slugifyyy(category),
 }));
 
-let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
+let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection);
 ---
 
 {

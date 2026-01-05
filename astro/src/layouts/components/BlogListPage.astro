@@ -1,6 +1,6 @@
 ---
 import Sidebar from "./widgets/Sidebar.astro";
-import ContentList from "./widgets/ContentList.astro";
+import ContentListStrapi from "./widgets/ContentListStrapi.astro";
 
 // Destructure Astro props with default values
 const {
@@ -13,13 +13,11 @@ const {
   },
 } = Astro.props;
 ---
-
-<section>
   <div
     class="container grid grid-cols-1 gap-x-6 gap-y-16 lg:grid-cols-12 lg:items-start">
     <div
       class="has-video-modal lg:box-shadow-primary space-y-10 lg:order-1 lg:col-span-8 lg:bg-white lg:p-5">
-      <ContentList
+      <ContentListStrapi
         filter={filterContent}
         pagination={pagination}
         options={{

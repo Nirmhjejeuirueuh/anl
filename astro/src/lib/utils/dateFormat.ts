@@ -4,6 +4,11 @@ const dateFormat = (
 ): string => {
   const dateObj = new Date(date);
 
+  // Check if date is valid
+  if (isNaN(dateObj.getTime())) {
+    return "Invalid Date";
+  }
+
   if (pattern === "dd MMM, yyyy") {
     const formatter = new Intl.DateTimeFormat("en-US", {
       day: "2-digit",
