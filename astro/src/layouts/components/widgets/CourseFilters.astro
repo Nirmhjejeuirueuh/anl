@@ -45,7 +45,7 @@ const durations = [...new Set(courses.map(course => course.data.duration).filter
 const coursesData = courses.map(course => ({
   id: course.id,
   title: course.data.title,
-  description: course.data.excerpt || '',
+  description: course.data.description || course.data.excerpt || '',
   categories: course.data.categories || [],
   level: course.data.level,
   instructor: course.data.instructor,
@@ -53,6 +53,7 @@ const coursesData = courses.map(course => ({
   featured: course.data.featured,
   tags: course.data.tags || [],
   image: course.data.image,
+  slug: course.slug,
 }));
 ---
 
@@ -341,7 +342,7 @@ const coursesData = courses.map(course => ({
 
     createCourseElement(course, index) {
       const div = document.createElement('div');
-      div.className = 'bg-white h-full flex flex-col';
+      div.className = 'bg-white h-full flex flex-col box-shadow-primary rounded-lg border border-gray-100 overflow-hidden';
       div.style.animationDelay = `${(index % 9) * 100}ms`;
 
       // Use the course slug directly

@@ -1,6 +1,6 @@
 // Strapi CMS API utilities for Astro integration
 
-const STRAPI_URL = 'http://localhost:1337';
+export const STRAPI_URL = import.meta.env.STRAPI_URL || 'http://localhost:1337';
 
 export interface StrapiBlog {
   id?: number;
@@ -63,6 +63,16 @@ export interface StrapiCourse {
   updatedAt?: string;
   moduleCode?: string;
   icon?: string;
+  trainingDays?: number;
+  price?: string;
+  maxParticipants?: number;
+  prerequisites?: string;
+  learningObjectives?: string;
+  targetAudience?: string;
+  trainingTime?: string;
+  trainingDate?: string;
+  status?: string;
+  hyperlink?: string;
   image?: {
     id: number;
     documentId: string;

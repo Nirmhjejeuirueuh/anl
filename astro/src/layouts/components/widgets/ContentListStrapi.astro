@@ -151,6 +151,7 @@ if (list.length === 0) return;
   pagination?.enable &&
   totalPages > 1 && (
     <Pagination
+      collection="blog"
       currentPage={pagination?.currentPage}
       totalPages={totalPages}
     />

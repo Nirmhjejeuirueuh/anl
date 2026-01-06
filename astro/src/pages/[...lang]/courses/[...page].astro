@@ -6,34 +6,10 @@ import CoursesSection from "@/layouts/components/sections/CoursesSection.astro";
 import CourseFilters from "@/layouts/components/widgets/CourseFilters.astro";
 import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
-import { supportedLanguages } from "@/lib/utils/i18nUtils.ts";
+import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 
-export async function getStaticPaths() {
-  const paths = await Promise.all(
-    supportedLanguages.map(async (lang) => {
-      const { defaultLanguage, showDefaultLangInUrl } = config.settings.multilingual;
-      
-      // Fetch total courses to calculate pages
-      const courses = await getCourses();
-      const COURSES_PER_PAGE = 9;
-      const totalPages = Math.ceil(courses.length / COURSES_PER_PAGE);
-      
-      const pagePaths = [];
-      // Start from page 2 since page 1 is the index
-      for (let i = 2; i <= totalPages; i++) {
-        pagePaths.push({
-          params: {
-            lang: lang.languageCode === defaultLanguage && !showDefaultLangInUrl ? undefined : lang.languageCode,
-            page: i.toString(),
-          },
-        });
-      }
-      
-      return pagePaths;
-    })
-  );
-
-  return paths.flat();
+export function getStaticPaths() {
+  return generatePaths();
 }
 
 // Fetch courses from Strapi and convert to Astro format
