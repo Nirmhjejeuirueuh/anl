@@ -14,7 +14,7 @@ import Pagination from "@/layouts/components/widgets/Pagination.astro";
 
 // Type for course section data
 export type sectionType = Section & {
-  limit?: number | boolean;
+  limit?: number | false;
   cta?: "link" | "slider-nav";
   colorScheme?: "light" | "dark";
   showCoursesAs?: "slider" | "static";

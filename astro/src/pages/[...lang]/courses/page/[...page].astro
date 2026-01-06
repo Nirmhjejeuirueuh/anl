@@ -16,9 +16,9 @@ export function getStaticPaths() {
 const strapiCourses = await getCourses();
 const courses = strapiCourses.map(convertStrapiCourseToAstro);
 
-// Get current page from URL query parameter
-const url = new URL(Astro.request.url);
-const currentPage = parseInt(url.searchParams.get('page') || '1');
+// Get current page from URL parameter
+const page = (Astro.params as any).page;
+const currentPage = parseInt(page || '1');
 
 // Mock index page data (since we don't have MDX index file)
 const indexData = {
@@ -49,7 +49,7 @@ const indexData = {
 ---
 
 <Base
-  title={indexData.title}
+  title={`${indexData.title} - Page ${currentPage}`}
   metaDescription={indexData.metaDescription}
   draft={indexData.draft}
   className={indexData.hasCustomLineAnimationBg ? "has-custom-line-animation-bg" : ""}

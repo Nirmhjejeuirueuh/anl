@@ -76,16 +76,6 @@ const tocEnabled = tableOfContents?.enable && headings?.length > 0;
 
 console.log('🚀 BLOG ROUTE: Extracted headings:', headings.length);
 console.log('🚀 BLOG ROUTE: TOC enabled:', tocEnabled);
-
-// Format categories
-const categories = blog.categories ? blog.categories.split(',').map(cat => cat.trim()) : [];
-
-// Format publish date
-const publishDate = blog.publishDate ? new Date(blog.publishDate) : new Date();
-
-// Parse markdown content to HTML
-const parsedContent = await marked.parse(blog.content || '');
-
 console.log('🚀 BLOG ROUTE: About to render blog:', blog.title);
 console.log('🚀 BLOG ROUTE: Raw content preview:', blog.content?.substring(0, 300));
 console.log('🚀 BLOG ROUTE: Raw content includes #:', blog.content?.includes('#'));

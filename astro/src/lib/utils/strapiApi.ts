@@ -50,6 +50,7 @@ export interface StrapiCourse {
   title: string;
   slug: string;
   excerpt?: string;
+  description?: string;
   content?: string;
   instructor?: string;
   duration?: string;
@@ -60,6 +61,8 @@ export interface StrapiCourse {
   featured?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  moduleCode?: string;
+  icon?: string;
   image?: {
     id: number;
     documentId: string;
@@ -206,13 +209,14 @@ export async function getCategories(): Promise<{ name: string; slug: string; cou
 export async function getCourses(): Promise<StrapiCourse[]> {
   try {
     console.log('getCourses: Starting API call to Strapi');
-    const response = await fetch(`${STRAPI_URL}/api/courses?populate=image&fields=title,slug,instructor,duration,level,categories,publishedAt`);
+    const response = await fetch(`${STRAPI_URL}/api/courses?populate=image&fields=title,slug,instructor,duration,level,categories,moduleCode,icon,description,excerpt,publishedAt`);
     console.log('getCourses: Response status:', response.status);
     if (!response.ok) {
       throw new Error(`Failed to fetch courses: ${response.status}`);
     }
     const data: StrapiResponse<StrapiCourse> = await response.json();
     console.log('getCourses: Received data:', data.data?.length || 0, 'courses');
+    console.log('getCourses: Sample course slugs:', data.data?.slice(0, 3).map(c => ({ title: c.title, slug: c.slug })));
     return data.data;
   } catch (error) {
     console.error('Error fetching courses:', error);
@@ -225,11 +229,17 @@ export async function getCourses(): Promise<StrapiCourse[]> {
  */
 export async function getCourseBySlug(slug: string): Promise<StrapiCourse | null> {
   try {
+    console.log('getCourseBySlug: Searching for slug:', slug);
     const response = await fetch(`${STRAPI_URL}/api/courses?filters[slug][$eq]=${slug}&populate=*`);
+    console.log('getCourseBySlug: Response status:', response.status);
     if (!response.ok) {
       throw new Error(`Failed to fetch course: ${response.status}`);
     }
     const data: StrapiResponse<StrapiCourse> = await response.json();
+    console.log('getCourseBySlug: Found courses:', data.data?.length || 0);
+    if (data.data?.length > 0) {
+      console.log('getCourseBySlug: Found course:', { title: data.data[0].title, slug: data.data[0].slug });
+    }
     return data.data[0] || null;
   } catch (error) {
     console.error('Error fetching course by slug:', error);
@@ -313,7 +323,7 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
   }
 
   return {
-    id: course.documentId,
+    id: course.documentId || course.id?.toString() || course.slug,
     slug: course.slug,
     collection: "courses",
     data: {
@@ -324,14 +334,17 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
       duration: course.duration,
       level: course.level,
       categories: course.categories ? course.categories.split(',').map(cat => cat.trim()) : [],
+      moduleCode: (course as any).moduleCode,
+      icon: (course as any).icon,
       draft: false,
       excerpt: course.excerpt,
+      description: course.description || course.excerpt,
       tags: course.tags ? course.tags.split(',').map(tag => tag.trim()) : [],
       featured: course.featured,
     },
-    body: course.content,
+    body: course.content || '',
     rendered: {
-      html: course.content,
+      html: course.content || '',
     },
   };
 }

@@ -19,6 +19,13 @@ if (!slug) {
   return Astro.redirect('/404');
 }
 
+// Check if slug is a page number (for pagination), let the page route handle it
+if (/^\d+$/.test(slug)) {
+  console.log('Numeric slug detected, letting page route handle it');
+  // Don't redirect, let the request fall through to the page route
+  return new Response(null, { status: 404 });
+}
+
 console.log('COURSE ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch course from Strapi by slug
@@ -40,7 +47,7 @@ if (!course) {
 }
 
 // Format publish date
-const publishDate = course.publishDate ? new Date(course.publishDate) : new Date();
+const publishDate = course.publishedAt ? new Date(course.publishedAt) : new Date();
 
 // Parse markdown content to HTML
 const parsedContent = await marked.parse(course.content || '');
