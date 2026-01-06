@@ -1,5 +1,6 @@
 ---
 import { getEntryCTM } from "@/lib/contentParser.astro";
+import { getAllTeamMembers, convertStrapiTeamMember } from "@/lib/strapiApi";
 import TeamCard from "@/layouts/components/cards/TeamCard.astro";
 import type { Section, TeamMember } from "@/types";
 import overrideObjects from "@/lib/utils/overrideObjects.ts";
@@ -49,7 +50,16 @@ let {
 
 let { members }: { members: TeamMember[] } = (
   await getEntryCTM("team", "-index", Astro.currentLocale)
-)?.data;
+)?.data || { members: [] };
+
+// Fetch team members from Strapi API
+const strapiMembers = await getAllTeamMembers();
+
+// Use Strapi members if available, otherwise fall back to markdown
+members = strapiMembers.length > 0 ? strapiMembers : members;
+
+// Sort members by order
+members = members.sort((a, b) => (a.order || 0) - (b.order || 0));
 
 // Limit the number of team members to be displayed
 members = limit && members ? members.slice(0, limit as number) : members;
@@ -60,7 +70,7 @@ const isHorizontal = layout === "horizontal";
 
 {
   enable && (
-    <section>
+    <section class="pb-12 lg:pb-16">
       <div
         class:list={[
           "container",

@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_elements_section_infos",
+  "info": {
+    "displayName": "Section Info",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

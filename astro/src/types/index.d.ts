@@ -85,9 +85,13 @@ export type Social = {
 };
 
 export type TeamMember = {
-  image: string;
+  id: number;
   name: string;
+  slug: string;
   role: string;
+  description: string;
+  order: number;
+  image: string;
   leadershipTeam?: boolean; // Optional since not all members have it
   social: Social;
 };

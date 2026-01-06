@@ -328,7 +328,6 @@ export const collections = {
   about: defineCollection({}),
   contact: defineCollection({}),
   faq: defineCollection({}),
-  team: defineCollection({}),
   "team-members": defineCollection({
     schema: page,
   }),

@@ -10,14 +10,11 @@ interface Props {
 }
 
 const { content, imageSize = "lg", class: className, ...rest } = Astro.props;
-const { name, role, image, social } = content as TeamMember;
-
-// Create URL slug from name
-const memberSlug = name ? name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : '';
+const { name, role, image, social, slug } = content as TeamMember;
 ---
 
 <a
-  href={`/about/team/${memberSlug}`}
+  href={`/about/team/${slug}`}
   class="cursor-pointer block"
   {...rest}>
   <div class="group relative flex flex-col items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transform scale-100 hover:scale-105 transition-all duration-300 ease-out"
@@ -30,6 +27,8 @@ const memberSlug = name ? name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z
         ]}
         src={image}
         alt={name}
+        width={imageSize === "lg" ? 192 : 128}
+        height={imageSize === "lg" ? 192 : 128}
       />
     </div>
     <div class="mt-4 text-center">

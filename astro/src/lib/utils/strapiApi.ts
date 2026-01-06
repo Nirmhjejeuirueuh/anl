@@ -99,6 +99,44 @@ export interface StrapiCourse {
   };
 }
 
+export interface StrapiTeamMember {
+  id?: number;
+  name: string;
+  role: string;
+  description?: string;
+  leadershipTeam?: boolean;
+  socialLinks?: any;
+  image?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+}
+
+export interface StrapiTeamPage {
+  id?: number;
+  documentId?: string;
+  title: string;
+  metaDescription?: string;
+  members: StrapiTeamMember[];
+}
+
 export interface StrapiImageFormat {
   name: string;
   hash: string;
@@ -402,4 +440,24 @@ export function convertStrapiBlogToAstro(blog: StrapiBlog) {
       html: blog.content,
     },
   };
+}
+
+/**
+ * Fetch team page from Strapi CMS
+ */
+export async function getTeamPage(): Promise<StrapiTeamPage | null> {
+  try {
+    console.log('getTeamPage: Starting API call to Strapi');
+    const response = await fetch(`${STRAPI_URL}/api/team-page?populate[members][fields][0]=name&populate[members][fields][1]=role&populate[members][populate][image][fields][0]=url&populate[members][populate][image][fields][1]=alternativeText`);
+    console.log('getTeamPage: Response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch team page: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log('getTeamPage: Received team page with', data.data?.members?.length || 0, 'members');
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching team page:', error);
+    return null;
+  }
 }

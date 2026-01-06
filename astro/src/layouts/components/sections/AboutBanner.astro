@@ -15,6 +15,7 @@ export type sectionType = Section & {
 };
 type Props = {
   content?: sectionType;
+  images?: any[];
 };
 
 // Fetching the default content for the this section
@@ -40,6 +41,12 @@ let {
   limit,
   marquee,
 } = actualContent as sectionType;
+
+// Use images from props if provided, otherwise use list
+let images = Astro.props.images;
+if (images && images.length > 0) {
+  list = images.map(img => img.url);
+}
 
 // If no list is provided, use default about images
 if (!list || list.length === 0) {
@@ -78,8 +85,8 @@ const formattedTitle = markdownTitle.replace(
   enable && (
     <section class="overflow-hidden">
       <div class="container">
-        <div class="flex flex-wrap items-center justify-between gap-6 lg:flex-nowrap">
-          <div class="max-w-xl" data-aos="fade-up-sm">
+        <div class="flex justify-center">
+          <div class="max-w-xl text-center" data-aos="fade-up-sm">
             {title && (
               <h2
                 class="text-h3 has-text-highlight text-inherit"

@@ -14,17 +14,17 @@ banner:
 company:
   mission:
     title: "Our Mission"
-    description: "We partner with organisations to embrace the evolving technological landscape; inspire individuals with 'know-how' to stay abreast of the changing trends."
+    description: "To simplify complex IT and security knowledge from governance to compliance by bridging theory and real-world practice."
     icon: "/images/icons/our-mission.svg"
 
   vision:
     title: "Our Vision"
-    description: "To be your facilitating enabler to remain relevant in the changing IT landscape."
+    description: "To be the go-to, innovative, and practical-focused training partner for organisations worldwide, making learning accessible, relevant, and impactful."
     icon: "/images/icons/our-vision.svg"
 
   values:
     title: "Our Core Values"
-    description: "Be proactive at the technology forefront to scan and implement cutting-edge training and ideas to people we serve."
+    description: "PRIME: We uphold Partnership & Integrity, deliver with Real-World Relevance, drive Innovation, strive for Mastery through excellence in delivery, and foster Empowerment in everything we do."
     icon: "/images/icons/our-core-values.svg"
 
 # Team Section

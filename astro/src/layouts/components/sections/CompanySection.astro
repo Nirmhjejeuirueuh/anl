@@ -1,0 +1,89 @@
+---
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import type { Section } from "@/types";
+
+// Type for company data
+type CompanyData = {
+  mission: {
+    title: string;
+    description: string;
+    icon: string;
+  };
+  vision: {
+    title: string;
+    description: string;
+    icon: string;
+  };
+  values: {
+    title: string;
+    description: string;
+    icon: string;
+  };
+};
+
+type Props = {
+  content?: CompanyData;
+  company?: any;
+};
+
+// Fetch company data from about page content
+let companyData = (
+  await getEntryCTM("about", "-index", Astro.currentLocale)
+)?.data?.company as CompanyData;
+
+// Use provided company prop, or fallback to fetched data
+let actualContent = Astro.props.company || companyData;
+
+if (!actualContent) {
+  actualContent = {
+    mission: {
+      title: "Our Mission",
+      description: "We partner with organisations to embrace the evolving technological landscape. We inspire individuals with know-how to stay abreast of the changing trends. We provide cutting-edge training and consulting solutions.",
+      icon: "/images/icons/our-mission.svg"
+    },
+    vision: {
+      title: "Our Vision",
+      description: "To be your facilitating enabler to remain relevant in the changing IT landscape. We strive to bridge the gap between technology and business needs. We aim to empower organizations with innovative solutions.",
+      icon: "/images/icons/our-vision.svg"
+    },
+    values: {
+      title: "Our Core Values",
+      description: "Be proactive at the technology forefront to scan and implement cutting-edge training and ideas. We are committed to excellence in everything we do. We value innovation, integrity, and collaboration.",
+      icon: "/images/icons/our-core-values.svg"
+    }
+  };
+}
+
+const { mission, vision, values } = actualContent;
+---
+
+<section class="py-16 lg:py-20">
+  <div class="container">
+    <div class="grid gap-12 md:grid-cols-1 lg:grid-cols-3">
+      <!-- Mission -->
+      <div class="text-center" data-aos="fade-up">
+        <h3 class="text-h4 mb-4 text-primary">{mission.title}</h3>
+        <p class="text-lg leading-relaxed text-muted max-w-none">
+          {mission.description}
+        </p>
+      </div>
+
+      <!-- Vision -->
+      <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-h4 mb-4 text-primary">{vision.title}</h3>
+        <p class="text-lg leading-relaxed text-muted max-w-none">
+          {vision.description}
+        </p>
+      </div>
+
+      <!-- Core Values -->
+      <div class="text-center" data-aos="fade-up" data-aos-delay="400">
+        <h3 class="text-h4 mb-4 text-primary">{values.title}</h3>
+        <p class="text-lg leading-relaxed text-muted max-w-none">
+          {values.description}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
