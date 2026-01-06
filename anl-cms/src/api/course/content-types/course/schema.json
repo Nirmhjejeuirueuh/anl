@@ -105,12 +105,6 @@
       "type": "string",
       "required": false
     },
-    "status": {
-      "type": "enumeration",
-      "enum": ["enable", "disable"],
-      "default": "enable",
-      "required": false
-    },
     "featured": {
       "type": "boolean",
       "default": false,

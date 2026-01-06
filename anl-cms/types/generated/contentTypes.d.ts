@@ -514,8 +514,6 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
       >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    status: Schema.Attribute.Enumeration<['enable', 'disable']> &
-      Schema.Attribute.DefaultTo<'enable'>;
     tags: Schema.Attribute.String;
     targetAudience: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;

@@ -71,7 +71,6 @@ export interface StrapiCourse {
   targetAudience?: string;
   trainingTime?: string;
   trainingDate?: string;
-  status?: string;
   hyperlink?: string;
   image?: {
     id: number;
