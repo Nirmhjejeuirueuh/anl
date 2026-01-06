@@ -1,7 +1,8 @@
 import path from 'path';
 
 export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  // Use PostgreSQL in production (Vercel), SQLite in development
+  const client = env('NODE_ENV') === 'production' ? 'postgres' : 'sqlite';
 
   const connections = {
     mysql: {
@@ -30,7 +31,7 @@ export default ({ env }) => {
         database: env('DATABASE_NAME', 'strapi'),
         user: env('DATABASE_USERNAME', 'strapi'),
         password: env('DATABASE_PASSWORD', 'strapi'),
-        ssl: env.bool('DATABASE_SSL', false) && {
+        ssl: env.bool('DATABASE_SSL', env('NODE_ENV') === 'production') && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
           ca: env('DATABASE_SSL_CA', undefined),
