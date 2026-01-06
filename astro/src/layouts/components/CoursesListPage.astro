@@ -1,0 +1,48 @@
+---
+import CourseFilters from "./widgets/CourseFilters.astro";
+import CoursesSection from "./sections/CoursesSection.astro";
+
+// Destructure Astro props with default values
+const {
+  courses = [],
+  layout = "classic",
+  columns = 2,
+  filterContent,
+  pagination = {
+    enable: true,
+    currentPage: 1,
+  },
+} = Astro.props;
+---
+
+<section class="section">
+  <div class="container grid grid-cols-1 gap-x-6 gap-y-16 lg:grid-cols-12 lg:items-start">
+    <div class="has-video-modal lg:box-shadow-primary space-y-10 lg:order-1 lg:col-span-8 lg:bg-white lg:p-5">
+      <CoursesSection
+        courses={courses}
+        content={{
+          pagination,
+          showCoursesAs: "static"
+        }}
+      />
+    </div>
+
+    <div class="lg:col-span-4 lg:order-2">
+      <div class="sticky-sidebar space-y-8">
+        <CourseFilters courses={courses} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { stickySidebar } from "@/plugins/sticky-sidebar.js";
+
+  const sidebar = document.querySelector(".sticky-sidebar");
+  if (sidebar) {
+    new stickySidebar(sidebar, {
+      topSpacing: 20,
+      bottomSpacing: 20,
+    });
+  }
+</script>

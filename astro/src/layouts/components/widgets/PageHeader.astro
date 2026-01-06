@@ -4,11 +4,12 @@ import Breadcrumbs from "@/layouts/components/widgets/Breadcrumbs.astro";
 
 interface Props {
   title?: string;
+  subtitle?: string;
   paddingBottom?: boolean;
   hiddenPaths?: string[];
 }
 
-const { title, hiddenPaths, paddingBottom = false } = Astro.props;
+const { title, subtitle, hiddenPaths, paddingBottom = false } = Astro.props;
 ---
 
 <section class="py-12">
@@ -22,6 +23,13 @@ const { title, hiddenPaths, paddingBottom = false } = Astro.props;
         <h1 data-aos="fade-up-sm" class="text-h2">
           {humanize(title)}
         </h1>
+      )
+    }
+    {
+      subtitle && (
+        <p data-aos="fade-up-sm" data-aos-delay="100" class="text-muted max-w-2xl">
+          {subtitle}
+        </p>
       )
     }
     <Breadcrumbs

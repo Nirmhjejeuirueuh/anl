@@ -115,6 +115,5 @@
 # -----------------------------------------------------------------------------------------------------------------------------------
 [head]
   content = """
-  <!-- You can easily add this type of tracking code by updating the `config.toml` file -->
-  <script defer src="/umami.is.js" data-website-id=""></script>
+  <!-- Analytics scripts can be added here if needed -->
   """

@@ -3,8 +3,33 @@ import type { CollectionEntry } from "astro:content";
 import { useTranslations } from "@/lib/utils/i18nUtils.ts";
 import Icons from "@/helpers/Icons.astro";
 
+// Type for converted Strapi courses
+interface ConvertedCourse {
+  id: string;
+  slug: string;
+  collection: string;
+  data: {
+    title: string;
+    image?: string;
+    date: Date;
+    instructor?: string;
+    duration?: string;
+    level?: string;
+    categories: string[];
+    draft: boolean;
+    excerpt?: string;
+    description?: string;
+    tags: string[];
+    featured?: boolean;
+  };
+  body: string;
+  rendered: {
+    html: string;
+  };
+}
+
 interface Props {
-  courses: CollectionEntry<"courses">[];
+  courses: ConvertedCourse[];
   class?: string;
 }
 
@@ -12,22 +37,24 @@ const { courses, class: className } = Astro.props;
 const t = await useTranslations(Astro.currentLocale as string);
 
 // Extract unique categories and other filter options
-const categories = [...new Set(courses.map(course => course.data.category).filter(Boolean))];
-const trainingDays = [...new Set(courses.map(course => course.data.trainingDays).filter(Boolean))].sort((a, b) => (a || 0) - (b || 0));
-const targetAudiences = [...new Set(courses.map(course => course.data.targetAudience).filter(Boolean))].sort();
+const categories = [...new Set(courses.flatMap(course => course.data.categories || []).filter(Boolean))];
+const levels = [...new Set(courses.map(course => course.data.level).filter(Boolean))];
+const instructors = [...new Set(courses.map(course => course.data.instructor).filter(Boolean))];
+const durations = [...new Set(courses.map(course => course.data.duration).filter(Boolean))];
 
 // Create course data for JavaScript
 const coursesData = courses.map(course => ({
   id: course.id,
   title: course.data.title,
-  description: course.data.description,
-  category: course.data.category,
-  trainingDays: course.data.trainingDays,
-  moduleCode: course.data.moduleCode,
-  favorite: course.data.favorite,
-  targetAudience: course.data.targetAudience,
-  icon: course.data.icon,
+  description: course.data.description || course.data.excerpt || '',
+  categories: course.data.categories || [],
+  level: course.data.level,
+  instructor: course.data.instructor,
+  duration: course.data.duration,
+  featured: course.data.featured,
+  tags: course.data.tags || [],
   image: course.data.image,
+  slug: course.slug,
 }));
 ---
 
@@ -84,8 +111,8 @@ const coursesData = courses.map(course => ({
         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
       >
         <option value="">All Durations</option>
-        {trainingDays.map(days => (
-          <option value={days}>{days} day{days && days > 1 ? 's' : ''}</option>
+        {durations.map(duration => (
+          <option value={duration}>{duration}</option>
         ))}
       </select>
     </div>
@@ -107,18 +134,18 @@ const coursesData = courses.map(course => ({
       </select>
     </div>
 
-    <!-- Target Audience Filter -->
+    <!-- Level Filter -->
     <div>
-      <label for="audience-filter" class="block text-sm font-medium text-gray-700 mb-2">
-        Target Audience
+      <label for="level-filter" class="block text-sm font-medium text-gray-700 mb-2">
+        Level
       </label>
       <select
-        id="audience-filter"
+        id="level-filter"
         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
       >
-        <option value="">All Audiences</option>
-        {targetAudiences.map(audience => (
-          <option value={audience}>{audience && audience.length > 50 ? audience.substring(0, 50) + '...' : audience}</option>
+        <option value="">All Levels</option>
+        {levels.map(level => (
+          <option value={level}>{level}</option>
         ))}
       </select>
     </div>
@@ -148,7 +175,7 @@ const coursesData = courses.map(course => ({
       this.searchInput = document.getElementById('course-search');
       this.categoryFilter = document.getElementById('category-filter');
       this.durationFilter = document.getElementById('duration-filter');
-      this.audienceFilter = document.getElementById('audience-filter');
+      this.levelFilter = document.getElementById('level-filter');
       this.sortSelect = document.getElementById('sort-select');
       this.clearFiltersBtn = document.getElementById('clear-filters');
       this.activeFiltersContainer = document.getElementById('active-filters');
@@ -165,7 +192,7 @@ const coursesData = courses.map(course => ({
 
       // Check if all required elements exist
       if (!this.searchInput || !this.categoryFilter || !this.durationFilter ||
-          !this.audienceFilter || !this.sortSelect ||
+          !this.levelFilter || !this.sortSelect ||
           !this.clearFiltersBtn || !this.activeFiltersContainer || !this.courseCount) {
         console.error('CourseFilters: Some required elements are missing');
         return;
@@ -184,7 +211,7 @@ const coursesData = courses.map(course => ({
         this.hasInteracted = true;
         this.filterCourses();
       });
-      this.audienceFilter.addEventListener('change', () => {
+      this.levelFilter.addEventListener('change', () => {
         this.hasInteracted = true;
         this.filterCourses();
       });
@@ -219,7 +246,7 @@ const coursesData = courses.map(course => ({
       const searchTerm = this.searchInput.value.toLowerCase();
       const selectedCategory = this.categoryFilter.value;
       const selectedDuration = this.durationFilter.value;
-      const selectedAudience = this.audienceFilter.value;
+      const selectedLevel = this.levelFilter.value;
 
       // Mark that filtering has occurred
       this.hasFiltered = true;
@@ -229,19 +256,20 @@ const coursesData = courses.map(course => ({
         const matchesSearch = !searchTerm ||
           course.title.toLowerCase().includes(searchTerm) ||
           course.description.toLowerCase().includes(searchTerm) ||
-          course.category?.toLowerCase().includes(searchTerm) ||
-          course.targetAudience?.toLowerCase().includes(searchTerm);
+          course.categories?.some(cat => cat.toLowerCase().includes(searchTerm)) ||
+          course.level?.toLowerCase().includes(searchTerm) ||
+          course.instructor?.toLowerCase().includes(searchTerm);
 
         // Category filter
-        const matchesCategory = !selectedCategory || course.category === selectedCategory;
+        const matchesCategory = !selectedCategory || course.categories?.includes(selectedCategory);
 
         // Duration filter
-        const matchesDuration = !selectedDuration || course.trainingDays?.toString() === selectedDuration;
+        const matchesDuration = !selectedDuration || course.duration === selectedDuration;
 
-        // Audience filter
-        const matchesAudience = !selectedAudience || course.targetAudience === selectedAudience;
+        // Level filter
+        const matchesLevel = !selectedLevel || course.level === selectedLevel;
 
-        return matchesSearch && matchesCategory && matchesDuration && matchesAudience;
+        return matchesSearch && matchesCategory && matchesDuration && matchesLevel;
       });
 
       this.updateActiveFilters();
@@ -259,11 +287,14 @@ const coursesData = courses.map(course => ({
           case 'title-desc':
             return b.title.localeCompare(a.title);
           case 'duration-asc':
-            return (a.trainingDays || 0) - (b.trainingDays || 0);
+            // Simple string comparison for duration (could be improved with parsing)
+            return (a.duration || '').localeCompare(b.duration || '');
           case 'duration-desc':
-            return (b.trainingDays || 0) - (a.trainingDays || 0);
+            return (b.duration || '').localeCompare(a.duration || '');
           case 'category-asc':
-            return (a.category || '').localeCompare(b.category || '');
+            const aCat = a.categories?.[0] || '';
+            const bCat = b.categories?.[0] || '';
+            return aCat.localeCompare(bCat);
           default:
             return 0;
         }
@@ -312,24 +343,23 @@ const coursesData = courses.map(course => ({
 
     createCourseElement(course, index) {
       const div = document.createElement('div');
-      div.className = 'bg-white h-full flex flex-col';
+      div.className = 'bg-white h-full flex flex-col box-shadow-primary rounded-lg border border-gray-100 overflow-hidden';
       div.style.animationDelay = `${(index % 9) * 100}ms`;
 
-      // Create course slug for URL
-      const courseSlug = course.id.replace(/\.mdx?|\.md/g, "").split("/").pop();
+      // Use the course slug directly
+      const courseSlug = course.slug;
 
       div.innerHTML = `
         <div class="px-8 pt-10 pb-10 flex flex-col h-full">
           <div class="flex items-center gap-3 mb-4">
-            ${course.icon ? `<div class="bg-primary flex h-12 w-12 items-center justify-center rounded-full fill-white transition duration-300 flex-shrink-0"><div data-lucide="${course.icon}" class="h-6 w-6 stroke-1 text-white transition duration-300"></div></div>` : ''}
             <h3 class="text-h4 after:bg-primary relative inline-block pb-2 opacity-80 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-10">${course.title}</h3>
           </div>
 
-          ${course.category || course.moduleCode || course.trainingDays ? `
+          ${course.categories?.length || course.level || course.duration ? `
             <div class="flex flex-wrap gap-3 mb-3 text-xs">
-              ${course.category ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#00025d]/10 text-[#00025d] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>${course.category}</span>` : ''}
-              ${course.moduleCode ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#FFEB3B]/10 text-[#14342B] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>${course.moduleCode}</span>` : ''}
-              ${course.trainingDays ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#43b14b]/10 text-[#43b14b] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${course.trainingDays} day${course.trainingDays > 1 ? 's' : ''}</span>` : ''}
+              ${course.categories?.[0] ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#00025d]/10 text-[#00025d] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>${course.categories[0]}</span>` : ''}
+              ${course.level ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#FFEB3B]/10 text-[#14342B] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>${course.level}</span>` : ''}
+              ${course.duration ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#43b14b]/10 text-[#43b14b] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${course.duration}</span>` : ''}
             </div>
           ` : ''}
 
@@ -360,11 +390,11 @@ const coursesData = courses.map(course => ({
       }
 
       if (this.durationFilter.value) {
-        activeFilters.push({ type: 'duration', value: this.durationFilter.value, label: `Duration: ${this.durationFilter.value} day${this.durationFilter.value > 1 ? 's' : ''}` });
+        activeFilters.push({ type: 'duration', value: this.durationFilter.value, label: `Duration: ${this.durationFilter.value}` });
       }
 
-      if (this.audienceFilter.value) {
-        activeFilters.push({ type: 'audience', value: this.audienceFilter.value, label: `Audience: ${this.audienceFilter.value.length > 30 ? this.audienceFilter.value.substring(0, 30) + '...' : this.audienceFilter.value}` });
+      if (this.levelFilter.value) {
+        activeFilters.push({ type: 'level', value: this.levelFilter.value, label: `Level: ${this.levelFilter.value}` });
       }
 
       // Store current active filters for removal
@@ -395,8 +425,8 @@ const coursesData = courses.map(course => ({
         case 'duration':
           this.durationFilter.value = '';
           break;
-        case 'audience':
-          this.audienceFilter.value = '';
+        case 'level':
+          this.levelFilter.value = '';
           break;
       }
       this.hasInteracted = true;
@@ -407,7 +437,7 @@ const coursesData = courses.map(course => ({
       this.searchInput.value = '';
       this.categoryFilter.value = '';
       this.durationFilter.value = '';
-      this.audienceFilter.value = '';
+      this.levelFilter.value = '';
       this.hasInteracted = false;
       localStorage.removeItem('courseFilters');
       this.filterCourses();
@@ -429,11 +459,11 @@ const coursesData = courses.map(course => ({
           if (filters.search) this.searchInput.value = filters.search;
           if (filters.category) this.categoryFilter.value = filters.category;
           if (filters.duration) this.durationFilter.value = filters.duration;
-          if (filters.audience) this.audienceFilter.value = filters.audience;
+          if (filters.level) this.levelFilter.value = filters.level;
           if (filters.sort) this.sortSelect.value = filters.sort;
           
           // Mark as interacted if any filters were loaded
-          this.hasInteracted = !!(filters.search || filters.category || filters.duration || filters.audience);
+          this.hasInteracted = !!(filters.search || filters.category || filters.duration || filters.level);
         }
       } catch (error) {
         console.error('Failed to load filters from storage:', error);
@@ -446,7 +476,7 @@ const coursesData = courses.map(course => ({
           search: this.searchInput.value,
           category: this.categoryFilter.value,
           duration: this.durationFilter.value,
-          audience: this.audienceFilter.value,
+          level: this.levelFilter.value,
           sort: this.sortSelect.value
         };
         localStorage.setItem('courseFilters', JSON.stringify(filters));

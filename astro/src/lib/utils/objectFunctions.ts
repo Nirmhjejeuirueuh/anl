@@ -26,6 +26,11 @@ export function recursiveCloneObject(obj: any) {
     return obj;
   }
 
+  // Handle Date objects
+  if (obj instanceof Date) {
+    return new Date(obj.getTime());
+  }
+
   // Determine if the input is an array or object, and initialize the copy accordingly.
   const copy: any = Array.isArray(obj) ? [] : {};
 

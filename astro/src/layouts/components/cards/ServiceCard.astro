@@ -19,12 +19,12 @@ const { content, class: className, showImage = true, ...rest } = Astro.props;
 const t = await useTranslations(Astro.currentLocale as string);
 const { image, icon, title, description } = content.data;
 
-// Only courses have category, moduleCode, and trainingDays
-const category = 'category' in content.data ? content.data.category : undefined;
+// Only courses have category, moduleCode, and duration
+const category = 'categories' in content.data ? content.data.categories : undefined;
 const moduleCode = 'moduleCode' in content.data ? content.data.moduleCode : undefined;
-const trainingDays = 'trainingDays' in content.data ? content.data.trainingDays : undefined;
+const duration = 'duration' in content.data ? content.data.duration : undefined;
 
-let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
+let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection);
 ---
 
 <div class:list={["bg-white h-full flex flex-col", className]} {...rest}>
@@ -64,7 +64,7 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
     </div>
 
     <!-- Course Information -->
-    {(category || moduleCode || trainingDays) && (
+    {(category || moduleCode || duration) && (
       <div class="flex flex-wrap gap-3 mb-3 text-xs">
         {category && (
           <span class="inline-flex items-center gap-1 px-2 py-1 bg-[#00025d]/10 text-[#00025d] rounded-full">
@@ -82,12 +82,12 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
             {moduleCode}
           </span>
         )}
-        {trainingDays && (
+        {duration && (
           <span class="inline-flex items-center gap-1 px-2 py-1 bg-[#43b14b]/10 text-[#43b14b] rounded-full">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            {trainingDays} day{trainingDays > 1 ? 's' : ''}
+            {duration}
           </span>
         )}
       </div>

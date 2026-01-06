@@ -31,11 +31,40 @@ let { content, options, class: className, ...rest } = Astro.props;
 
 // Check if content and content.data exist
 if (!content || !content.data) {
-  console.error("BlogCard: Missing content or content.data");
+  console.error("BlogCard: Missing content or content.data", { content, hasContent: !!content, hasData: !!(content && content.data) });
   return null;
 }
 
+console.log("BlogCard: Rendering blog", { title: content.data.title, hasImage: !!content.data.image });
+
 let { title, description, image, author, date, categories } = content.data;
+
+console.log("BlogCard: Raw date from content.data:", date, typeof date);
+
+// Ensure date is a valid Date object
+if (!date) {
+  console.log("BlogCard: No date, using current date");
+  date = new Date();
+} else if (typeof date === 'string') {
+  console.log("BlogCard: Date is string, parsing:", date);
+  date = new Date(date);
+  if (isNaN(date.getTime())) {
+    console.log("BlogCard: Invalid date string, using current date");
+    date = new Date();
+  }
+} else if (!(date instanceof Date)) {
+  console.log("BlogCard: Date is not Date object, converting");
+  date = new Date(date);
+  if (isNaN(date.getTime())) {
+    console.log("BlogCard: Invalid date value, using current date");
+    date = new Date();
+  }
+} else if (isNaN(date.getTime())) {
+  console.log("BlogCard: Date object is invalid, using current date");
+  date = new Date();
+}
+
+console.log("BlogCard: Final date:", date);
 
 // Get author information
 let authorEntry;
@@ -58,9 +87,10 @@ options = {
 const categoriesArray = categories?.map((category: string) => ({
   name: category,
   slug: slugifyyy(category),
+  url: getLocaleUrlCTM(slugifyyy(category), Astro.currentLocale, `/${blogFolder}/category`),
 }));
 
-let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
+let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection);
 ---
 
 {
@@ -127,7 +157,9 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
           {categoriesArray &&
             categoriesArray.map((category: any, index: number) => (
               <>
-                <span class="text-inherit">{humanize(category.name)}</span>
+                <a href={category.url} class="text-inherit hover:text-primary transition-colors">
+                  {humanize(category.name)}
+                </a>
                 {index !== categoriesArray.length - 1 && (
                   <span class="bg-primary inline-block h-0.75 w-0.75 rounded-full" />
                 )}
@@ -164,10 +196,7 @@ let slug = getLocaleUrlCTM(content.id, Astro.currentLocale, content.collection);
             categoriesArray.map((category: any, index: number) => (
               <>
                 <a
-                  href={getLocaleUrlCTM(
-                    `/${blogFolder}/category/${category.slug}`,
-                    Astro.currentLocale,
-                  )}
+                  href={category.url}
                   class="text-inherit">
                   {humanize(category.name)}
                 </a>

@@ -1,6 +1,6 @@
 ---
 import config from ".astro/config.generated.json" assert { type: "json" };
-import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getBlogs, convertStrapiBlogToAstro } from "@/lib/utils/strapiApi";
 import BlogCard from "../cards/BlogCard.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { useTranslations } from "@/lib/utils/i18nUtils";
@@ -9,28 +9,28 @@ interface Props {
   class?: string;
 }
 
-let posts = await getCollectionCTM(
-  config.settings.blogFolder as "blog",
-  Astro.currentLocale,
-);
+const strapiPosts = await getBlogs();
+
+// Convert Strapi blogs to Astro format
+const posts = strapiPosts.map(convertStrapiBlogToAstro);
 
 const t = await useTranslations(Astro.currentLocale as string);
 
 // Posts sorted by date
-posts = sortByDate(posts);
+const sortedPosts = sortByDate(posts);
 
 // Limit the number of items to be displayed
-posts = posts.slice(0, 3);
+const recentPosts = sortedPosts.slice(0, 3);
 ---
 
 {
-  posts && posts.length > 0 && (
+  recentPosts && recentPosts.length > 0 && (
     <div class="space-y-4">
       <h2 class="text-h5 border-border-light/50 mb-4 border-b pb-4">
         {t("widgets.recentPostsTitle")}
       </h2>
       <div class="space-y-3">
-        {posts.map((post) => (
+        {recentPosts.map((post) => (
           <BlogCard
             content={post}
             options={{ card: { layout: "horizontal" } }}

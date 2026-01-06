@@ -1,0 +1,60 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { supportedLanguages } from "@/lib/utils/i18nUtils.ts";
+import handleDraftPage from "@/lib/utils/handleDraftPage";
+import BlogListPage from "@/components/BlogListPage.astro";
+import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
+import CallToAction from "@/components/sections/CallToAction.astro";
+import config from ".astro/config.generated.json" assert { type: "json" };
+import { getBlogs } from "@/lib/utils/strapiApi";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { defaultLanguage, showDefaultLangInUrl } = config.settings.multilingual;
+      
+      // Fetch total blogs to calculate pages
+      const blogs = await getBlogs();
+      const totalPages = Math.ceil(blogs.length / config.settings.pagination);
+      
+      const pagePaths = [];
+      // Start from page 2 since page 1 is the index
+      for (let i = 2; i <= totalPages; i++) {
+        pagePaths.push({
+          params: {
+            lang: lang.languageCode === defaultLanguage && !showDefaultLangInUrl ? undefined : lang.languageCode,
+            page: i.toString(),
+          },
+        });
+      }
+      
+      return pagePaths;
+    })
+  );
+
+  return paths.flat();
+}
+
+const { blogFolder } = config.settings;
+
+const postIndex = await getEntryCTM(
+  blogFolder as "blog",
+  "-index",
+  Astro.currentLocale,
+);
+
+// Remove drafts pages in production
+const response = handleDraftPage(postIndex?.data);
+if (response) return response;
+
+// Get current page from URL parameter
+const page = (Astro.params as any).page;
+const currentPage = parseInt(page || '1');
+---
+
+<Base title={`Insights & Updates - Page ${currentPage}`} fitToScreen={false}>
+  <PageHeader title="Insights & Updates" subtitle="Stay updated with our latest insights and industry updates" />
+  <BlogListPage pagination={{ enable: true, currentPage }} />
+  <CallToAction />
+</Base>

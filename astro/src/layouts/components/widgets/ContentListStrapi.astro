@@ -1,0 +1,168 @@
+---
+// Debug: Check if component is being executed
+console.log('ContentListStrapi: Component starting execution');
+
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getBlogs, getBlogsByCategory, convertStrapiBlogToAstro } from "@/lib/utils/strapiApi";
+import type { ContentListType } from "@/types";
+import config from ".astro/config.generated.json" assert { type: "json" };
+import BlogCard from "@/components/cards/BlogCard.astro";
+import PortfolioCard from "@/components/cards/PortfolioCard.astro";
+import { recursiveCloneObject } from "@/lib/utils/objectFunctions";
+import Pagination from "@/components/widgets/Pagination.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+
+type Props = {
+  class?: string;
+  hasSearch?: boolean;
+  pagination?: {
+    enable: boolean;
+    currentPage: number;
+  };
+  filter?: {
+    name: string;
+    slug: string;
+  }; // show filtered content list based on provided taxonomy
+  options?: ContentListType;
+  [key: string]: any;
+};
+
+const {
+  class: className,
+  pagination,
+  filter,
+  options,
+  ...rest
+} = Astro.props as Props;
+
+const {
+  content,
+  layout,
+  limit = false,
+  gap = "gap-6",
+  columns = 3,
+} = options || {};
+
+// Get content list based on content value
+let list = [] as any[];
+
+if (content === "portfolio") {
+  // Keep existing portfolio logic
+  list = await getCollectionCTM(
+    config.settings.portfolioFolder as "case-studies",
+    Astro.currentLocale,
+  );
+} else if (content === "blog") {
+  // Fetch blogs from Strapi API
+  console.log('ContentListStrapi: Starting to fetch blogs from Strapi API');
+  console.log('ContentListStrapi: Filter provided:', filter);
+  try {
+    let strapiBlogs;
+    if (filter?.name) {
+      // If category filter is provided, fetch blogs by category
+      console.log('ContentListStrapi: Fetching blogs by category:', filter.name);
+      strapiBlogs = await getBlogsByCategory(filter.name);
+    } else {
+      // Otherwise fetch all blogs
+      strapiBlogs = await getBlogs();
+    }
+    console.log('ContentListStrapi: Received blogs from Strapi:', strapiBlogs?.length || 0);
+    console.log('ContentListStrapi: First blog sample:', strapiBlogs?.[0] ? {
+      title: strapiBlogs[0].title,
+      slug: strapiBlogs[0].slug,
+      id: strapiBlogs[0].id
+    } : 'No blogs');
+
+    // Convert Strapi blogs to Astro format
+    list = strapiBlogs.map(convertStrapiBlogToAstro);
+    console.log('ContentListStrapi: Converted blogs to Astro format:', list.length);
+    console.log('ContentListStrapi: First converted blog:', list?.[0] ? {
+      id: list[0].id,
+      slug: list[0].slug,
+      title: list[0].data?.title
+    } : 'No converted blogs');
+  } catch (error) {
+    console.error('ContentListStrapi: Error fetching blogs from Strapi:', error);
+    list = []; // Return empty array on error
+  }
+}
+
+let posts = content === "blog" ? list : [];
+
+// Filter out items without data
+list = list.filter((item) => item && item.data);
+
+// Filter content list based on category (only for non-Strapi content)
+if (filter?.name && content !== "blog") {
+  list = list.filter((item) =>
+    item.data.categories
+      .map((cat: string) => cat.toLowerCase())
+      .includes(filter?.name.toLocaleLowerCase()),
+  );
+}
+
+// Limit content list
+list =
+  limit && list && pagination?.enable === false
+    ? list.slice(0, limit as number)
+    : list;
+
+// Sort list by date
+list = sortByDate(list);
+
+// For Blog List Pagination
+let totalPages = Math.ceil(posts?.length / config.settings.pagination);
+if (content === "blog" && pagination?.enable) {
+  const indexOfLastPost = pagination?.currentPage * config.settings.pagination;
+  const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
+  list = posts.slice(indexOfFirstPost, indexOfLastPost);
+}
+
+if (list.length === 0) return;
+---
+
+<div
+  class:list={[
+    "blog-search-results",
+    className,
+    { "gap-6": gap === "gap-6" },
+    { "gap-8": gap === "gap-8" },
+    "gap-y-10",
+    {
+      "grid grid-cols-1": layout === "grid" && columns === 1,
+      "grid md:grid-cols-2": layout === "grid" && columns === 2,
+      "grid md:grid-cols-2 lg:grid-cols-3": layout === "grid" && columns === 3,
+    },
+  ]}>
+  {list.map((item) => {
+    const cardProps = recursiveCloneObject(item);
+    cardProps.data = recursiveCloneObject(item.data);
+
+    return content === "blog" ? (
+      <BlogCard content={cardProps} options={options} />
+    ) : content === "portfolio" ? (
+      <PortfolioCard {...cardProps} />
+    ) : null;
+  })}
+</div>
+
+{
+  content === "blog" &&
+  pagination?.enable &&
+  totalPages > 1 && (
+    <Pagination
+      collection="blog"
+      currentPage={pagination?.currentPage}
+      totalPages={totalPages}
+    />
+  )
+}
+
+<script>
+  import { stickySidebar } from "@/plugins/sticky-sidebar.js";
+
+  const sidebar = document.querySelector(".sticky-sidebar");
+  if (sidebar) {
+    new stickySidebar(sidebar);
+  }
+</script>
