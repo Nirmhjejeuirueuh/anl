@@ -62,7 +62,7 @@ console.log('COURSE ROUTE: About to render course:', course.title);
 <Base
   title={course.title}
   description={course.excerpt}
-  image={course.image ? `${STRAPI_URL}${course.image.url}` : undefined}
+  image={course.image ? (course.image.url.startsWith('http') ? course.image.url : `${STRAPI_URL}${course.image.url}`) : undefined}
 >
   <section class="py-12">
     <div class="container">
@@ -94,7 +94,7 @@ console.log('COURSE ROUTE: About to render course:', course.title);
         <!-- Course Image -->
         {course.image && (
           <OptimizedImage
-            src={`${STRAPI_URL}${course.image.url}`}
+            src={course.image.url.startsWith('http') ? course.image.url : `${STRAPI_URL}${course.image.url}`}
             width={896}
             height={384}
             alt={course.title}

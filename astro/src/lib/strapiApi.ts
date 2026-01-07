@@ -62,7 +62,7 @@ export function convertStrapiTeamMember(strapiMember: StrapiTeamMember): TeamMem
     role: strapiMember.role,
     description: strapiMember.description,
     order: strapiMember.order,
-    image: strapiMember.image ? `${STRAPI_URL}${strapiMember.image.url}` : "",
+    image: strapiMember.image ? (strapiMember.image.url.startsWith('http') ? strapiMember.image.url : `${STRAPI_URL}${strapiMember.image.url}`) : "",
     leadershipTeam: false, // Not implemented yet
     social: {
       enable: false,

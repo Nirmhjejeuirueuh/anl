@@ -673,7 +673,7 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
     collection: "courses",
     data: {
       title: course.title,
-      image: course.image ? `${STRAPI_URL}${course.image.url}` : undefined,
+      image: course.image ? (course.image.url.startsWith('http') ? course.image.url : `${STRAPI_URL}${course.image.url}`) : undefined,
       date: date,
       instructor: course.instructor,
       duration: course.duration,
@@ -724,7 +724,7 @@ export function convertStrapiTrainingToAstro(training: StrapiTraining) {
     collection: "trainings",
     data: {
       title: training.title,
-      image: training.images && training.images.length > 0 ? `${STRAPI_URL}${training.images[0].url}` : undefined,
+      image: training.images && training.images.length > 0 ? (training.images[0].url.startsWith('http') ? training.images[0].url : `${STRAPI_URL}${training.images[0].url}`) : undefined,
       date: date,
       trainingType: training.trainingType || 'other',
       categories: training.categories ? training.categories.map(cat => cat.name) : [],
@@ -773,7 +773,7 @@ export function convertStrapiBlogToAstro(blog: StrapiBlog) {
     collection: "blog",
     data: {
       title: blog.title,
-      image: blog.image ? `${STRAPI_URL}${blog.image.url}` : undefined,
+      image: blog.image ? (blog.image.url.startsWith('http') ? blog.image.url : `${STRAPI_URL}${blog.image.url}`) : undefined,
       date: date,
       author: blog.author,
       categories: blog.categories ? blog.categories.split(',').map(cat => cat.trim()) : [],

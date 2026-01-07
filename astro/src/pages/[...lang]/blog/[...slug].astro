@@ -86,7 +86,7 @@ console.log('🚀 BLOG ROUTE: Parsed content preview:', parsedContent.substring(
 <Base
   title={blog.title}
   description={blog.excerpt}
-  image={blog.image ? `${STRAPI_URL}${blog.image.url}` : undefined}
+  image={blog.image ? (blog.image.url.startsWith('http') ? blog.image.url : `${STRAPI_URL}${blog.image.url}`) : undefined}
 >
   <section class="py-12">
     <div class="container">
@@ -122,7 +122,7 @@ console.log('🚀 BLOG ROUTE: Parsed content preview:', parsedContent.substring(
         <!-- Blog Image -->
         {blog.image && (
           <OptimizedImage
-            src={`${STRAPI_URL}${blog.image.url}`}
+            src={blog.image.url.startsWith('http') ? blog.image.url : `${STRAPI_URL}${blog.image.url}`}
             width={896}
             height={384}
             alt={blog.title}

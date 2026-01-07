@@ -48,7 +48,7 @@ let imageData: Array<{url: string, width: number, height: number}> = [];
 
 if (images && images.length > 0) {
   imageData = images.map((img: any) => ({
-    url: `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${img.url}`,
+    url: img.url.startsWith('http') ? img.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${img.url}`,
     width: img.width,
     height: img.height
   }));

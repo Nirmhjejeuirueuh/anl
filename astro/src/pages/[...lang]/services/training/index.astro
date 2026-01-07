@@ -58,7 +58,7 @@ const indexData = {
               {training.images && training.images.length > 0 && (
                 <div class="aspect-[16/9] overflow-hidden">
                   <img
-                    src={`${STRAPI_URL}${training.images[0].url}`}
+                    src={training.images[0].url.startsWith('http') ? training.images[0].url : `${STRAPI_URL}${training.images[0].url}`}
                     alt={training.title}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
