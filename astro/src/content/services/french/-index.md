@@ -68,7 +68,7 @@ servicesSection:
 # "FAQ" Section located in Services Single Page
 faqSection:
   enable: true # Control the visibility of this section across all services single
-  title: "Vous Avez des Questions sur l'Identité de Marque ? Nous Sommes Là pour Vous Aider"
+  # title: "Vous Avez des Questions sur l'Identité de Marque ? Nous Sommes Là pour Vous Aider"
   # subtitle: ""
   sectionLayout: "horizontal"
   minimalFaqLayout: true
@@ -76,7 +76,7 @@ faqSection:
   showCategories: false
 
   button:
-    enable: true
+    enable: false
     label: "Voir Toutes les FAQ"
     url: "/faq"
     rel: ""

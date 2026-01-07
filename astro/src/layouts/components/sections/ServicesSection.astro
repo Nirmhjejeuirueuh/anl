@@ -68,11 +68,11 @@ services =
       "overflow-hidden":
         creativeShape?.enable && creativeShape?.position !== "top",
     },
-    "pt-16",
+    "pt-0 -mt-8 md:-mt-12 pb-4 md:pb-8",
   ]}>
   <div
     class:list={[
-      "flex flex-col justify-start gap-12 md:gap-16 py-16 md:py-28",
+      "flex flex-col justify-start gap-12 md:gap-16 py-0 md:py-8",
       { "bg-theme-dark": colorScheme === "dark" },
     ]}>
     <div class="container">
@@ -148,7 +148,7 @@ services =
                 creativeShape?.position === "top",
             },
           ]}>
-          <div class="relative z-10 container">
+          <div class="relative z-10 container pb-8 md:pb-12">
             {services && showServicesAs === "static" ? (
               <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {services.map((item, index) => (
