@@ -316,12 +316,30 @@ const courseCollection = defineCollection({
   ),
 });
 
+const trainingCollection = defineCollection({
+  schema: page.merge(
+    z.object({
+      trainingType: z.enum(['bespoke_programme', 'funded_programme', 'video_podcast', 'partner_programme', 'eligibility_terms', 'other']),
+      categories: z.array(z.string()),
+      tags: z.array(z.string()),
+      featured: z.boolean().optional(),
+      seoTitle: z.string().optional(),
+      seoDescription: z.string().optional(),
+      keywords: z.string().optional(),
+      hasCustomLineAnimationBg: z.boolean().optional(),
+      trainingsSection: courseSection.optional(),
+      indexTrainingsSection: courseSection.optional(),
+    }),
+  ),
+});
+
 // Export collections
 export const collections = {
   blog: blogCollection,
   services: serviceCollection,
   "case-studies": portfolioCollection,
   courses: courseCollection,
+  trainings: trainingCollection,
 
   pages: pagesCollection,
   sections: defineCollection({}),

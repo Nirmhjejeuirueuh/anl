@@ -7,24 +7,92 @@ import ServicesSection from "@/components/sections/ServicesSection.astro";
 import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
+import { STRAPI_URL } from "@/lib/strapiApi";
+import { markdownify } from "@/lib/utils/textConverter";
 
 export function getStaticPaths() {
   return generatePaths();
 }
 
-const entry = await getEntryCTM(
-  config.settings.servicesFolder as "services",
-  "-index",
-  Astro.currentLocale,
-);
+// Fetch services page from Strapi
+const response = await fetch(`${STRAPI_URL}/api/services-page?populate[services][populate]=image`);
+if (!response.ok) {
+  throw new Error(`Failed to fetch services page: ${response.status}`);
+}
+const strapiData = await response.json();
+const entry = { data: strapiData.data };
 
-// Remove drafts pages in production
-const response = handleDraftPage(entry?.data);
-if (response) return response;
+// Remove drafts pages in production (adapt for Strapi)
+const draftResponse = handleDraftPage(entry?.data);
+if (draftResponse) return draftResponse;
 ---
 
 <Base title="Our Services" fitToScreen={false}>
-  <PageHeader title="Our Services" subtitle="Comprehensive training and consulting services in Agile, DevOps, Cybersecurity, and Process Optimization" />
-  <ServicesSection content={entry?.data.indexServicesSection} />
+  <PageHeader title="Our Services" />
+
+  <!-- Services Description Section -->
+  <section class="relative py-16 md:py-20 lg:py-24 -mt-16">
+    <div class="container">
+      <div class="mx-auto max-w-4xl">
+        <div class="space-y-8 md:space-y-12">
+          <div
+            data-aos="fade-up-sm"
+            class="prose prose-lg prose-gray max-w-none text-justify">
+            <div class="text-xl md:text-2xl text-gray-700 leading-relaxed font-light">
+              {entry?.data?.description && (
+                <div set:html={markdownify(entry.data.description, true)}></div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Cards Section -->
+  {entry?.data?.services && entry.data.services.length > 0 && (
+    <section class="py-16 md:py-20 lg:py-24 bg-gray-50 -mt-8">
+      <div class="container">
+        <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
+          {entry.data.services.map((service: any, index: number) => (
+            <div
+              data-aos="fade-up-sm"
+              data-aos-delay={index * 200}
+              class={`group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 ${service.endpoint ? 'cursor-pointer' : ''}`}
+              onclick={service.endpoint ? `window.location.href='/services/${service.endpoint.replace(/^\//, '')}'` : undefined}>
+              {service.image && (
+                <div class="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={`${STRAPI_URL}${service.image.url}`}
+                    alt={service.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              )}
+              <div class="p-8 md:p-10">
+                <h3 class="text-h4 text-primary mb-4">{service.title}</h3>
+                <div class="text-gray-600 leading-relaxed prose prose-sm max-w-none text-justify">
+                  {service.description && (
+                    <div set:html={markdownify(service.description, true)}></div>
+                  )}
+                </div>
+                {service.endpoint && (
+                  <div class="mt-6">
+                    <span class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                      Learn More
+                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <CallToAction />
 </Base>

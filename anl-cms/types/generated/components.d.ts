@@ -12,10 +12,26 @@ export interface ElementsSectionInfo extends Struct.ComponentSchema {
   };
 }
 
+export interface ServicesServiceCard extends Struct.ComponentSchema {
+  collectionName: 'components_services_service_cards';
+  info: {
+    description: '';
+    displayName: 'Service Card';
+  };
+  attributes: {
+    description: Schema.Attribute.RichText & Schema.Attribute.Required;
+    endpoint: Schema.Attribute.String;
+    icon: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'elements.section-info': ElementsSectionInfo;
+      'services.service-card': ServicesServiceCard;
     }
   }
 }

@@ -1,0 +1,231 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import ServiceCard from "@/layouts/components/cards/ServiceCard.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import CustomButton from "../CustomButton.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Pagination from "@/layouts/components/widgets/Pagination.astro";
+
+// Type for training section data
+export type sectionType = Section & {
+  limit?: number | false;
+  cta?: "link" | "slider-nav";
+  colorScheme?: "light" | "dark";
+  showTrainingsAs?: "slider" | "static";
+  creativeShape?: { enable: boolean; position: "top" | "bottom" };
+  pagination?: {
+    enable: boolean;
+    currentPage: number;
+  };
+};
+
+type Props = {
+  content?: sectionType;
+  trainings?: CollectionEntry<"trainings">[] | any[];
+};
+
+// Fetching the default content for the training section
+let defaultContent = (
+  await getEntryCTM("sections", "trainings-section", Astro.currentLocale)
+)?.data as sectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as sectionType;
+
+// Extracting required values from 'content' object
+let {
+  cta,
+  limit,
+  title,
+  enable,
+  button,
+  subtitle,
+  colorScheme,
+  creativeShape,
+  showTrainingsAs: originalShowTrainingsAs,
+  pagination,
+} = actualContent as sectionType;
+
+// Force static display and disable navigation
+const showTrainingsAs = "static";
+
+if (!enable) return;
+
+// Use trainings from props if provided, otherwise fetch from collections
+let trainings = Astro.props.trainings || await getCollectionCTM(
+  "trainings" as any,
+  Astro.currentLocale,
+) as CollectionEntry<"trainings">[];
+
+// Limit the number of trainings to be displayed (only if pagination is disabled)
+trainings = limit && (!pagination || !pagination.enable)
+  ? trainings.slice(0, limit as number)
+  : trainings;
+
+// Pagination setup
+const TRAININGS_PER_PAGE = 9;
+let allTrainings = Astro.props.trainings || await getCollectionCTM(
+  "trainings" as any,
+  Astro.currentLocale,
+) as CollectionEntry<"trainings">[];
+let totalPages = Math.ceil(allTrainings.length / TRAININGS_PER_PAGE);
+let hasPagination = allTrainings.length > TRAININGS_PER_PAGE && showTrainingsAs === "static";
+
+// Handle URL-based pagination like blog
+if (pagination?.enable) {
+  const indexOfLastTraining = pagination.currentPage * TRAININGS_PER_PAGE;
+  const indexOfFirstTraining = indexOfLastTraining - TRAININGS_PER_PAGE;
+  trainings = trainings.slice(indexOfFirstTraining, indexOfLastTraining);
+  hasPagination = true; // Always show pagination on paginated pages
+}
+---
+
+<section
+  class:list={[
+    "-mt-4 md:-mt-6 relative overflow-hidden",
+    {
+      "overflow-hidden":
+        creativeShape?.enable && creativeShape?.position !== "top",
+    },
+  ]}>
+  {/* Background Patterns */}
+  <div class="pointer-events-none absolute top-0 left-0 z-0 h-40 w-44 opacity-30 md:opacity-100">
+    <OptimizedImage
+      inlineSvg={true}
+      class="text-primary h-full w-full object-cover"
+      src="/images/shapes/footer-bg-pattern-1.svg"
+      alt="pattern"
+    />
+  </div>
+  <div class="pointer-events-none absolute top-20 right-0 z-0 h-40 w-40 opacity-30 md:opacity-100">
+    <OptimizedImage
+      inlineSvg={true}
+      class="text-secondary h-full w-full object-cover"
+      src="/images/shapes/footer-bg-pattern-1.svg"
+      alt="pattern"
+    />
+  </div>
+  <div
+    class:list={[
+      "flex flex-col justify-start gap-6 md:gap-8 pt-0 pb-16 md:pb-18",
+      { "bg-theme-dark": colorScheme === "dark", "bg-theme-light": colorScheme === "light" },
+    ]}>
+      <div class="container relative z-10">
+        <div
+          class="flex flex-col flex-wrap justify-between gap-8 lg:flex-row lg:items-center">
+        <div class="shrink-0 lg:lg:max-w-2xl" data-aos="fade-up-sm">
+          {
+            subtitle && (
+              <span
+                class:list={[
+                  "mb-2.5 inline-block rounded-full border px-5 py-px",
+                  colorScheme === "dark"
+                    ? "border-white/5 bg-white/5 text-white"
+                    : "bg-primary/5 border-secondary text-primary",
+                ]}
+                set:html={markdownify(subtitle)}
+              />
+            )
+          }
+          {
+            title && (
+              <h2
+                class:list={[
+                  "text-h3",
+                  colorScheme === "dark" ? "text-white" : "text-dark",
+                ]}
+                set:html={markdownify(title)}
+              />
+            )
+          }
+        </div>
+
+        {
+          button?.enable && cta === "link" ? (
+            // CTA button
+            <div data-aos="fade-up-sm" data-aos-delay="200">
+              <CustomButton {...button} />
+            </div>
+          ) : null
+        }
+      </div>
+    </div>
+    {
+      creativeShape?.enable ? (
+        <div
+          class:list={[
+            "has-light-shape relative after:absolute after:inset-x-0 after:h-screen after:w-full",
+            {
+              "after:top-68.25 after:bg-stone-50 after:md:top-72":
+                creativeShape?.position === "bottom",
+            },
+            {
+              "after:bg-theme-light after:bottom-[calc(100%-18rem)] after:-z-20":
+                creativeShape?.position === "top",
+            },
+          ]}>
+          <div class="relative z-10 container">
+            {trainings && showTrainingsAs === "static" ? (
+              <>
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                  <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 py-4 trainings-container" id="trainings-grid">
+                  {trainings.map((item, index) => (
+                    <ServiceCard
+                      data-aos="fade-up-sm"
+                      data-aos-delay={((index % 3) + 1) * 100}
+                      class:list={{
+                        "box-shadow-primary": colorScheme === "light",
+                      }}
+                      content={item as any}
+                      showImage={true}
+                    />
+                  ))}
+                  </div>
+
+                  {hasPagination && (
+                    <Pagination
+                      class="mt-12"
+                      collection="trainings"
+                      currentPage={pagination?.currentPage || 1}
+                      totalPages={totalPages}
+                    />
+                  )}
+                  </div>
+              </>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <div class="container relative z-10">
+          {trainings && showTrainingsAs === "static" ? (
+            <div class="bg-white rounded-lg p-6 shadow-sm">
+              <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3 pt-4 trainings-container">
+              {trainings.map((item, index) => (
+                <ServiceCard
+                  data-aos="fade-up-sm"
+                  data-aos-delay={((index % 3) + 1) * 100}
+                  class:list={{
+                    "box-shadow-primary": colorScheme === "light",
+                  }}
+                  content={item as any}
+                  showImage={true}
+                />
+              ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )
+    }
+  </div>
+</section>

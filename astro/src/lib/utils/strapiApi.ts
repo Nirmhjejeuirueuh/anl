@@ -99,6 +99,126 @@ export interface StrapiCourse {
   };
 }
 
+export interface StrapiTraining {
+  id?: number;
+  documentId?: string;
+  title: string;
+  slug: string;
+  description: string;
+  content?: string;
+  trainingType?: 'bespoke_programme' | 'funded_programme' | 'video_podcast' | 'partner_programme' | 'eligibility_terms' | 'other';
+  images?: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    formats: {
+      thumbnail: StrapiImageFormat;
+      medium: StrapiImageFormat;
+      small: StrapiImageFormat;
+    };
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }>;
+  categories?: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }>;
+  tags?: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }>;
+  featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  keywords?: string;
+  publishedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface StrapiConsultant {
+  id?: number;
+  documentId?: string;
+  title: string;
+  slug: string;
+  description: string;
+  content?: string;
+  consultantType?: 'technical_consultant' | 'business_consultant' | 'agile_coach' | 'devops_specialist' | 'other';
+  images?: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    formats: {
+      thumbnail: StrapiImageFormat;
+      medium: StrapiImageFormat;
+      small: StrapiImageFormat;
+    };
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }>;
+  categories?: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }>;
+  tags?: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }>;
+  featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  keywords?: string;
+  publishedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface StrapiTeamMember {
   id?: number;
   name: string;
@@ -314,6 +434,184 @@ export async function getCoursesByCategory(category: string): Promise<StrapiCour
 }
 
 /**
+ * Fetch all trainings from Strapi CMS
+ */
+export async function getTrainings(): Promise<StrapiTraining[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/trainings?populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch trainings: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiTraining> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching trainings:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch training by slug from Strapi CMS
+ */
+export async function getTrainingBySlug(slug: string): Promise<StrapiTraining | null> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/trainings?filters[slug][$eq]=${slug}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch training: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiTraining> = await response.json();
+    return data.data[0] || null;
+  } catch (error) {
+    console.error('Error fetching training by slug:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch trainings by category from Strapi CMS
+ */
+export async function getTrainingsByCategory(category: string): Promise<StrapiTraining[]> {
+  try {
+    console.log('getTrainingsByCategory: Searching for category:', category);
+    const response = await fetch(`${STRAPI_URL}/api/trainings?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch trainings by category: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiTraining> = await response.json();
+    console.log('getTrainingsByCategory: Found', data.data.length, 'trainings for category:', category);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching trainings by category:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch trainings by type from Strapi CMS
+ */
+export async function getTrainingsByType(trainingType: string): Promise<StrapiTraining[]> {
+  try {
+    console.log('getTrainingsByType: Searching for type:', trainingType);
+    const response = await fetch(`${STRAPI_URL}/api/trainings?filters[trainingType][$eq]=${trainingType}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch trainings by type: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiTraining> = await response.json();
+    console.log('getTrainingsByType: Found', data.data.length, 'trainings for type:', trainingType);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching trainings by type:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch featured trainings from Strapi CMS
+ */
+export async function getFeaturedTrainings(): Promise<StrapiTraining[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/trainings?filters[featured][$eq]=true&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch featured trainings: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiTraining> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching featured trainings:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all consultants from Strapi CMS
+ */
+export async function getConsultants(): Promise<StrapiConsultant[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/consultants?populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch consultants: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiConsultant> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching consultants:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch consultant by slug from Strapi CMS
+ */
+export async function getConsultantBySlug(slug: string): Promise<StrapiConsultant | null> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/consultants?filters[slug][$eq]=${slug}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch consultant: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiConsultant> = await response.json();
+    return data.data[0] || null;
+  } catch (error) {
+    console.error('Error fetching consultant by slug:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch consultants by category from Strapi CMS
+ */
+export async function getConsultantsByCategory(category: string): Promise<StrapiConsultant[]> {
+  try {
+    console.log('getConsultantsByCategory: Searching for category:', category);
+    const response = await fetch(`${STRAPI_URL}/api/consultants?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch consultants by category: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiConsultant> = await response.json();
+    console.log('getConsultantsByCategory: Found', data.data.length, 'consultants for category:', category);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching consultants by category:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch consultants by type from Strapi CMS
+ */
+export async function getConsultantsByType(consultantType: string): Promise<StrapiConsultant[]> {
+  try {
+    console.log('getConsultantsByType: Searching for type:', consultantType);
+    const response = await fetch(`${STRAPI_URL}/api/consultants?filters[consultantType][$eq]=${consultantType}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch consultants by type: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiConsultant> = await response.json();
+    console.log('getConsultantsByType: Found', data.data.length, 'consultants for type:', consultantType);
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching consultants by type:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch featured consultants from Strapi CMS
+ */
+export async function getFeaturedConsultants(): Promise<StrapiConsultant[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/consultants?filters[featured][$eq]=true&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch featured consultants: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiConsultant> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching featured consultants:', error);
+    return [];
+  }
+}
+
+/**
  * Fetch blogs by category from Strapi CMS
  */
 export async function getBlogsByCategory(category: string): Promise<StrapiBlog[]> {
@@ -392,6 +690,55 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
     body: course.content || '',
     rendered: {
       html: course.content || '',
+    },
+  };
+}
+
+/**
+ * Convert Strapi training to Astro-compatible format
+ */
+export function convertStrapiTrainingToAstro(training: StrapiTraining) {
+  // Safely parse date with fallbacks
+  let date: Date;
+  try {
+    const dateString = training.publishedAt || training.createdAt;
+    if (dateString) {
+      date = new Date(dateString);
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        // Fallback to current date if invalid
+        date = new Date();
+      }
+    } else {
+      // No date available, use current date
+      date = new Date();
+    }
+  } catch (error) {
+    // Fallback to current date if parsing fails
+    date = new Date();
+  }
+
+  return {
+    id: training.documentId || training.id?.toString() || training.slug,
+    slug: training.slug,
+    collection: "trainings",
+    data: {
+      title: training.title,
+      image: training.images && training.images.length > 0 ? `${STRAPI_URL}${training.images[0].url}` : undefined,
+      date: date,
+      trainingType: training.trainingType || 'other',
+      categories: training.categories ? training.categories.map(cat => cat.name) : [],
+      tags: training.tags ? training.tags.map(tag => tag.name) : [],
+      draft: false,
+      description: training.description,
+      featured: training.featured,
+      seoTitle: training.seoTitle,
+      seoDescription: training.seoDescription,
+      keywords: training.keywords,
+    },
+    body: training.content || '',
+    rendered: {
+      html: training.content || '',
     },
   };
 }
