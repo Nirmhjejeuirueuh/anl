@@ -1,9 +1,3 @@
----
-// Training detail pages have been removed - all trainings are now shown on the main trainings page
----
-
-<meta http-equiv="refresh" content="0; url=/services/training" />
-
 export async function getStaticPaths() {
   const STRAPI_URL = import.meta.env.STRAPI_URL || 'https://bold-dog-24d9579fdd.strapiapp.com';
   
@@ -31,3 +25,9 @@ export async function getStaticPaths() {
     return [];
   }
 }
+
+---
+// Training detail pages have been removed - all trainings are now shown on the main trainings page
+---
+
+<meta http-equiv="refresh" content="0; url=/services/training" />
