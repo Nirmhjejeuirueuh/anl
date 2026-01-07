@@ -124,6 +124,9 @@ build/
 dist/
 out/
 
+# Vercel
+.vercel/
+
 # Log files
 logs
 *.log
@@ -133,6 +136,8 @@ create-sample-trainings-curl.sh
 create-sample-trainings.js
 create-training-curl.sh
 create-training.js
+export-local-data.js
+migrate-to-cloud.js
 
 # Root level package files (if unwanted)
 package.json
