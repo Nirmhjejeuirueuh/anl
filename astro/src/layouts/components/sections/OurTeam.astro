@@ -48,15 +48,8 @@ let {
   layout,
 } = actualContent as sectionType;
 
-let { members }: { members: TeamMember[] } = (
-  await getEntryCTM("team", "-index", Astro.currentLocale)
-)?.data || { members: [] };
-
 // Fetch team members from Strapi API
-const strapiMembers = await getAllTeamMembers();
-
-// Use Strapi members if available, otherwise fall back to markdown
-members = strapiMembers.length > 0 ? strapiMembers : members;
+let members = await getAllTeamMembers();
 
 // Sort members by order
 members = members.sort((a, b) => (a.order || 0) - (b.order || 0));

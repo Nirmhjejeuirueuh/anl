@@ -93,7 +93,7 @@ export async function getAllTeamMembers(): Promise<TeamMember[]> {
     }
     const data = await response.json();
     console.log('Team members API response:', data); // Debug log
-    return (data.data || []).map(convertStrapiTeamMember).filter(member => member !== null);
+    return (data.data || []).map(convertStrapiTeamMember).filter((member: StrapiTeamMember | null) => member !== null);
   } catch (error) {
     console.error("Error fetching all team members:", error);
     return [];

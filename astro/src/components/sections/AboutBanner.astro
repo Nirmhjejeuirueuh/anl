@@ -1,0 +1,64 @@
+---
+import OptimizedImage from "@/layouts/components/utilities/OptimizedImage.astro";
+import { STRAPI_URL } from "@/lib/strapiApi";
+
+interface Image {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  width: number;
+  height: number;
+  formats: any;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: string | null;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+interface Props {
+  images?: Image[];
+}
+
+const { images } = Astro.props;
+---
+
+<section class="relative py-16 bg-gradient-to-br from-primary/5 to-secondary/5">
+  <div class="container">
+    <div class="text-center mb-12">
+      <h1 class="text-h2 md:text-h1 mb-4">About Us</h1>
+      <p class="text-lg text-muted max-w-2xl mx-auto">
+        Discover our story, mission, and the values that drive us to deliver exceptional training and consulting solutions.
+      </p>
+    </div>
+
+    {images && images.length > 0 && (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {images.map((image) => (
+          <div class="relative group overflow-hidden rounded-lg shadow-lg">
+            <OptimizedImage
+              src={`${STRAPI_URL}${image.url}`}
+              width={image.width}
+              height={image.height}
+              alt={image.alternativeText || image.name}
+              class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            {image.caption && (
+              <div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-4">
+                <p class="text-sm">{image.caption}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

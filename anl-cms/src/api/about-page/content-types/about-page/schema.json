@@ -12,20 +12,25 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
-      "type": "string",
-      "required": true
-    },
     "images": {
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
-    "company": {
-      "type": "component",
-      "repeatable": false,
-      "component": "elements.company-info"
+    "mission": {
+      "type": "text",
+      "required": false
+    },
+    "vision": {
+      "type": "text",
+      "required": false
+    },
+    "core_values": {
+      "type": "text",
+      "required": false
     }
   }
 }

@@ -12,20 +12,16 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "slug": {
-      "type": "uid",
-      "targetField": "name"
-    },
     "name": {
       "type": "string",
       "required": true
     },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
     "role": {
       "type": "string",
-      "required": true
-    },
-    "description": {
-      "type": "richtext",
       "required": true
     },
     "image": {
@@ -35,6 +31,10 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
     },
     "order": {
       "type": "integer",
