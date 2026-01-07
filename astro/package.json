@@ -24,6 +24,7 @@
     "yarn": ">=1.22.22"
   },
   "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
     "@floating-ui/dom": "^1.7.4",
     "@georgedoescode/generative-utils": "^2.0.1",
     "@lucide/astro": "^0.548.0",

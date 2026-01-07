@@ -12,6 +12,7 @@ import { generateAstroFontsConfig } from "./src/lib/utils/AstroFont.ts";
 import config from "./.astro/config.generated.json" with { type: "json" };
 
 import compressor from "astro-compressor";
+import vercel from "@astrojs/vercel";
 
 const fonts = generateAstroFontsConfig(fontsJson);
 
@@ -53,6 +54,7 @@ export default defineConfig({
       "@/shortcodes/VideoInline.astro",
     ],
   }), mdx(), compressor()],
+  adapter: vercel(),
   markdown: {
     rehypePlugins: [
       [
