@@ -12,6 +12,8 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
+export const prerender = false;
+
 // Fetch courses from Strapi and convert to Astro format
 const strapiCourses = await getCourses();
 const courses = strapiCourses.map(convertStrapiCourseToAstro);

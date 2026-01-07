@@ -13,6 +13,8 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
+export const prerender = false;
+
 // Fetch about page from Strapi
 const response = await fetch(`${STRAPI_URL}/api/about-page?populate=*`);
 if (!response.ok) {

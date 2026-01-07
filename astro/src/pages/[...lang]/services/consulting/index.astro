@@ -11,6 +11,8 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
+export const prerender = false;
+
 // Fetch consultants from Strapi
 const strapiConsultants = await getConsultants();
 

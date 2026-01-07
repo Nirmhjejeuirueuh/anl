@@ -9,6 +9,8 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
+export const prerender = false;
+
 // Default page data
 const pageData = {
   title: "Our Team",

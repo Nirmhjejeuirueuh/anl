@@ -8,6 +8,8 @@ import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { supportedLanguages } from "@/lib/utils/i18nUtils.ts";
 
+export const prerender = false;
+
 export async function getStaticPaths() {
   const paths = await Promise.all(
     supportedLanguages.map(async (lang) => {

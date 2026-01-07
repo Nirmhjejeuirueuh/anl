@@ -11,6 +11,8 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
+export const prerender = false;
+
 // Fetch trainings from Strapi
 const strapiTrainings = await getTrainings();
 
