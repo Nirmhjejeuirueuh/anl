@@ -8,6 +8,7 @@ import { getCollectionCTM } from "@/lib/contentParser.astro";
 import CustomButton from "../CustomButton.astro";
 import overrideObjects from "@/lib/utils/overrideObjects";
 import Icons from "@/helpers/Icons.astro";
+import { getTrainings, getConsultants } from "@/lib/utils/strapiApi";
 
 // Type for service section data
 export type sectionType = Section & {
@@ -50,10 +51,29 @@ let {
 
 if (!enable) return;
 
-let services = await getCollectionCTM(
-  config.settings.servicesFolder as "services",
-  Astro.currentLocale,
-);
+// Fetch trainings and consultants from Strapi
+const trainings = await getTrainings();
+const consultants = await getConsultants();
+
+// Combine trainings and consultants as services
+let services = [
+  ...trainings.slice(0, 2).map(training => ({
+    ...training,
+    type: 'training',
+    slug: training.slug,
+    title: training.title,
+    description: training.description,
+    image: training.image
+  })),
+  ...consultants.slice(0, 2).map(consultant => ({
+    ...consultant,
+    type: 'consultant',
+    slug: consultant.slug,
+    title: consultant.title,
+    description: consultant.description,
+    image: consultant.image
+  }))
+];
 
 // Limit the number of services to be displayed
 services =
@@ -150,39 +170,83 @@ services =
           ]}>
           <div class="relative z-10 container pb-8 md:pb-12">
             {services && showServicesAs === "static" ? (
-              <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {services.map((item, index) => (
-                  <ServiceCard
+              <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+                {services.map((service: any, index: number) => (
+                  <div
                     data-aos="fade-up-sm"
-                    data-aos-delay={((index % 3) + 1) * 100}
-                    class:list={{
-                      "box-shadow-primary": colorScheme === "light",
-                    }}
-                    content={item}
-                  />
+                    data-aos-delay={index * 100}
+                    class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+                    {service.image && (
+                      <div class="aspect-[16/9] overflow-hidden">
+                        <img
+                          src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                          alt={service.title}
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <div class="p-6">
+                      <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-h5 text-primary font-semibold">{service.title}</h3>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary capitalize">
+                          {service.type}
+                        </span>
+                      </div>
+                      <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                        {service.description?.length > 120 ? service.description.substring(0, 120) + '...' : service.description}
+                      </p>
+                      <div class="mt-4">
+                        <a
+                          href={service.type === 'training' ? `/services/training/${service.slug}` : `/services/consulting/${service.slug}`}
+                          class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors text-sm">
+                          Learn More
+                          <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             ) : (
               <div class="swiper services-swiper w-full">
                 <div class="swiper-wrapper">
                   {services &&
-                    services.map((item, index) => (
-                      <div
-                        class:list={[
-                          "swiper-slide h-auto!",
-                          { "p-2": colorScheme === "light" },
-                        ]}>
-                        <ServiceCard
-                          class:list={[
-                            "min-h-full",
-                            {
-                              "box-shadow-primary": colorScheme === "light",
-                            },
-                          ]}
-                          content={item}
-                          data-aos="fade-up-sm"
-                          data-aos-delay={((index % 3) + 1) * 100}
-                        />
+                    services.map((service: any, index: number) => (
+                      <div class="swiper-slide h-auto! p-2">
+                        <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 min-h-full">
+                          {service.image && (
+                            <div class="aspect-[16/9] overflow-hidden">
+                              <img
+                                src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                                alt={service.title}
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                          )}
+                          <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                              <h3 class="text-h5 text-primary font-semibold">{service.title}</h3>
+                              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary capitalize">
+                                {service.type}
+                              </span>
+                            </div>
+                            <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                              {service.description?.length > 200 ? service.description.substring(0, 200) + '...' : service.description}
+                            </p>
+                            <div class="mt-4">
+                              <a
+                                href={service.type === 'training' ? `/services/training/${service.slug}` : `/services/consulting/${service.slug}`}
+                                class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors text-sm">
+                                Learn More
+                                <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                 </div>
@@ -193,39 +257,83 @@ services =
       ) : (
         <div class="container">
           {services && showServicesAs === "static" ? (
-            <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {services.map((item, index) => (
-                <ServiceCard
+            <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+              {services.map((service: any, index: number) => (
+                <div
                   data-aos="fade-up-sm"
-                  data-aos-delay={((index % 3) + 1) * 100}
-                  class:list={{
-                    "box-shadow-primary": colorScheme === "light",
-                  }}
-                  content={item}
-                />
+                  data-aos-delay={index * 100}
+                  class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+                  {service.image && (
+                    <div class="aspect-[16/9] overflow-hidden">
+                      <img
+                        src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                        alt={service.title}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                  <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="text-h5 text-primary font-semibold">{service.title}</h3>
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary capitalize">
+                        {service.type}
+                      </span>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                      {service.description?.length > 200 ? service.description.substring(0, 200) + '...' : service.description}
+                    </p>
+                    <div class="mt-4">
+                      <a
+                        href={service.type === 'training' ? `/services/training/${service.slug}` : `/services/consulting/${service.slug}`}
+                        class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors text-sm">
+                        Learn More
+                        <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           ) : (
             <div class="swiper services-swiper w-full">
               <div class="swiper-wrapper">
                 {services &&
-                  services.map((item, index) => (
-                    <div
-                      class:list={[
-                        "swiper-slide h-auto!",
-                        { "p-2": colorScheme === "light" },
-                      ]}>
-                      <ServiceCard
-                        data-aos="fade-up-sm"
-                        data-aos-delay={((index % 3) + 1) * 100}
-                        class:list={[
-                          "min-h-full",
-                          {
-                            "box-shadow-primary": colorScheme === "light",
-                          },
-                        ]}
-                        content={item}
-                      />
+                  services.map((service: any, index: number) => (
+                    <div class="swiper-slide h-auto! p-2">
+                      <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 min-h-full">
+                        {service.image && (
+                          <div class="aspect-[16/9] overflow-hidden">
+                            <img
+                              src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                              alt={service.title}
+                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                        )}
+                        <div class="p-6">
+                          <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-h5 text-primary font-semibold">{service.title}</h3>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary capitalize">
+                              {service.type}
+                            </span>
+                          </div>
+                          <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                            {service.description?.length > 120 ? service.description.substring(0, 120) + '...' : service.description}
+                          </p>
+                          <div class="mt-4">
+                            <a
+                              href={service.type === 'training' ? `/services/training/${service.slug}` : `/services/consulting/${service.slug}`}
+                              class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors text-sm">
+                              Learn More
+                              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ))}
               </div>

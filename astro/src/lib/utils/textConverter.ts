@@ -29,6 +29,8 @@ export const markdownify = (content: string, container?: boolean) => {
   // Set the custom renderer
   marked.setOptions({
     renderer,
+    breaks: true,
+    gfm: true,
   });
 
   return container ? marked.parse(content) : marked.parseInline(content);

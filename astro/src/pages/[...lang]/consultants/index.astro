@@ -28,37 +28,21 @@ const indexData = {
 <Base title={indexData.title} metaDescription={indexData.metaDescription} draft={indexData.draft}>
   <PageHeader {...indexData} />
 
-  <!-- Consultants Description Section -->
-  <section class="relative py-16 md:py-20 lg:py-24 -mt-16">
-    <div class="container">
-      <div class="mx-auto max-w-4xl">
-        <div class="space-y-8 md:space-y-12">
-          <div
-            data-aos="fade-up-sm"
-            class="prose prose-lg prose-gray max-w-none text-justify">
-            <div class="text-xl md:text-2xl text-gray-700 leading-relaxed font-light">
-              <p>AgileN Lite provides expert consulting services to help organizations navigate their digital transformation journey. Our consultants bring deep expertise in agile methodologies, DevOps practices, and business process optimization to deliver measurable results.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Consultants Cards Section -->
   {strapiConsultants && strapiConsultants.length > 0 && (
     <section class="py-16 md:py-20 lg:py-24 bg-gray-50 -mt-8">
       <div class="container">
         <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
           {strapiConsultants.map((consultant: any, index: number) => (
-            <div
+            <a
               data-aos="fade-up-sm"
               data-aos-delay={index * 200}
-              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-              {consultant.images && consultant.images.length > 0 && (
+              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 block"
+              href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/consultants/${consultant.slug}`.replace(/^\/\//, '/')}>
+              {consultant.image && (
                 <div class="aspect-[16/9] overflow-hidden">
                   <img
-                    src={consultant.images[0].url.startsWith('http') ? consultant.images[0].url : `${STRAPI_URL}${consultant.images[0].url}`}
+                    src={consultant.image.url.startsWith('http') ? consultant.image.url : `${STRAPI_URL}${consultant.image.url}`}
                     alt={consultant.title}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -72,15 +56,15 @@ const indexData = {
                   )}
                 </div>
                 <div class="mt-6">
-                  <a href={`/consultant/${consultant.slug}`} class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                  <span class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
                     Learn More
                     <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                  </a>
+                  </span>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

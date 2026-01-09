@@ -22,24 +22,9 @@ if (!training) {
 const parsedContent = await marked.parse(training.content || '');
 ---
 
-<Base title={training.title} metaDescription={training.description}>
+<Base>
 
-  <!-- Hero Section -->
-  <section class="py-12">
-    <div class="container">
-      <div class="grid grid-cols-1 justify-items-center space-y-12">
-        <!-- Training Meta -->
-        <div class="max-w-full space-y-8 text-center lg:max-w-3xl">
-          <div>
-            <h1 class="text-h3 md:text-h2">{training.title}</h1>
-            {training.description && (
-              <p class="text-muted mt-6">{training.description}</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- Training Content Section -->
   <section class="relative py-16 md:py-20 lg:py-24 -mt-16">

@@ -1,10 +1,9 @@
 ---
 import Base from "@/layouts/Base.astro";
 import CallToAction from "@/components/sections/CallToAction.astro";
-import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
-import { getConsultantBySlug, STRAPI_URL } from "@/lib/utils/strapiApi";
+import { getConsultantBySlug } from "@/lib/utils/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { markdownify } from "@/lib/utils/textConverter";
+import { marked } from "marked";
 
 // Enable SSR for dynamic Strapi content
 export const prerender = false;
@@ -18,89 +17,46 @@ if (!consultant) {
   throw new Error(`Consultant with slug "${slug}" not found`);
 }
 
-// Mock page data
-const pageData = {
-  title: consultant.title,
-  subtitle: consultant.description,
-  metaDescription: consultant.seoDescription || consultant.description,
-  draft: false
-};
+// Parse markdown content to HTML
+const parsedContent = await marked.parse(consultant.content || '');
 ---
 
-<Base title={pageData.title} metaDescription={pageData.metaDescription} draft={pageData.draft}>
-  <PageHeader {...pageData} />
+<Base title={consultant.title} metaDescription={consultant.description}>
 
-  <!-- Consultant Hero Section -->
-  <section class="relative py-16 md:py-20 lg:py-24 -mt-16">
+  <!-- Hero Section -->
+  <section class="py-12">
     <div class="container">
-      <div class="mx-auto max-w-4xl">
-        <div class="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-          <!-- Content -->
-          <div data-aos="fade-up-sm">
-            <h1 class="text-h2 md:text-h1 text-primary mb-6">{consultant.title}</h1>
-            <div class="prose prose-lg prose-gray max-w-none text-justify">
-              <div set:html={markdownify(consultant.description, true)}></div>
-            </div>
-            {consultant.consultantType && (
-              <div class="mt-6">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
-                  {consultant.consultantType.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </span>
-              </div>
+      <div class="grid grid-cols-1 justify-items-center space-y-12">
+        <!-- Consultant Meta -->
+        <div class="max-w-full space-y-8 text-center lg:max-w-3xl">
+          <div>
+            <h1 class="text-h3 md:text-h2">{consultant.title}</h1>
+            {consultant.description && (
+              <p class="text-muted mt-6">{consultant.description}</p>
             )}
           </div>
-
-          <!-- Image -->
-          {consultant.images && consultant.images.length > 0 && (
-            <div data-aos="fade-up-sm" data-aos-delay="200" class="relative">
-              <div class="aspect-[16/9] overflow-hidden rounded-2xl shadow-xl">
-                <img
-                  src={consultant.images[0].url.startsWith('http') ? consultant.images[0].url : `${STRAPI_URL}${consultant.images[0].url}`}
-                  alt={consultant.title}
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
   </section>
 
   <!-- Consultant Content Section -->
-  {consultant.content && (
-    <section class="py-16 md:py-20 lg:py-24">
-      <div class="container">
-        <div class="mx-auto max-w-4xl">
-          <div class="prose prose-lg prose-gray max-w-none">
-            <div set:html={markdownify(consultant.content, true)}></div>
+  <section class="relative py-16 md:py-20 lg:py-24 -mt-16">
+    <div class="container">
+      <div class="mx-auto max-w-4xl">
+        <div class="space-y-8 md:space-y-12">
+          <!-- Consultant Content -->
+          <div
+            data-aos="fade-up-sm"
+            class="prose-styles content">
+            {consultant.content && (
+              <div set:html={parsedContent} />
+            )}
           </div>
         </div>
       </div>
-    </section>
-  )}
-
-  <!-- Consultant Images Gallery -->
-  {consultant.images && consultant.images.length > 1 && (
-    <section class="py-16 md:py-20 lg:py-24 bg-gray-50">
-      <div class="container">
-        <div class="mx-auto max-w-6xl">
-          <h2 class="text-h3 text-center mb-12">Gallery</h2>
-          <div data-aos="fade-up-sm" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {consultant.images.slice(1).map((image: any, index: number) => (
-              <div class="aspect-[16/9] overflow-hidden rounded-xl shadow-lg">
-                <img
-                  src={image.url}
-                  alt={image.alternativeText || consultant.title}
-                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  )}
+    </div>
+  </section>
 
   <CallToAction />
 </Base>

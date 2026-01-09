@@ -1,0 +1,115 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getResourceLibraries } from "@/lib/utils/strapiApi";
+import CallToAction from "@/components/sections/CallToAction.astro";
+import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils.ts";
+import { STRAPI_URL } from "@/lib/strapiApi";
+import { markdownify } from "@/lib/utils/textConverter";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+export const prerender = false;
+
+// Fetch resource libraries from Strapi
+const strapiResourceLibraries = await getResourceLibraries();
+
+// Mock index page data
+const indexData = {
+  title: "Resource Library",
+  subtitle: "Access our comprehensive collection of training materials, videos, documents, and resources",
+  metaDescription: "Explore AgileN Lite's resource library featuring training videos, PDF guides, documentation, articles, and other valuable resources for your professional development.",
+  draft: false
+};
+---
+
+<Base title={indexData.title} metaDescription={indexData.metaDescription} draft={indexData.draft}>
+  <PageHeader {...indexData} />
+
+  <!-- Resource Libraries Cards Section -->
+  {strapiResourceLibraries && strapiResourceLibraries.length > 0 && (
+    <section class="py-16 md:py-20 lg:py-24 bg-gray-50 -mt-8">
+      <div class="container">
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-12">
+          {strapiResourceLibraries.map((resource: any, index: number) => (
+            <a
+              data-aos="fade-up-sm"
+              data-aos-delay={index * 150}
+              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 block"
+              href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/resources/${resource.slug}`.replace(/^\/\//, '/')}>
+              {resource.image && (
+                <div class="aspect-[16/9] overflow-hidden">
+                  <img
+                    src={resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`}
+                    alt={resource.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              )}
+              <div class="p-6 md:p-8">
+                <div class="flex items-center justify-between mb-3">
+                  <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    resource.resourceType === 'video' ? 'bg-red-100 text-red-800' :
+                    resource.resourceType === 'pdf' ? 'bg-blue-100 text-blue-800' :
+                    resource.resourceType === 'document' ? 'bg-green-100 text-green-800' :
+                    resource.resourceType === 'article' ? 'bg-purple-100 text-purple-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {resource.resourceType === 'video' && (
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                      </svg>
+                    )}
+                    {resource.resourceType === 'pdf' && (
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                      </svg>
+                    )}
+                    {resource.resourceType === 'document' && (
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                      </svg>
+                    )}
+                    {resource.resourceType === 'article' && (
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"/>
+                      </svg>
+                    )}
+                    {resource.resourceType || 'other'}
+                  </span>
+                  {resource.featured && (
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Featured
+                    </span>
+                  )}
+                </div>
+                <h3 class="text-h5 text-primary mb-3 line-clamp-2">{resource.title}</h3>
+                <div class="text-gray-600 leading-relaxed prose prose-sm max-w-none text-justify line-clamp-3">
+                  {resource.description && (
+                    <div set:html={markdownify(resource.description, true)}></div>
+                  )}
+                </div>
+                <div class="mt-4">
+                  <span class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                    {resource.resourceType === 'video' ? 'Watch Now' :
+                     resource.resourceType === 'pdf' ? 'Download PDF' :
+                     resource.resourceType === 'document' ? 'View Document' :
+                     resource.resourceType === 'article' ? 'Read Article' :
+                     'Learn More'}
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CallToAction />
+</Base>

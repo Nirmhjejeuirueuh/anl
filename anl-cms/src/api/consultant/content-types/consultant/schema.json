@@ -38,30 +38,18 @@
         "other"
       ]
     },
-    "images": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
-      "allowedTypes": ["images"]
-    },
-    "categories": {
-      "type": "string"
-    },
-    "tags": {
-      "type": "string"
-    },
-    "featured": {
+    "hide": {
       "type": "boolean",
       "default": false
     },
-    "seoTitle": {
-      "type": "string"
-    },
-    "seoDescription": {
-      "type": "string"
-    },
     "keywords": {
       "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
     }
   }
 }

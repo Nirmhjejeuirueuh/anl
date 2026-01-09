@@ -107,7 +107,7 @@ export interface StrapiTraining {
   description: string;
   content?: string;
   trainingType?: 'bespoke_programme' | 'funded_programme' | 'video_podcast' | 'partner_programme' | 'eligibility_terms' | 'other';
-  images?: Array<{
+  image?: {
     id: number;
     documentId: string;
     name: string;
@@ -131,28 +131,8 @@ export interface StrapiTraining {
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-  }>;
-  categories?: Array<{
-    id: number;
-    documentId: string;
-    name: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-  }>;
-  tags?: Array<{
-    id: number;
-    documentId: string;
-    name: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-  }>;
-  featured?: boolean;
-  seoTitle?: string;
-  seoDescription?: string;
+  };
+  hide?: boolean;
   keywords?: string;
   publishedAt: string;
   createdAt?: string;
@@ -167,7 +147,7 @@ export interface StrapiConsultant {
   description: string;
   content?: string;
   consultantType?: 'technical_consultant' | 'business_consultant' | 'agile_coach' | 'devops_specialist' | 'other';
-  images?: Array<{
+  image?: {
     id: number;
     documentId: string;
     name: string;
@@ -191,28 +171,52 @@ export interface StrapiConsultant {
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-  }>;
-  categories?: Array<{
+  };
+  hide?: boolean;
+  keywords?: string;
+  publishedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface StrapiResourceLibrary {
+  id?: number;
+  documentId?: string;
+  title: string;
+  slug: string;
+  description: string;
+  content?: string;
+  resourceType: 'video' | 'pdf' | 'document' | 'article' | 'other';
+  videoUrl?: string;
+  pdfUrl?: string;
+  externalUrl?: string;
+  image?: {
     id: number;
     documentId: string;
     name: string;
-    slug: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    formats: {
+      thumbnail: StrapiImageFormat;
+      medium: StrapiImageFormat;
+      small: StrapiImageFormat;
+    };
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-  }>;
-  tags?: Array<{
-    id: number;
-    documentId: string;
-    name: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-  }>;
+  };
   featured?: boolean;
-  seoTitle?: string;
-  seoDescription?: string;
+  tags?: string;
   keywords?: string;
   publishedAt: string;
   createdAt?: string;
@@ -443,7 +447,8 @@ export async function getTrainings(): Promise<StrapiTraining[]> {
       throw new Error(`Failed to fetch trainings: ${response.status}`);
     }
     const data: StrapiResponse<StrapiTraining> = await response.json();
-    return data.data;
+    // Filter out hidden trainings
+    return data.data.filter(training => !training.hide);
   } catch (error) {
     console.error('Error fetching trainings:', error);
     return [];
@@ -532,7 +537,8 @@ export async function getConsultants(): Promise<StrapiConsultant[]> {
       throw new Error(`Failed to fetch consultants: ${response.status}`);
     }
     const data: StrapiResponse<StrapiConsultant> = await response.json();
-    return data.data;
+    // Filter out hidden consultants
+    return data.data.filter(consultant => !consultant.hide);
   } catch (error) {
     console.error('Error fetching consultants:', error);
     return [];
@@ -607,6 +613,74 @@ export async function getFeaturedConsultants(): Promise<StrapiConsultant[]> {
     return data.data;
   } catch (error) {
     console.error('Error fetching featured consultants:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all resource libraries from Strapi CMS
+ */
+export async function getResourceLibraries(): Promise<StrapiResourceLibrary[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/resource-libraries?populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch resource libraries: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiResourceLibrary> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching resource libraries:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch resource library by slug from Strapi CMS
+ */
+export async function getResourceLibraryBySlug(slug: string): Promise<StrapiResourceLibrary | null> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/resource-libraries?filters[slug][$eq]=${slug}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch resource library: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiResourceLibrary> = await response.json();
+    return data.data[0] || null;
+  } catch (error) {
+    console.error('Error fetching resource library by slug:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch featured resource libraries from Strapi CMS
+ */
+export async function getFeaturedResourceLibraries(): Promise<StrapiResourceLibrary[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/resource-libraries?filters[featured][$eq]=true&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch featured resource libraries: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiResourceLibrary> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching featured resource libraries:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch resource libraries by type from Strapi CMS
+ */
+export async function getResourceLibrariesByType(resourceType: string): Promise<StrapiResourceLibrary[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/resource-libraries?filters[resourceType][$eq]=${resourceType}&populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch resource libraries by type: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiResourceLibrary> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching resource libraries by type:', error);
     return [];
   }
 }

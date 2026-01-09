@@ -28,43 +28,18 @@ const indexData = {
 <Base title={indexData.title} metaDescription={indexData.metaDescription} draft={indexData.draft}>
   <PageHeader {...indexData} />
 
-  <!-- Trainings Description Section -->
-  <section class="relative py-16 md:py-20 lg:py-24 -mt-16">
-    <div class="container">
-      <div class="mx-auto max-w-4xl">
-        <div class="space-y-8 md:space-y-12">
-          <div
-            data-aos="fade-up-sm"
-            class="prose prose-lg prose-gray max-w-none text-justify">
-            <div class="text-xl md:text-2xl text-gray-700 leading-relaxed font-light">
-              <p>AgileN Lite offers comprehensive training programs designed to bridge knowledge gaps with practical applicability. Our training solutions equip your company's staff and individuals with the capabilities and competencies necessary for the ever-changing digital landscape.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Trainings Cards Section -->
   {strapiTrainings && strapiTrainings.length > 0 && (
     <section class="py-16 md:py-20 lg:py-24 bg-gray-50 -mt-8">
       <div class="container">
         <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
           {strapiTrainings.map((training: any, index: number) => (
-            <div
+            <a
               data-aos="fade-up-sm"
               data-aos-delay={index * 200}
-              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer"
-              onclick={`window.location.href='/training/${training.slug}'`}>
-              {training.images && training.images.length > 0 && (
-                <div class="aspect-[16/9] overflow-hidden">
-                  <img
-                    src={training.images[0].url.startsWith('http') ? training.images[0].url : `${STRAPI_URL}${training.images[0].url}`}
-                    alt={training.title}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              )}
+              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 block"
+              href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/services/training/${training.slug}`.replace(/^\/\//, '/')}>
+
               <div class="p-8 md:p-10">
                 <h3 class="text-h4 text-primary mb-4">{training.title}</h3>
                 <div class="text-gray-600 leading-relaxed prose prose-sm max-w-none text-justify">
@@ -81,7 +56,7 @@ const indexData = {
                   </span>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

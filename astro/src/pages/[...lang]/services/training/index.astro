@@ -55,10 +55,10 @@ const indexData = {
               data-aos="fade-up-sm"
               data-aos-delay={index * 200}
               class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-              {training.images && training.images.length > 0 && (
+              {training.image && (
                 <div class="aspect-[16/9] overflow-hidden">
                   <img
-                    src={training.images[0].url.startsWith('http') ? training.images[0].url : `${STRAPI_URL}${training.images[0].url}`}
+                    src={training.image.url.startsWith('http') ? training.image.url : `${STRAPI_URL}${training.image.url}`}
                     alt={training.title}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -72,7 +72,7 @@ const indexData = {
                   )}
                 </div>
                 <div class="mt-6">
-                  <a href={`/training/${training.slug}`} class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                  <a href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/services/training/${training.slug}`.replace(/^\/\//, '/')} class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
                     Learn More
                     <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

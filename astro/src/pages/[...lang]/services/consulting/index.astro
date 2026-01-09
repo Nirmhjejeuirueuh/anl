@@ -55,10 +55,10 @@ const indexData = {
               data-aos="fade-up-sm"
               data-aos-delay={index * 200}
               class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-              {consultant.images && consultant.images.length > 0 && (
+              {consultant.image && (
                 <div class="aspect-[16/9] overflow-hidden">
                   <img
-                    src={consultant.images[0].url.startsWith('http') ? consultant.images[0].url : `${STRAPI_URL}${consultant.images[0].url}`}
+                    src={consultant.image.url.startsWith('http') ? consultant.image.url : `${STRAPI_URL}${consultant.image.url}`}
                     alt={consultant.title}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

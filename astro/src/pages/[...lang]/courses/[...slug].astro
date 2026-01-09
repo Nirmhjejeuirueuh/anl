@@ -71,7 +71,9 @@ console.log('COURSE ROUTE: About to render course:', course.title);
         <div class="max-w-full space-y-8 text-center lg:max-w-3xl">
           <div>
             <h1 class="text-h3 md:text-h2">{course.title}</h1>
-            {course.excerpt && <p class="text-muted">{course.excerpt}</p>}
+            {course.excerpt && (
+              <p class="text-muted mt-6">{course.excerpt}</p>
+            )}
             {course.instructor && (
               <div class="mt-4">
                 <p class="text-sm text-muted">By {course.instructor}</p>
