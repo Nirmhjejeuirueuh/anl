@@ -20,24 +20,16 @@
       "targetField": "title",
       "required": true
     },
-    "description": {
-      "type": "text",
-      "required": true
-    },
-    "content": {
-      "type": "richtext",
-      "required": false
-    },
     "resourceType": {
       "type": "enumeration",
+      "required": true,
       "enum": [
         "video",
         "pdf",
         "document",
         "article",
         "other"
-      ],
-      "required": true
+      ]
     },
     "videoUrl": {
       "type": "string",
@@ -51,18 +43,18 @@
       "type": "string",
       "required": false
     },
-    "image": {
+    "media": {
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     },
     "featured": {
       "type": "boolean",
       "default": false
-    },
-    "tags": {
-      "type": "string"
     },
     "keywords": {
       "type": "string"

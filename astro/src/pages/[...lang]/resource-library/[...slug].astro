@@ -22,11 +22,16 @@ if (!resource) {
   return Astro.redirect('/404');
 }
 
+// Redirect videos back to index page since they display inline
+if (resource.resourceType === 'video') {
+  return Astro.redirect(`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/resource-library`.replace(/^\//, ''));
+}
+
 // Page data
 const pageData = {
   title: resource.title,
-  subtitle: resource.description,
-  metaDescription: resource.description,
+  subtitle: resource.title,
+  metaDescription: resource.title,
   draft: false
 };
 ---
@@ -141,13 +146,6 @@ const pageData = {
           </div>
         )}
 
-        <!-- Article Content -->
-        {resource.content && (
-          <div class="prose prose-lg max-w-none">
-            <div set:html={markdownify(resource.content)}></div>
-          </div>
-        )}
-
         <!-- External Link -->
         {resource.resourceType === 'other' && resource.externalUrl && (
           <div class="mb-8">
@@ -169,20 +167,6 @@ const pageData = {
                 </svg>
                 Visit Resource
               </a>
-            </div>
-          </div>
-        )}
-
-        <!-- Tags -->
-        {resource.tags && (
-          <div class="mt-8 pt-8 border-t border-gray-200">
-            <h4 class="text-lg font-semibold text-gray-900 mb-4">Tags</h4>
-            <div class="flex flex-wrap gap-2">
-              {resource.tags.split(',').map((tag: string) => (
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
-                  {tag.trim()}
-                </span>
-              ))}
             </div>
           </div>
         )}

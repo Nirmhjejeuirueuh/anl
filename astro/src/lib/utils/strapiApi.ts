@@ -178,7 +178,46 @@ export interface StrapiConsultant {
   createdAt?: string;
   updatedAt?: string;
 }
-
+export interface StrapiResourceLibrary {
+  id?: number;
+  documentId?: string;
+  title: string;
+  slug: string;
+  resourceType: 'video' | 'pdf' | 'document' | 'article' | 'other';
+  videoUrl?: string;
+  pdfUrl?: string;
+  externalUrl?: string;
+  image?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    formats: {
+      thumbnail: StrapiImageFormat;
+      medium: StrapiImageFormat;
+      small: StrapiImageFormat;
+    };
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+  featured?: boolean;
+  keywords?: string;
+  publishedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
 export interface StrapiResourceLibrary {
   id?: number;
   documentId?: string;

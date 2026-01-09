@@ -23,6 +23,13 @@ const indexData = {
   metaDescription: "Explore AgileN Lite's resource library featuring training videos, PDF guides, documentation, articles, and other valuable resources for your professional development.",
   draft: false
 };
+
+// Helper function to extract YouTube video ID
+function getYouTubeVideoId(url: string): string {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length == 11) ? match[2] : '';
+}
 ---
 
 <Base title={indexData.title} metaDescription={indexData.metaDescription} draft={indexData.draft}>
@@ -34,18 +41,46 @@ const indexData = {
       <div class="container">
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-12">
           {strapiResourceLibraries.map((resource: any, index: number) => (
-            <a
+            <div
               data-aos="fade-up-sm"
               data-aos-delay={index * 150}
-              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 block"
-              href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/resources/${resource.slug}`.replace(/^\/\//, '/')}>
-              {resource.image && (
+              class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
+            >
+              {(resource.image || resource.media) && resource.resourceType !== 'video' && (
                 <div class="aspect-[16/9] overflow-hidden">
                   <img
-                    src={resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`}
+                    src={
+                      resource.image ?
+                        (resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`) :
+                        (resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`)
+                    }
                     alt={resource.title}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
+                </div>
+              )}
+
+              <!-- Video iframe for video resources -->
+              {resource.resourceType === 'video' && resource.videoUrl && (
+                <div class="aspect-video overflow-hidden">
+                  {resource.videoUrl.includes('youtube.com') || resource.videoUrl.includes('youtu.be') ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${getYouTubeVideoId(resource.videoUrl)}`}
+                      title={resource.title}
+                      class="w-full h-full rounded-t-2xl"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  ) : (
+                    <video
+                      controls
+                      class="w-full h-full rounded-t-2xl"
+                      poster={resource.image ? (resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`) : undefined}
+                    >
+                      <source src={resource.videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
                 </div>
               )}
               <div class="p-6 md:p-8">
@@ -86,25 +121,42 @@ const indexData = {
                   )}
                 </div>
                 <h3 class="text-h5 text-primary mb-3 line-clamp-2">{resource.title}</h3>
-                <div class="text-gray-600 leading-relaxed prose prose-sm max-w-none text-justify line-clamp-3">
-                  {resource.description && (
-                    <div set:html={markdownify(resource.description, true)}></div>
-                  )}
-                </div>
                 <div class="mt-4">
-                  <span class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
-                    {resource.resourceType === 'video' ? 'Watch Now' :
-                     resource.resourceType === 'pdf' ? 'Download PDF' :
-                     resource.resourceType === 'document' ? 'View Document' :
-                     resource.resourceType === 'article' ? 'Read Article' :
-                     'Learn More'}
-                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </span>
+                  {resource.resourceType === 'pdf' && (resource.pdfUrl || resource.externalUrl || resource.media) ? (
+                    <a
+                      href={
+                        resource.media ? 
+                          (resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`) :
+                          (resource.pdfUrl || resource.externalUrl)
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors"
+                    >
+                      <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                      </svg>
+                      Open PDF
+                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                      </svg>
+                    </a>
+                  ) : (resource.resourceType === 'document' || resource.resourceType === 'article') ? (
+                    <a
+                      href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/resource-library/${resource.slug}`.replace(/^\/\//, '/')}
+                      class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors"
+                    >
+                      {resource.resourceType === 'document' ? 'View Document' :
+                       resource.resourceType === 'article' ? 'Read Article' :
+                       ''}
+                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                  ) : null}
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>
