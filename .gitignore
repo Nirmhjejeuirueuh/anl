@@ -1,6 +1,7 @@
 old-anl-source-code/
 s3 structure/
 agilenlite_courses_backup.sql
+.claude
 
 # Dependencies
 node_modules/

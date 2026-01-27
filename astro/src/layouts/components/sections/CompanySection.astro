@@ -2,6 +2,7 @@
 import { getEntryCTM } from "@/lib/contentParser.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import type { Section } from "@/types";
+import Icons from "@/helpers/Icons.astro";
 
 type Props = {
   mission?: string;
@@ -21,26 +22,78 @@ const actualVision = vision || defaultVision;
 const actualValues = values || defaultValues;
 ---
 
-<section class="py-16 lg:py-20">
+<section class="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-white">
   <div class="container">
-    <div class="grid gap-12 md:grid-cols-1 lg:grid-cols-3">
+    <!-- Section Header -->
+    <div class="text-center mb-16" data-aos="fade-up">
+      <h2 class="text-h2 mb-6 text-primary">What Drives Us</h2>
+      <p class="text-lg text-muted max-w-2xl mx-auto">
+        Our foundation is built on clear purpose, forward-thinking vision, and unwavering values that guide everything we do.
+      </p>
+    </div>
+
+    <!-- Three Pillars -->
+    <div class="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
       <!-- Mission -->
-      <div class="text-center" data-aos="fade-up">
-        <h3 class="text-h4 mb-4 text-primary">Our Mission</h3>
-        <pre class="text-lg leading-relaxed text-muted max-w-none whitespace-pre-wrap">{actualMission}</pre>
+      <div class="group" data-aos="fade-up" data-aos-delay="100">
+        <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 h-full">
+          <div class="flex flex-col items-center text-center">
+            <!-- Icon -->
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+              <Icons icon="Target" class="w-8 h-8 text-primary" />
+            </div>
+
+            <!-- Content -->
+            <h3 class="text-h4 mb-4 text-primary font-semibold">Our Mission</h3>
+            <div class="text-muted leading-relaxed">
+              {markdownify(actualMission)}
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Vision -->
-      <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-        <h3 class="text-h4 mb-4 text-primary">Our Vision</h3>
-        <pre class="text-lg leading-relaxed text-muted max-w-none whitespace-pre-wrap">{actualVision}</pre>
+      <div class="group" data-aos="fade-up" data-aos-delay="200">
+        <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 h-full">
+          <div class="flex flex-col items-center text-center">
+            <!-- Icon -->
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+              <Icons icon="Eye" class="w-8 h-8 text-primary" />
+            </div>
+
+            <!-- Content -->
+            <h3 class="text-h4 mb-4 text-primary font-semibold">Our Vision</h3>
+            <div class="text-muted leading-relaxed">
+              {markdownify(actualVision)}
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Core Values -->
-      <div class="text-center" data-aos="fade-up" data-aos-delay="400">
-        <h3 class="text-h4 mb-4 text-primary">Our Core Values</h3>
-        <pre class="text-lg leading-relaxed text-muted max-w-none whitespace-pre-wrap">{actualValues}</pre>
+      <div class="group" data-aos="fade-up" data-aos-delay="300">
+        <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 h-full">
+          <div class="flex flex-col items-center text-center">
+            <!-- Icon -->
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+              <Icons icon="Heart" class="w-8 h-8 text-primary" />
+            </div>
+
+            <!-- Content -->
+            <h3 class="text-h4 mb-4 text-primary font-semibold">Our Core Values</h3>
+            <div class="text-muted leading-relaxed">
+              {markdownify(actualValues)}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  // Initialize Lucide icons after component mounts
+  if (typeof window !== 'undefined' && (window as any).initLucide) {
+    (window as any).initLucide();
+  }
+</script>

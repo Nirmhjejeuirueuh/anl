@@ -27,8 +27,12 @@
     "fallback": "sans-serif"
   },
   {
-    "name": "Syne",
+    "name": "Raleway",
     "variants": [
+      {
+        "style": "normal",
+        "weight": "600"
+      },
       {
         "style": "normal",
         "weight": "700"
