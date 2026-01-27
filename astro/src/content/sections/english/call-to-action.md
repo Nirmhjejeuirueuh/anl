@@ -1,16 +1,15 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "**Transform** Your Organization with Expert Guidance"
-subtitle: "Get Started Today"
+title: "Bridging the Gap Between Today's Capabilities and Tomorrow's Success"
+subtitle: "Your Trusted Partner in Professional Growth and Innovation"
 description: |
-  Partner with AgilenLite to navigate the evolving IT landscape with confidence. From Agile transformation to cybersecurity training, we provide practical solutions that deliver measurable results.
-
-  **Let's discuss how we can help you bridge the gap between current capabilities and future success.**
+  AgilenLite helps financial and technology teams bridge the gap between current capabilities and future success with practical, measurable solutions. 
+  Join 3,000+ professionals who've transformed their skills through our IBF-accredited programmes
 
 button:
   enable: true
-  label: "Schedule a Free Consultation"
-  url: "/contact/"
+  label: "Explore Our Programmes"
+  url: "/courses/"
   rel: ""
   target: ""
   showIcon: "true"

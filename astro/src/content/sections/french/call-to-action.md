@@ -1,14 +1,15 @@
 ---
 enable: true # Contrôler la visibilité de cette section sur toutes les pages où elle est utilisée
-title: "Prêt à Transformer Votre Entreprise?"
-subtitle: "Objectifs Commerciaux"
+title: "Combler l'écart entre les capacités d'aujourd'hui et le succès de demain"
+subtitle: "Votre partenaire de confiance pour la croissance professionnelle et l'innovation"
 description: |
-  Partenariez avec notre équipe d'experts pour débloquer le plein potentiel de votre entreprise. Réservez votre consultation gratuite et découvrez comment nous pouvons vous aider.
+  AgilenLite aide les équipes financières et technologiques à combler l'écart entre les capacités actuelles et le succès futur avec des solutions pratiques et mesurables.
+  Rejoignez plus de 3 000 professionnels qui ont transformé leurs compétences grâce à nos programmes accrédités IBF
 
 button:
   enable: true
-  label: "Obtenir une Consultation Gratuite"
-  url: "/contact/"
+  label: "Explorer Nos Programmes"
+  url: "/courses/"
   rel: ""
   target: ""
   showIcon: "true"

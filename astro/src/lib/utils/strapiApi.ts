@@ -300,6 +300,79 @@ export interface StrapiTeamPage {
   members: StrapiTeamMember[];
 }
 
+export interface StrapiSpotlight {
+  id?: number;
+  documentId?: string;
+  tag?: string;
+  date?: string;
+  title: string;
+  subtitle?: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  order?: number;
+  image?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+export interface StrapiBook {
+  id?: number;
+  documentId?: string;
+  title: string;
+  description: string;
+  author: string;
+  pages: number;
+  publishedDate: string;
+  buttonText: string;
+  buttonLink: string;
+  image?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
 export interface StrapiImageFormat {
   name: string;
   hash: string;
@@ -919,5 +992,39 @@ export async function getTeamPage(): Promise<StrapiTeamPage | null> {
   } catch (error) {
     console.error('Error fetching team page:', error);
     return null;
+  }
+}
+
+/**
+ * Fetch all spotlights from Strapi CMS
+ */
+export async function getSpotlights(): Promise<StrapiSpotlight[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/spotlights?populate=*&sort=order:asc`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch spotlights: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiSpotlight> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching spotlights:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all books from Strapi CMS
+ */
+export async function getBooks(): Promise<StrapiBook[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/books?populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch books: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiBook> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    return [];
   }
 }

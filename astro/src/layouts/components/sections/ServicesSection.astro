@@ -11,7 +11,7 @@ import Icons from "@/helpers/Icons.astro";
 import { getTrainings, getConsultants } from "@/lib/utils/strapiApi";
 
 // Type for service section data
-export type sectionType = Section & {
+export type ServicesSectionType = Section & {
   limit?: number | boolean;
   cta?: "link" | "slider-nav";
   colorScheme?: "light" | "dark";
@@ -19,13 +19,13 @@ export type sectionType = Section & {
   creativeShape?: { enable: boolean; position: "top" | "bottom" };
 };
 type Props = {
-  content?: sectionType;
+  content?: ServicesSectionType;
 };
 
 // Fetching the default content for the service section
 let defaultContent = (
   await getEntryCTM("sections", "services-section", Astro.currentLocale)
-)?.data as sectionType;
+)?.data as ServicesSectionType;
 
 // Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
 // The 'content' prop should match the structure of 'defaultContent'.
@@ -34,7 +34,7 @@ let defaultContent = (
 let actualContent = overrideObjects(
   { ...defaultContent },
   Astro.props.content,
-) as sectionType;
+) as ServicesSectionType;
 
 // Extracting required values from 'content' object
 let {
@@ -47,7 +47,7 @@ let {
   colorScheme,
   creativeShape,
   showServicesAs,
-} = actualContent as sectionType;
+} = actualContent as ServicesSectionType;
 
 if (!enable) return;
 
@@ -88,11 +88,11 @@ services =
       "overflow-hidden":
         creativeShape?.enable && creativeShape?.position !== "top",
     },
-    "pt-0 -mt-8 md:-mt-12 pb-4 md:pb-8",
+    "-mt-8 md:-mt-12",
   ]}>
   <div
     class:list={[
-      "flex flex-col justify-start gap-12 md:gap-16 py-0 md:py-8",
+      "flex flex-col justify-start gap-12 md:gap-16 pt-12",
       { "bg-theme-dark": colorScheme === "dark" },
     ]}>
     <div class="container">
@@ -175,13 +175,13 @@ services =
                   <div
                     data-aos="fade-up-sm"
                     data-aos-delay={index * 100}
-                    class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+                    class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300">
                     {service.image && (
                       <div class="aspect-[16/9] overflow-hidden">
                         <img
                           src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
                           alt={service.title}
-                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                         />
                       </div>
                     )}
@@ -211,17 +211,17 @@ services =
               </div>
             ) : (
               <div class="swiper services-swiper w-full">
-                <div class="swiper-wrapper">
+                <div class="swiper-wrapper mb-8">
                   {services &&
                     services.map((service: any, index: number) => (
                       <div class="swiper-slide h-auto! p-2">
-                        <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 min-h-full">
+                        <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 min-h-full">
                           {service.image && (
                             <div class="aspect-[16/9] overflow-hidden">
                               <img
                                 src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
                                 alt={service.title}
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                               />
                             </div>
                           )}
@@ -262,13 +262,13 @@ services =
                 <div
                   data-aos="fade-up-sm"
                   data-aos-delay={index * 100}
-                  class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+                  class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300">
                   {service.image && (
                     <div class="aspect-[16/9] overflow-hidden">
                       <img
                         src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
                         alt={service.title}
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                       />
                     </div>
                   )}
@@ -302,13 +302,13 @@ services =
                 {services &&
                   services.map((service: any, index: number) => (
                     <div class="swiper-slide h-auto! p-2">
-                      <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 min-h-full">
+                      <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 min-h-full">
                         {service.image && (
                           <div class="aspect-[16/9] overflow-hidden">
                             <img
                               src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
                               alt={service.title}
-                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                             />
                           </div>
                         )}

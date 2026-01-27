@@ -1,0 +1,138 @@
+---
+import { getEntry } from "astro:content";
+import CustomButton from "@/components/ui/CustomButton.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+
+interface Props {
+  content?: any;
+}
+
+const { content } = Astro.props;
+
+// Get default content from MD file if no content prop is provided
+const defaultContent = content || (await getEntry("sections", `${Astro.currentLocale || 'english'}/call-to-action`));
+
+// Extract data from content
+const {
+  title,
+  subtitle,
+  description,
+  button,
+  rightContent,
+  imageBlock,
+  statsBlock,
+  ctaShapeOne,
+  ctaShapeTwo
+} = defaultContent?.data || {};
+
+if (!defaultContent?.data?.enable) {
+  return null;
+}
+---
+
+<section class="relative overflow-hidden bg-gradient-to-r from-primary to-primary/90 py-16 lg:py-20">
+  <!-- Background Shapes -->
+  {ctaShapeOne && (
+    <div class="absolute left-0 top-0 -z-10">
+      <img src={ctaShapeOne} alt="" class="h-auto w-full opacity-10" />
+    </div>
+  )}
+  {ctaShapeTwo && (
+    <div class="absolute right-0 top-0 -z-10">
+      <img src={ctaShapeTwo} alt="" class="h-auto w-full opacity-10" />
+    </div>
+  )}
+
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+      <!-- Left Content -->
+      <div class="flex flex-col justify-center">
+        {subtitle && (
+          <p class="mb-8 text-lg font-medium text-white/90">
+            {subtitle}
+          </p>
+        )}
+
+        {title && (
+          <h2 class="py-4 mb-6 text-3xl font-bold text-white lg:text-4xl xl:text-5xl">
+            {title}
+          </h2>
+        )}
+
+        {description && (
+          <div class="mb-8 text-lg text-white/90 leading-relaxed">
+            {markdownify(description)}
+          </div>
+        )}
+
+        {button?.enable && (
+          <div class="flex flex-wrap gap-4">
+            <CustomButton
+              variant={button.variant || "fill"}
+              href={button.url}
+              rel={button.rel}
+              target={button.target}
+              showIcon={button.showIcon}
+              hoverEffect={button.hoverEffect}
+              className="bg-white text-primary hover:bg-white/90"
+            >
+              {button.label}
+            </CustomButton>
+          </div>
+        )}
+      </div>
+
+      <!-- Right Content -->
+      <div class="flex items-center justify-center">
+        {rightContent === "image" && imageBlock?.image && (
+          <div class="relative">
+            <img
+              src={imageBlock.image}
+              alt=""
+              class="h-auto w-full max-w-md rounded-lg shadow-2xl"
+            />
+            {imageBlock.experience && (
+              <div class="absolute -bottom-6 -left-6 rounded-lg bg-white px-6 py-4 shadow-lg">
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-primary">
+                    {imageBlock.experience.prependValue}
+                    {imageBlock.experience.value}
+                    {imageBlock.experience.appendValue}
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    {imageBlock.experience.label}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {rightContent === "stats" && statsBlock?.list && (
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            {statsBlock.list.map((stat: any, index: number) => (
+              <div
+                key={index}
+                class="rounded-lg bg-white/10 p-6 backdrop-blur-sm"
+              >
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-white lg:text-4xl">
+                    {stat.prependValue}
+                    {stat.value}
+                    {stat.appendValue}
+                  </div>
+                  <h3 class="mt-2 text-lg font-semibold text-white">
+                    {stat.title}
+                  </h3>
+                  <p class="mt-1 text-sm text-white/80">
+                    {stat.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

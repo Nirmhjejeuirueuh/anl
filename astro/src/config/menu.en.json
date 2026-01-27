@@ -39,6 +39,11 @@
     },
     {
       "enable": true,
+      "name": "Books",
+      "url": "/books/"
+    },
+    {
+      "enable": true,
       "name": "Resource Library",
       "url": "/resource-library/"
     }
