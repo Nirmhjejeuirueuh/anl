@@ -84,6 +84,7 @@ services =
 
 <section
   class:list={[
+    "py-16 md:py-20 lg:py-24",
     {
       "overflow-hidden":
         creativeShape?.enable && creativeShape?.position !== "top",
@@ -168,7 +169,7 @@ services =
                 creativeShape?.position === "top",
             },
           ]}>
-          <div class="relative z-10 container pb-8 md:pb-12">
+          <div class="relative z-10 container">
             {services && showServicesAs === "static" ? (
               <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
                 {services.map((service: any, index: number) => (
@@ -211,7 +212,7 @@ services =
               </div>
             ) : (
               <div class="swiper services-swiper w-full">
-                <div class="swiper-wrapper mb-8">
+                <div class="swiper-wrapper">
                   {services &&
                     services.map((service: any, index: number) => (
                       <div class="swiper-slide h-auto! p-2">
