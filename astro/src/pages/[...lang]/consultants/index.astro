@@ -30,7 +30,7 @@ const indexData = {
 
   <!-- Consultants Cards Section -->
   {strapiConsultants && strapiConsultants.length > 0 && (
-    <section class="py-16 md:py-20 lg:py-24 bg-gray-50 -mt-8">
+    <section class="py-16 md:py-20 lg:py-24 bg-theme-light -mt-8">
       <div class="container">
         <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
           {strapiConsultants.map((consultant: any, index: number) => (
@@ -38,7 +38,7 @@ const indexData = {
               data-aos="fade-up-sm"
               data-aos-delay={index * 200}
               class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 block"
-              href={`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/consultants/${consultant.slug}`.replace(/^\/\//, '/')}>
+              href={`/${['en', 'fr'].includes(Astro.params.lang || '') ? Astro.params.lang : ''}/consultants/${consultant.slug}`.replace(/^\/\//, '/')}>
               {consultant.image && (
                 <div class="aspect-[16/9] overflow-hidden">
                   <img

@@ -24,6 +24,11 @@
           "enable": true,
           "name": "Consulting",
           "url": "/services/consulting/"
+        },
+        {
+          "enable": true,
+          "name": "Video Podcast Series",
+          "url": "/services/training/video-podcast-series/"
         }
       ]
     },

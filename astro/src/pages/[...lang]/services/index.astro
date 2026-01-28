@@ -17,84 +17,155 @@ export function getStaticPaths() {
 export const prerender = false;
 
 // Fetch services page from Strapi
-const response = await fetch(`${STRAPI_URL}/api/services-page?populate[services][populate]=image`);
+const response = await fetch(`${STRAPI_URL}/api/services-page?${new URLSearchParams({
+  'populate[services][populate]': 'image'
+}).toString()}`);
 if (!response.ok) {
   throw new Error(`Failed to fetch services page: ${response.status}`);
 }
 const strapiData = await response.json();
-const entry = { data: strapiData.data };
-
-// Remove drafts pages in production (adapt for Strapi)
-const draftResponse = handleDraftPage(entry?.data);
-if (draftResponse) return draftResponse;
+const pageData = strapiData.data;
 ---
 
 <Base title="Our Services" fitToScreen={false}>
   <PageHeader title="Our Services" />
 
-  <!-- Services Description Section -->
-  <section class="relative py-16 md:py-20 lg:py-24 -mt-16">
+  <!-- Hero Section -->
+  <section class="relative py-8 md:py-12 lg:py-12 bg-theme-light">
     <div class="container">
-      <div class="mx-auto max-w-4xl">
-        <div class="space-y-8 md:space-y-12">
-          <div
-            data-aos="fade-up-sm"
-            class="prose prose-lg prose-gray max-w-none text-justify">
-            <div class="text-xl md:text-2xl text-gray-700 leading-relaxed font-light">
-              {entry?.data?.description && (
-                <div set:html={markdownify(entry.data.description, true)}></div>
-              )}
-            </div>
-          </div>
+      <div class="mx-auto max-w-5xl text-center pt-12">
+        <!-- Subtitle -->
+        <span class="bg-primary/5 border-gray-300 text-primary mb-2.5 inline-block rounded-full border px-5 py-px text-sm font-semibold tracking-wider" data-aos="fade-up-sm">
+          OUR STRATEGIC SOLUTIONS
+        </span>
+
+        <!-- Main Heading -->
+        <h1 class="text-h1 mb-12 text-inherit capitalize" data-aos="fade-up-sm" data-aos-delay="100">
+          Secure Today, <span class="text-primary">Agile Tomorrow</span>
+        </h1>
+
+        <!-- Description -->
+        <div class="text-base md:text-lg text-gray-700 leading-relaxed space-y-4 mb-12 text-left" data-aos="fade-up-sm" data-aos-delay="200">
+          {pageData.description.split('\n\n').map((paragraph: string) => (
+            <p set:html={markdownify(paragraph)}></p>
+          ))}
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Services Cards Section -->
-  {entry?.data?.services && entry.data.services.length > 0 && (
-    <section class="py-16 md:py-20 lg:py-24 bg-gray-50 -mt-8">
-      <div class="container">
-        <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
-          {entry.data.services.map((service: any, index: number) => (
-            <div
-              data-aos="fade-up-sm"
-              data-aos-delay={index * 200}
-              class={`group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 ${service.endpoint ? 'cursor-pointer' : ''}`}
-              onclick={service.endpoint ? `window.location.href='/services/${service.endpoint.replace(/^\//, '')}'` : undefined}>
-              {service.image && (
-                <div class="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={service.image.url.startsWith('http') ? service.image.url : `${STRAPI_URL}${service.image.url}`}
-                    alt={service.title}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              )}
-              <div class="p-8 md:p-10">
-                <h3 class="text-h4 text-primary mb-4">{service.title}</h3>
-                <div class="text-gray-600 leading-relaxed prose prose-sm max-w-none text-justify">
-                  {service.description && (
-                    <div set:html={markdownify(service.description, true)}></div>
-                  )}
-                </div>
-                {service.endpoint && (
-                  <div class="mt-6">
-                    <span class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
-                      Learn More
-                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+  <!-- Services Section -->
+  <section class="py-8 md:py-12 lg:py-12 bg-theme-light -mt-8">
+    <div class="container">
+
+      <!-- Services Grid -->
+      <div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
+        {pageData.services.map((service: any, index: number) => {
+          const isFirstService = index === 0;
+          const iconColor = isFirstService ? 'text-primary' : 'text-secondary';
+          const bgColor = isFirstService ? 'bg-primary/10' : 'bg-secondary/10';
+          const titleColor = isFirstService ? 'text-dark' : 'text-secondary';
+          const btnClass = isFirstService ? 'btn-primary' : 'btn-danger';
+          const btnHref = isFirstService ? '/services/training' : '/services/consulting';
+          const aosDelay = index * 100;
+
+          // Parse description: first line is main description, rest are bullet points
+          const descriptionLines = service.description.split('\n');
+          const mainDescription = descriptionLines[0];
+          const bulletPoints = descriptionLines.slice(1).filter((line: string) => line.trim().startsWith('-')).map((line: string) => line.trim().substring(1).trim());
+
+          return (
+            <div class={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col`} data-aos="fade-up-sm" data-aos-delay={aosDelay}>
+              <div class="p-8 md:p-10 flex-1 flex flex-col">
+                {/* Service Image Banner (if available) */}
+                {service.image && service.image.url && (
+                  <div class="relative w-full aspect-[2/1] mb-6 rounded-xl overflow-hidden bg-gray-100">
+                    <img 
+                      src={`${STRAPI_URL}${service.image.url}`} 
+                      alt={service.title} 
+                      class="w-full h-full object-cover"
+                    />
+                    {/* Logo Overlay */}
+                    <div class="absolute top-3 left-3 w-12 h-12 rounded-lg bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                      <svg class={`w-6 h-6 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {isFirstService ? (
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z M12 14l-6.16-3.422a12.083 12.083 0 010-6.479A11.952 11.952 0 0012 3.945a11.952 11.952 0 006.824 2.998 12.078 12.078 0 010 6.479L12 14z"></path>
+                        ) : (
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        )}
                       </svg>
-                    </span>
+                    </div>
                   </div>
                 )}
+
+                {/* Icon (only show if no image) */}
+                {!service.image?.url && (
+                  <div class={`w-14 h-14 rounded-xl ${bgColor} flex items-center justify-center mb-6`}>
+                    <svg class={`w-8 h-8 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {isFirstService ? (
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z M12 14l-6.16-3.422a12.083 12.083 0 010-6.479A11.952 11.952 0 0012 3.945a11.952 11.952 0 006.824 2.998 12.078 12.078 0 010 6.479L12 14z"></path>
+                      ) : (
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      )}
+                    </svg>
+                  </div>
+                )}
+
+                {/* Title */}
+                <h3 class={`text-2xl md:text-3xl font-bold ${titleColor} mb-4`}>{service.title}</h3>
+
+                {/* Description */}
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                  {mainDescription}
+                </p>
+
+                {/* Features List */}
+                <ul class="space-y-4 mb-8">
+                  {bulletPoints.map((point: string) => (
+                    <li class="flex items-start gap-3">
+                      <svg class={`w-6 h-6 ${iconColor} mt-0.5 flex-shrink-0`} fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span class="text-gray-700">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA Button */}
+                <div class="mt-auto">
+                  <a href={btnHref} class={`creative-hover-anim ${btnClass} inline-flex items-center justify-center w-full px-8 py-4 text-base font-medium text-white ${isFirstService ? 'bg-primary hover:bg-primary/90' : 'bg-secondary hover:bg-secondary/90'} rounded-lg transition-colors duration-200 relative overflow-hidden`}>
+                    <span class="text-flip-inner relative z-10" data-content="Learn More">Learn More</span>
+                    <span class="hover-bg"></span>
+                    <svg class="ml-2 w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 
   <CallToAction />
 </Base>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.creative-hover-anim');
+    
+    buttons.forEach(function(button: Element) {
+      const htmlButton = button as HTMLElement;
+      htmlButton.addEventListener('mouseenter', function(e: MouseEvent) {
+        const rect = htmlButton.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        htmlButton.style.setProperty('--mouse-x', x + '%');
+        htmlButton.style.setProperty('--mouse-y', y + '%');
+      });
+    });
+  });
+</script>

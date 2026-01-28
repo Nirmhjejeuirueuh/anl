@@ -39,7 +39,7 @@ if (!service) {
           <!-- Content -->
           <div data-aos="fade-up-sm">
             <h1 class="text-h2 md:text-h1 text-primary mb-6">{service.title}</h1>
-            <div class="prose prose-lg prose-gray max-w-none text-justify">
+            <div class="text-gray-600 leading-relaxed space-y-4 mb-12 text-left">
               <div set:html={markdownify(service.description, true)}></div>
             </div>
           </div>

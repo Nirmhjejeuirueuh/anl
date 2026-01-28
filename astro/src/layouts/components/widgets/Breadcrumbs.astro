@@ -66,7 +66,11 @@ if (hiddenPaths && hiddenPaths.length > 0) {
     {
       breadcrumbParts.map(({ label, ...attrs }, index) => (
         <li class="mx-1 capitalize" role="listitem">
-          {index !== breadcrumbParts.length - 1 && attrs.href !== "" ? (
+          {index === 0 && label === "Home" ? (
+            <a class="text-primary" href="/">
+              {label}
+            </a>
+          ) : index !== breadcrumbParts.length - 1 && attrs.href !== "" ? (
             <a class="text-primary" {...attrs}>
               {label}
             </a>

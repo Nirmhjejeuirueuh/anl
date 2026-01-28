@@ -21,14 +21,6 @@
       "allowedTypes": [
         "images"
       ]
-    },
-    "icon": {
-      "type": "string",
-      "required": false
-    },
-    "endpoint": {
-      "type": "string",
-      "required": false
     }
   }
 }

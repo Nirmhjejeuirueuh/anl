@@ -20,8 +20,6 @@ export interface ServicesServiceCard extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
-    endpoint: Schema.Attribute.String;
-    icon: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };

@@ -9,7 +9,9 @@
 
   /* AgilenLite Brand Colors */
   --color-primary: #00025d;      /* Primary Navy */
-  --color-secondary: #666666;    /* Gray-700 - Secondary text */
+  --color-primary-rgb: 0, 2, 93; /* RGB values for primary */
+  --color-secondary: #8B0000;    /* Dark Red - Secondary color */
+  --color-secondary-rgb: 139, 0, 0; /* RGB values for secondary */
   --color-accent: #8af3ff;       /* Primary Cyan - Accent color */
   --color-body: #fff;            /* White background */
   --color-border-light: #e1e1e1; /* Gray-300 - Borders */

@@ -21,12 +21,11 @@
       "required": true
     },
     "description": {
-      "type": "text",
-      "required": true
+      "type": "richtext"
     },
     "content": {
       "type": "richtext",
-      "required": true
+      "required": false
     },
     "consultantType": {
       "type": "enumeration",
@@ -49,7 +48,12 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "URL": {
+      "type": "string"
     }
   }
 }

@@ -116,7 +116,7 @@ console.log('COURSE ROUTE: About to render course:', course.title);
 
   <!-- Target Audience & Schedule -->
   {(course.targetAudience || course.trainingTime || course.trainingDate) && (
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-theme-light">
       <div class="container">
         <div class="max-w-4xl mx-auto">
           <div class="grid md:grid-cols-2 gap-12">
@@ -156,7 +156,7 @@ console.log('COURSE ROUTE: About to render course:', course.title);
 
   <!-- Brochure -->
   {course.hyperlink && (
-    <section class="py-6 pb-30 bg-gray-50">
+    <section class="py-6 pb-30 bg-theme-light">
       <div class="container">
         <div class="max-w-4xl mx-auto text-center">
           <h2 class="text-3xl font-bold mb-8">Brochure</h2>

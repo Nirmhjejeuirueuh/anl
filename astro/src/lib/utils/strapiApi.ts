@@ -107,6 +107,7 @@ export interface StrapiTraining {
   description: string;
   content?: string;
   trainingType?: 'bespoke_programme' | 'funded_programme' | 'video_podcast' | 'partner_programme' | 'eligibility_terms' | 'other';
+  order?: number;
   image?: {
     id: number;
     documentId: string;
@@ -147,6 +148,7 @@ export interface StrapiConsultant {
   description: string;
   content?: string;
   consultantType?: 'technical_consultant' | 'business_consultant' | 'agile_coach' | 'devops_specialist' | 'other';
+  order?: number;
   image?: {
     id: number;
     documentId: string;
@@ -559,8 +561,22 @@ export async function getTrainings(): Promise<StrapiTraining[]> {
       throw new Error(`Failed to fetch trainings: ${response.status}`);
     }
     const data: StrapiResponse<StrapiTraining> = await response.json();
-    // Filter out hidden trainings
-    return data.data.filter(training => !training.hide);
+    // Filter out hidden trainings and sort by order field
+    const filteredTrainings = data.data.filter(training => !training.hide);
+    return filteredTrainings.sort((a, b) => {
+      // Items with order come first, sorted by order value
+      // Items without order come last
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      if (a.order !== undefined) {
+        return -1; // a has order, b doesn't - a comes first
+      }
+      if (b.order !== undefined) {
+        return 1; // b has order, a doesn't - b comes first
+      }
+      return 0; // both don't have order, maintain current order
+    });
   } catch (error) {
     console.error('Error fetching trainings:', error);
     return [];
@@ -596,7 +612,20 @@ export async function getTrainingsByCategory(category: string): Promise<StrapiTr
     }
     const data: StrapiResponse<StrapiTraining> = await response.json();
     console.log('getTrainingsByCategory: Found', data.data.length, 'trainings for category:', category);
-    return data.data;
+    // Filter out hidden trainings and sort by order field
+    const filteredTrainings = data.data.filter(training => !training.hide);
+    return filteredTrainings.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      if (a.order !== undefined) {
+        return -1;
+      }
+      if (b.order !== undefined) {
+        return 1;
+      }
+      return 0;
+    });
   } catch (error) {
     console.error('Error fetching trainings by category:', error);
     return [];
@@ -615,7 +644,20 @@ export async function getTrainingsByType(trainingType: string): Promise<StrapiTr
     }
     const data: StrapiResponse<StrapiTraining> = await response.json();
     console.log('getTrainingsByType: Found', data.data.length, 'trainings for type:', trainingType);
-    return data.data;
+    // Filter out hidden trainings and sort by order field
+    const filteredTrainings = data.data.filter(training => !training.hide);
+    return filteredTrainings.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      if (a.order !== undefined) {
+        return -1;
+      }
+      if (b.order !== undefined) {
+        return 1;
+      }
+      return 0;
+    });
   } catch (error) {
     console.error('Error fetching trainings by type:', error);
     return [];
@@ -649,8 +691,20 @@ export async function getConsultants(): Promise<StrapiConsultant[]> {
       throw new Error(`Failed to fetch consultants: ${response.status}`);
     }
     const data: StrapiResponse<StrapiConsultant> = await response.json();
-    // Filter out hidden consultants
-    return data.data.filter(consultant => !consultant.hide);
+    // Filter out hidden consultants and sort by order field
+    const filteredConsultants = data.data.filter(consultant => !consultant.hide);
+    return filteredConsultants.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      if (a.order !== undefined) {
+        return -1;
+      }
+      if (b.order !== undefined) {
+        return 1;
+      }
+      return 0;
+    });
   } catch (error) {
     console.error('Error fetching consultants:', error);
     return [];
@@ -686,7 +740,20 @@ export async function getConsultantsByCategory(category: string): Promise<Strapi
     }
     const data: StrapiResponse<StrapiConsultant> = await response.json();
     console.log('getConsultantsByCategory: Found', data.data.length, 'consultants for category:', category);
-    return data.data;
+    // Filter out hidden consultants and sort by order field
+    const filteredConsultants = data.data.filter(consultant => !consultant.hide);
+    return filteredConsultants.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      if (a.order !== undefined) {
+        return -1;
+      }
+      if (b.order !== undefined) {
+        return 1;
+      }
+      return 0;
+    });
   } catch (error) {
     console.error('Error fetching consultants by category:', error);
     return [];
@@ -705,7 +772,20 @@ export async function getConsultantsByType(consultantType: string): Promise<Stra
     }
     const data: StrapiResponse<StrapiConsultant> = await response.json();
     console.log('getConsultantsByType: Found', data.data.length, 'consultants for type:', consultantType);
-    return data.data;
+    // Filter out hidden consultants and sort by order field
+    const filteredConsultants = data.data.filter(consultant => !consultant.hide);
+    return filteredConsultants.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      if (a.order !== undefined) {
+        return -1;
+      }
+      if (b.order !== undefined) {
+        return 1;
+      }
+      return 0;
+    });
   } catch (error) {
     console.error('Error fetching consultants by type:', error);
     return [];
