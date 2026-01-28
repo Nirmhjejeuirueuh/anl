@@ -26,14 +26,41 @@ export const markdownify = (content: string, container?: boolean) => {
     return `<a href="${link.href}" ${targetAttrs}>${link.text}</a>`;
   };
 
-  // Set the custom renderer
+  // Pre-process content to handle markdown inside <details> tags
+  let processedContent = content;
+
+  // Find all <details> blocks and process markdown inside them
+  const detailsRegex = /<details>([\s\S]*?)<\/details>/g;
+  processedContent = processedContent.replace(detailsRegex, (match, innerContent) => {
+    // Extract summary if present
+    const summaryMatch = innerContent.match(/<summary>(.*?)<\/summary>/);
+    const summary = summaryMatch ? summaryMatch[1] : '';
+    const contentAfterSummary = summaryMatch
+      ? innerContent.replace(/<summary>.*?<\/summary>/, '')
+      : innerContent;
+
+    // Process the markdown content inside details
+    marked.setOptions({
+      renderer,
+      breaks: true,
+      gfm: true,
+    });
+    const processedInner = marked.parse(contentAfterSummary.trim());
+
+    // Reconstruct the details block with processed content
+    return summary
+      ? `<details><summary>${summary}</summary>\n${processedInner}</details>`
+      : `<details>${processedInner}</details>`;
+  });
+
+  // Set the custom renderer for the main content
   marked.setOptions({
     renderer,
     breaks: true,
     gfm: true,
   });
 
-  return container ? marked.parse(content) : marked.parseInline(content);
+  return container ? marked.parse(processedContent) : marked.parseInline(processedContent);
 };
 
 // humanize

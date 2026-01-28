@@ -8,7 +8,7 @@
 <style is:global>
   .page-container {
     max-width: 960px;
-    margin: auto;
+    margin: 12px auto;
     padding: 40px 60px;
     background-color: #fff;
     border-radius: 12px;
@@ -134,8 +134,38 @@
     border-radius: 8px 8px 0 0;
   }
 
-  .page-container details > div {
-    padding: 20px;
+  .page-container details > div,
+  .page-container details > *:not(summary) {
+    padding: 15px 20px;
+  }
+
+  /* Tighter spacing inside dropdowns */
+  .page-container details p {
+    margin: 0.5em 0;
+  }
+
+  .page-container details h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-container details h3 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .page-container details img {
+    margin: 1rem auto;
+  }
+
+  .page-container details ul,
+  .page-container details ol {
+    margin: 0.5em 0;
+  }
+
+  .page-container details ol li {
+    margin-bottom: 5px;
+    padding: 10px;
   }
 
   @media (max-width: 768px) {

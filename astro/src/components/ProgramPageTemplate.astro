@@ -27,6 +27,7 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
 
   <!-- Programs Cards Section -->
   {currentSlug ? (
+    <PageHeader title={title} subtitle={subtitle} />
     <!-- Programs Ribbon for Slug Pages -->
     <ProgramsRibbon
       programs={programs}
