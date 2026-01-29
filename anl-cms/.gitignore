@@ -130,3 +130,13 @@ build
 .strapi-updater.json
 .strapi-cloud.json
 types/generated/
+
+# Export/Import files
+assets/
+backups/
+configuration/
+entities/
+links/
+metadata.json
+schemas/
+import-books.js
