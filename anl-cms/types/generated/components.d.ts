@@ -19,7 +19,7 @@ export interface MediaLibraryMediaItem extends Struct.ComponentSchema {
     displayName: 'Media Item';
   };
   attributes: {
-    caption: Schema.Attribute.String & Schema.Attribute.Required;
+    caption: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
   };
@@ -28,11 +28,11 @@ export interface MediaLibraryMediaItem extends Struct.ComponentSchema {
 export interface MediaLibraryMediaSection extends Struct.ComponentSchema {
   collectionName: 'components_media_library_media_sections';
   info: {
-    description: 'A section containing media items with photos and captions';
+    description: 'A section containing multiple photos uploaded in bulk';
     displayName: 'Media Section';
   };
   attributes: {
-    mediaItems: Schema.Attribute.Component<'media-library.media-item', true>;
+    photos: Schema.Attribute.Media<'images', true>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }

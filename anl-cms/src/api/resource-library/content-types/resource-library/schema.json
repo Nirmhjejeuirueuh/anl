@@ -26,25 +26,49 @@
       "enum": [
         "video",
         "pdf",
-        "document",
-        "article",
-        "other"
+        "article"
       ]
     },
     "videoUrl": {
       "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "resourceType"
+            },
+            "video"
+          ]
+        }
+      },
       "required": false
     },
     "pdfUrl": {
       "type": "string",
-      "required": false
-    },
-    "externalUrl": {
-      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "resourceType"
+            },
+            "pdf"
+          ]
+        }
+      },
       "required": false
     },
     "media": {
       "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "resourceType"
+            },
+            "pdf"
+          ]
+        }
+      },
       "multiple": false,
       "required": false,
       "allowedTypes": [
@@ -52,12 +76,24 @@
         "files"
       ]
     },
-    "featured": {
-      "type": "boolean",
-      "default": false
-    },
-    "keywords": {
+    "category": {
       "type": "string"
+    },
+    "date": {
+      "type": "date"
+    },
+    "article": {
+      "type": "richtext",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "resourceType"
+            },
+            "article"
+          ]
+        }
+      }
     }
   }
 }

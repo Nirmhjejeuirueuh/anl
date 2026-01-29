@@ -643,7 +643,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
 export interface ApiMediaLibraryMediaLibrary extends Struct.SingleTypeSchema {
   collectionName: 'media_libraries';
   info: {
-    description: 'Content for the media library page with sections and photos';
+    description: 'Content for the media library page with sections for bulk photo uploads';
     displayName: 'Media Library';
     pluralName: 'media-libraries';
     singularName: 'media-library';
@@ -684,12 +684,12 @@ export interface ApiResourceLibraryResourceLibrary
     draftAndPublish: true;
   };
   attributes: {
+    article: Schema.Attribute.RichText;
+    category: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    externalUrl: Schema.Attribute.String;
-    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    keywords: Schema.Attribute.String;
+    date: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -699,9 +699,7 @@ export interface ApiResourceLibraryResourceLibrary
     media: Schema.Attribute.Media<'images' | 'files'>;
     pdfUrl: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    resourceType: Schema.Attribute.Enumeration<
-      ['video', 'pdf', 'document', 'article', 'other']
-    > &
+    resourceType: Schema.Attribute.Enumeration<['video', 'pdf', 'article']> &
       Schema.Attribute.Required;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;

@@ -5,7 +5,7 @@
     "singularName": "media-library",
     "pluralName": "media-libraries",
     "displayName": "Media Library",
-    "description": "Content for the media library page with sections and photos"
+    "description": "Content for the media library page with sections for bulk photo uploads"
   },
   "options": {
     "draftAndPublish": true

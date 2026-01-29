@@ -20,6 +20,22 @@ const mediaLibrary = await getMediaLibrary();
 // Get current section from URL query parameter
 const url = new URL(Astro.request.url);
 const currentSection = url.searchParams.get('section') || (mediaLibrary?.sections?.[0]?.id?.toString() || '0');
+
+// Helper function to get photo caption
+function getPhotoCaption(photo: any, index: number): string {
+  // First check if caption field is available
+  if (photo.caption && photo.caption.trim()) {
+    return photo.caption.trim();
+  }
+
+  // If not, use the image name and remove extension, then replace underscores with spaces
+  if (photo.name) {
+    return photo.name.replace(/\.[^/.]+$/, '').replace(/_/g, ' '); // Remove file extension and replace underscores with spaces
+  }
+
+  // Fallback
+  return `Photo ${index + 1}`;
+}
 ---
 
 <Base title={mediaLibrary?.title || "Media Library"} fitToScreen={false}>
@@ -75,28 +91,28 @@ const currentSection = url.searchParams.get('section') || (mediaLibrary?.section
                     <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-4">{activeSection.description}</p>
                   )}
                   <p class="text-sm text-gray-500">
-                    {activeSection.mediaItems.length} {activeSection.mediaItems.length === 1 ? 'image' : 'images'} loaded
+                    {activeSection.photos?.length || 0} {(activeSection.photos?.length || 0) === 1 ? 'image' : 'images'} loaded
                   </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-8xl mx-auto">
-                  {activeSection.mediaItems.map((item) => (
-                    <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${item.image ? `${STRAPI_URL}${item.image.url}` : "/images/placeholder.jpg"}', '${item.caption}', '${item.altText || item.caption}', '${item.description || ''}')`}>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-8xl mx-auto">
+                  {activeSection.photos?.map((photo, index) => (
+                    <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}', '${getPhotoCaption(photo, index)}', '${photo.alternativeText || getPhotoCaption(photo, index)}', '${getPhotoCaption(photo, index)}')`}>
                       <div class="aspect-[16/9] overflow-hidden">
                         <img
-                          src={item.image ? `${STRAPI_URL}${item.image.url}` : "/images/placeholder.jpg"}
-                          alt={item.altText || item.caption}
+                          src={photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}
+                          alt={photo.alternativeText || getPhotoCaption(photo, index)}
                           loading="lazy"
                           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div class="p-4">
                         <h3 class="font-medium text-gray-900 text-center text-base">
-                          {item.caption}
+                          {getPhotoCaption(photo, index)}
                         </h3>
                       </div>
                     </div>
-                  ))}
+                  )) || []}
                 </div>
               </>
             );

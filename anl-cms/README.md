@@ -48,6 +48,31 @@ yarn strapi deploy
 - [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
 - [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
 
+## 🔄 Data Migration to Strapi Cloud
+
+To migrate data from local development to Strapi Cloud:
+
+1. **Export local data** (with Strapi running):
+   ```bash
+   node export-data.js
+   ```
+
+2. **Get API token** from Strapi Cloud admin (Settings > API Tokens)
+
+3. **Update import script** with your cloud URL and API token in `import-data.js`
+
+4. **Import data** to cloud:
+   ```bash
+   node import-data.js
+   ```
+
+**Note:** If using the CLI transfer command, ensure schemas match:
+```bash
+yarn strapi transfer --to https://your-cloud-project.strapiapp.com/admin --to-token YOUR_TRANSFER_TOKEN --force
+```
+
+**Important:** Create admin user first and ensure cloud database schema matches local (richtext fields should be TEXT, not VARCHAR).
+
 Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
 
 ## ✨ Community

@@ -2,7 +2,7 @@
   "collectionName": "components_media_library_media_sections",
   "info": {
     "displayName": "Media Section",
-    "description": "A section containing media items with photos and captions"
+    "description": "A section containing multiple photos uploaded in bulk"
   },
   "options": {},
   "attributes": {
@@ -10,10 +10,13 @@
       "type": "string",
       "required": true
     },
-    "mediaItems": {
-      "type": "component",
-      "component": "media-library.media-item",
-      "repeatable": true
+    "photos": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }
