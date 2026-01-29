@@ -32,11 +32,11 @@
       "required": true
     },
     "buttonLink": {
-      "type": "string",
+      "type": "text",
       "required": true
     },
     "author": {
-      "type": "string",
+      "type": "text",
       "required": true
     },
     "pages": {
@@ -44,7 +44,7 @@
       "required": true
     },
     "publishedDate": {
-      "type": "string",
+      "type": "date",
       "required": true
     }
   }
