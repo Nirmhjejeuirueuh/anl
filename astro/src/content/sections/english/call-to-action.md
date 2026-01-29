@@ -1,7 +1,7 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "Bridging the Gap Between Today's Capabilities and Tomorrow's Success"
-subtitle: "Your Trusted Partner in Professional Growth and Innovation"
+title: "Your Trusted Partner in Professional Growth and Innovation or Bridging the Gap Between Today’s Capabilities and Tomorrow’s Success"
+subtitle: "Get Started Today"
 description: |
   AgilenLite helps financial and technology teams bridge the gap between current capabilities and future success with practical, measurable solutions. 
   Join 3,000+ professionals who've transformed their skills through our IBF-accredited programmes
@@ -9,7 +9,7 @@ description: |
 button:
   enable: true
   label: "Explore Our Programmes"
-  url: "/courses/"
+  url: "/services/"
   rel: ""
   target: ""
   showIcon: "true"

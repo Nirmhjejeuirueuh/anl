@@ -640,6 +640,38 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiMediaLibraryMediaLibrary extends Struct.SingleTypeSchema {
+  collectionName: 'media_libraries';
+  info: {
+    description: 'Content for the media library page with sections and photos';
+    displayName: 'Media Library';
+    pluralName: 'media-libraries';
+    singularName: 'media-library';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::media-library.media-library'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    sections: Schema.Attribute.Component<'media-library.media-section', true>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Media Library'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiResourceLibraryResourceLibrary
   extends Struct.CollectionTypeSchema {
   collectionName: 'resource_libraries';
@@ -1341,6 +1373,7 @@ declare module '@strapi/strapi' {
       'api::book.book': ApiBookBook;
       'api::consultant.consultant': ApiConsultantConsultant;
       'api::course.course': ApiCourseCourse;
+      'api::media-library.media-library': ApiMediaLibraryMediaLibrary;
       'api::resource-library.resource-library': ApiResourceLibraryResourceLibrary;
       'api::services-page.services-page': ApiServicesPageServicesPage;
       'api::spotlight.spotlight': ApiSpotlightSpotlight;

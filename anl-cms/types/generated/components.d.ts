@@ -12,6 +12,31 @@ export interface ElementsSectionInfo extends Struct.ComponentSchema {
   };
 }
 
+export interface MediaLibraryMediaItem extends Struct.ComponentSchema {
+  collectionName: 'components_media_library_media_items';
+  info: {
+    description: 'A single media item with photo and caption';
+    displayName: 'Media Item';
+  };
+  attributes: {
+    caption: Schema.Attribute.String & Schema.Attribute.Required;
+    description: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+  };
+}
+
+export interface MediaLibraryMediaSection extends Struct.ComponentSchema {
+  collectionName: 'components_media_library_media_sections';
+  info: {
+    description: 'A section containing media items with photos and captions';
+    displayName: 'Media Section';
+  };
+  attributes: {
+    mediaItems: Schema.Attribute.Component<'media-library.media-item', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ServicesServiceCard extends Struct.ComponentSchema {
   collectionName: 'components_services_service_cards';
   info: {
@@ -29,6 +54,8 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'elements.section-info': ElementsSectionInfo;
+      'media-library.media-item': MediaLibraryMediaItem;
+      'media-library.media-section': MediaLibraryMediaSection;
       'services.service-card': ServicesServiceCard;
     }
   }

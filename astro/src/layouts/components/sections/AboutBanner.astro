@@ -3,6 +3,7 @@ import Marquee from "@/components/widgets/Marquee.astro";
 import { getEntryCTM } from "@/lib/contentParser.astro";
 import overrideObjects from "@/lib/utils/overrideObjects.ts";
 import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import ImageModal from "@/components/utilities/ImageModal.astro";
 import type { Section } from "@/types";
 import { markdownify } from "@/lib/utils/textConverter";
 import type { TypeOf } from "astro:schema";
@@ -183,46 +184,11 @@ const formattedTitle = markdownTitle.replace(
         </div>
       )}
 
-      <!-- Image Modal -->
-      <div id="imageModal" class="fixed inset-0 z-50 hidden" style="background-color: rgba(0, 0, 0, 0.8);">
-        <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
-          <div class="relative">
-            <img id="modalImage" src="" alt="" class="max-w-full max-h-[80vh] object-contain" />
-            <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white text-4xl hover:text-gray-300 z-10 w-12 h-12 flex items-center justify-center bg-black/80 rounded-full">&times;</button>
-          </div>
-          <div id="modalCaption" class="text-white text-center mt-4 max-w-4xl px-4"></div>
-        </div>
-      </div>
+      <!-- Image Modal Component -->
+      <ImageModal />
 
       <script is:inline>
-        window.openImageModal = function(imageUrl, caption) {
-          const modal = document.getElementById('imageModal');
-          const modalImage = document.getElementById('modalImage');
-          const modalCaption = document.getElementById('modalCaption');
-
-          modalImage.src = imageUrl;
-          modalCaption.textContent = caption;
-          modal.classList.remove('hidden');
-        }
-
-        window.closeImageModal = function() {
-          const modal = document.getElementById('imageModal');
-          modal.classList.add('hidden');
-        }
-
-        // Close modal when clicking outside the image
-        document.getElementById('imageModal')?.addEventListener('click', function(e) {
-          if (e.target === this) {
-            window.closeImageModal();
-          }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape') {
-            window.closeImageModal();
-          }
-        });
+        // Image modal functions are now handled by the ImageModal component
       </script>
     </section>
   )

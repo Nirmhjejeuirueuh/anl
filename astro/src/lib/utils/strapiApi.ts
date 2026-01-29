@@ -1108,3 +1108,44 @@ export async function getBooks(): Promise<StrapiBook[]> {
     return [];
   }
 }
+
+// Media Library Types
+export interface StrapiMediaItem {
+  id: number;
+  image: StrapiMedia;
+  caption: string;
+  altText?: string;
+  description?: string;
+}
+
+export interface StrapiMediaSection {
+  id: number;
+  title: string;
+  description?: string;
+  mediaItems: StrapiMediaItem[];
+}
+
+export interface StrapiMediaLibrary {
+  id?: number;
+  documentId?: string;
+  title: string;
+  description?: string;
+  sections: StrapiMediaSection[];
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+export async function getMediaLibrary(): Promise<StrapiMediaLibrary | null> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/media-library?populate[sections][populate][mediaItems][populate]=image`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch media library: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiMediaLibrary> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching media library:', error);
+    return null;
+  }
+}

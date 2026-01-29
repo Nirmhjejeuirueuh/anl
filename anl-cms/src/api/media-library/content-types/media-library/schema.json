@@ -1,0 +1,26 @@
+{
+  "kind": "singleType",
+  "collectionName": "media_libraries",
+  "info": {
+    "singularName": "media-library",
+    "pluralName": "media-libraries",
+    "displayName": "Media Library",
+    "description": "Content for the media library page with sections and photos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Media Library",
+      "required": true
+    },
+    "sections": {
+      "type": "component",
+      "component": "media-library.media-section",
+      "repeatable": true
+    }
+  }
+}

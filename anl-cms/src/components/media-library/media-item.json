@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_media_library_media_items",
+  "info": {
+    "displayName": "Media Item",
+    "description": "A single media item with photo and caption"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "caption": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    }
+  }
+}

@@ -49,6 +49,11 @@
     },
     {
       "enable": true,
+      "name": "Media Library",
+      "url": "/media-library/"
+    },
+    {
+      "enable": true,
       "name": "Resource Library",
       "url": "/resource-library/"
     }
