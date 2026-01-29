@@ -206,6 +206,11 @@ if (pagination?.enable) {
                   )}
                   </div>
               </>
+            ) : courses && courses.length === 0 ? (
+              <div class="text-center py-16">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Courses Coming Soon</h2>
+                <p class="text-gray-600">We're working on creating amazing courses for you. Check back soon!</p>
+              </div>
             ) : null}
           </div>
         </div>
