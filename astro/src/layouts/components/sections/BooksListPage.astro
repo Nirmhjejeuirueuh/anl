@@ -28,7 +28,7 @@ const books = await getBooks();
                   <!-- Book Image Container -->
                   <div class="w-full max-w-sm overflow-hidden rounded-lg shadow-2xl transform transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">
                     <img
-                      src={book.image ? `${STRAPI_URL}${book.image.url}` : "/images/placeholder-book.jpg"}
+                      src={book.image ? (book.image.url.startsWith('http') ? book.image.url : `${STRAPI_URL}${book.image.url}`) : "/images/placeholder-book.jpg"}
                       alt={book.title}
                       class="w-full h-auto object-contain"
                     />
