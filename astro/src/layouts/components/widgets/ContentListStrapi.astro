@@ -118,10 +118,12 @@ if (content === "blog" && pagination?.enable) {
   list = posts.slice(indexOfFirstPost, indexOfLastPost);
 }
 
-if (list.length === 0) {
-  // Show fallback message when no content is available
-  const contentType = content === "blog" ? "Blog" : content === "portfolio" ? "Portfolio" : "Content";
-  ---
+// Determine if we should show the empty state
+const showEmptyState = list.length === 0;
+const contentType = content === "blog" ? "Blog" : content === "portfolio" ? "Portfolio" : "Content";
+---
+
+{showEmptyState ? (
   <section class="py-16 md:py-20 lg:py-24 bg-gray-50">
     <div class="container">
       <div class="text-center">
@@ -130,47 +132,46 @@ if (list.length === 0) {
       </div>
     </div>
   </section>
-  ---
-  return;
-}
----
+) : (
+  <>
+    <div
+      class:list={[
+        "blog-search-results",
+        className,
+        { "gap-6": gap === "gap-6" },
+        { "gap-8": gap === "gap-8" },
+        "gap-y-10",
+        {
+          "grid grid-cols-1": layout === "grid" && columns === 1,
+          "grid md:grid-cols-2": layout === "grid" && columns === 2,
+          "grid md:grid-cols-2 lg:grid-cols-3": layout === "grid" && columns === 3,
+        },
+      ]}>
+      {list.map((item) => {
+        const cardProps = recursiveCloneObject(item);
+        cardProps.data = recursiveCloneObject(item.data);
 
-<div
-  class:list={[
-    "blog-search-results",
-    className,
-    { "gap-6": gap === "gap-6" },
-    { "gap-8": gap === "gap-8" },
-    "gap-y-10",
+        return content === "blog" ? (
+          <BlogCard content={cardProps} options={options} />
+        ) : content === "portfolio" ? (
+          <PortfolioCard {...cardProps} />
+        ) : null;
+      })}
+    </div>
+
     {
-      "grid grid-cols-1": layout === "grid" && columns === 1,
-      "grid md:grid-cols-2": layout === "grid" && columns === 2,
-      "grid md:grid-cols-2 lg:grid-cols-3": layout === "grid" && columns === 3,
-    },
-  ]}>
-  {list.map((item) => {
-    const cardProps = recursiveCloneObject(item);
-    cardProps.data = recursiveCloneObject(item.data);
-
-    return content === "blog" ? (
-      <BlogCard content={cardProps} options={options} />
-    ) : content === "portfolio" ? (
-      <PortfolioCard {...cardProps} />
-    ) : null;
-  })}
-</div>
-
-{
-  content === "blog" &&
-  pagination?.enable &&
-  totalPages > 1 && (
-    <Pagination
-      collection="blog"
-      currentPage={pagination?.currentPage}
-      totalPages={totalPages}
-    />
-  )
-}
+      content === "blog" &&
+      pagination?.enable &&
+      totalPages > 1 && (
+        <Pagination
+          collection="blog"
+          currentPage={pagination?.currentPage}
+          totalPages={totalPages}
+        />
+      )
+    }
+  </>
+)}
 
 <script>
   import { stickySidebar } from "@/plugins/sticky-sidebar.js";
