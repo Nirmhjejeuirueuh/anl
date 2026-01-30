@@ -1,5 +1,5 @@
 ---
-import Marquee from "@/components/widgets/Marquee.astro";
+import Marquee from "@/layouts/components/widgets/Marquee.astro";
 import { getEntryCTM } from "@/lib/contentParser.astro";
 import type { Section } from "@/types";
 import { markdownify } from "@/lib/utils/textConverter";
@@ -8,31 +8,11 @@ import TestimonialCard from "@/layouts/components/cards/TestimonialCard.astro";
 import CustomButton from "../CustomButton.astro";
 import type { marqueeConfig } from "@/content.config";
 import type { TypeOf } from "astro:schema";
+import { getTestimonials } from "@/lib/utils/strapiApi";
 
 // Type for this section data
 export type sectionType = Section & {
   marquee: TypeOf<typeof marqueeConfig>;
-  list: {
-    enable: boolean;
-    rating: number;
-    content: string;
-    source: {
-      logo: string;
-      url: string;
-    };
-    customer: {
-      image: string;
-      name: string;
-      role: string;
-      company: {
-        logo: string;
-        name: string;
-      };
-    };
-  }[];
-};
-type Props = {
-  content?: sectionType;
 };
 
 // Fetching the default content for the this section
@@ -49,46 +29,57 @@ let actualContent = overrideObjects(
   Astro.props.content,
 ) as sectionType;
 
+// Fetch testimonials from Strapi
+const testimonials = await getTestimonials();
+
+// Sort testimonials by order
+const sortedTestimonials = testimonials.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+// Helper function to process testimonial data
+const processTestimonial = (testimonial: any) => ({
+  ...testimonial,
+  companyLogo: testimonial.companyLogo ? {
+    ...testimonial.companyLogo,
+    url: testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `http://localhost:1337${testimonial.companyLogo.url}`
+  } : undefined,
+  avatar: testimonial.avatar ? {
+    ...testimonial.avatar,
+    url: testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `http://localhost:1337${testimonial.avatar.url}`
+  } : undefined
+});
+
 // Extracting required values from 'content' object
-let {
-  enable = true,
-  title,
-  subtitle,
-  button,
-  list,
-  marquee,
-} = actualContent as sectionType;
+const sectionData: sectionType = actualContent as sectionType;
+const { enable, title, subtitle, button, marquee } = sectionData;
 ---
 
 {
   enable && (
-    <section class="overflow-hidden py-16 md:py-20 lg:py-24">
-      <div class="bg-theme-light">
-        <div class="container overflow-x-hidden">
-          <div
-            data-aos="fade-right-sm"
-            class="flex flex-wrap items-center justify-between gap-6 lg:flex-nowrap">
-            <div class="lg:max-w-2xl">
+    <section class="py-16 md:py-20 lg:py-24">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-xl-10">
+            <div class="text-center mb-5">
               {subtitle && (
-                <span
-                  class="bg-primary/5 border-gray-300 text-primary mb-2.5 inline-block rounded-full border px-5 py-px"
-                  set:html={markdownify(subtitle)}
-                />
+                <span class="bg-primary/5 border-gray-300 text-primary mb-2.5 inline-block rounded-full border px-5 py-px text-sm font-semibold">
+                  {subtitle}
+                </span>
               )}
               {title && (
-                <h2
-                  class="text-h3 text-inherit"
-                  set:html={markdownify(title)}
-                />
+                <h2 class="text-h3 text-inherit mt-4" set:html={markdownify(title)} />
               )}
             </div>
+          </div>
+
+          <div class="col-xl-10">
             {button && button.enable && (
-              <div data-aos="fade-right-sm" data-aos-delay="200">
+              <div class="text-center mt-5">
                 <CustomButton {...button} />
               </div>
             )}
           </div>
         </div>
+
         <div class="relative" data-aos="fade-up-sm" data-aos-delay="300">
           <div
             class="testimonial-gradient-bg [--accent-color:--color-accent]"
@@ -97,18 +88,26 @@ let {
           <div class="relative mt-12 flex overflow-x-hidden md:mt-16">
             <Marquee
               class="items-stretch"
-              marqueeElements={list.length}
-              {...marquee}>
-              {list.map((item) => (
-                <div class="min-w-(--marquee-element-width-responsive) px-4 md:min-w-(--marquee-element-width)">
-                  <TestimonialCard class="min-h-full" content={item} />
+              marqueeElements={sortedTestimonials.length}
+              {...marquee}
+            >
+              {sortedTestimonials.map((testimonial) => (
+                <div class="min-w-(--marquee-element-width-responsive) h-full px-4 md:min-w-(--marquee-element-width)">
+                  <TestimonialCard class="h-full" content={{
+                    enable: true,
+                    testimonial: processTestimonial(testimonial)
+                  }} />
                 </div>
               ))}
-              {list.map((item) => (
+              {sortedTestimonials.map((testimonial) => (
                 <div
-                  class="min-w-(--marquee-element-width-responsive) px-4 md:min-w-(--marquee-element-width)"
-                  aria-hidden="true">
-                  <TestimonialCard class="min-h-full" content={item} />
+                  class="min-w-(--marquee-element-width-responsive) h-full px-4 md:min-w-(--marquee-element-width)"
+                  aria-hidden="true"
+                >
+                  <TestimonialCard class="h-full" content={{
+                    enable: true,
+                    testimonial: processTestimonial(testimonial)
+                  }} />
                 </div>
               ))}
             </Marquee>

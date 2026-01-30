@@ -1,0 +1,72 @@
+{
+  "kind": "collectionType",
+  "collectionName": "testimonials",
+  "info": {
+    "singularName": "testimonial",
+    "pluralName": "testimonials",
+    "displayName": "Testimonial"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "shortTestimonial": {
+      "type": "text",
+      "required": true
+    },
+    "fullStory": {
+      "type": "richtext",
+      "required": false
+    },
+    "personName": {
+      "type": "string",
+      "required": false
+    },
+    "personRole": {
+      "type": "string",
+      "required": false
+    },
+    "companyName": {
+      "type": "string",
+      "required": false
+    },
+    "companyLogo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "logoText": {
+      "type": "string",
+      "required": false
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "backgroundColor": {
+      "type": "enumeration",
+      "enum": ["yellow", "red", "cyan", "blue", "dark-green", "green", "nil"],
+      "required": false,
+      "default": "nil"
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "required": false,
+      "default": false
+    },
+    "order": {
+      "type": "integer",
+      "required": false,
+      "default": 0
+    },
+    "hasStory": {
+      "type": "boolean",
+      "required": false,
+      "default": false
+    }
+  }
+}

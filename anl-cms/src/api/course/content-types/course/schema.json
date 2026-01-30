@@ -20,69 +20,25 @@
       "targetField": "title",
       "required": true
     },
-    "description": {
+    "overview": {
       "type": "text",
       "required": true
-    },
-    "content": {
-      "type": "richtext",
-      "required": true
-    },
-    "image": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": ["images"]
-    },
-    "icon": {
-      "type": "string",
-      "required": false
-    },
-    "excerpt": {
-      "type": "text",
-      "required": false
-    },
-    "level": {
-      "type": "string",
-      "required": false
-    },
-    "categories": {
-      "type": "string",
-      "required": false
-    },
-    "tags": {
-      "type": "string",
-      "required": false
     },
     "moduleCode": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "trainingDays": {
       "type": "integer",
       "required": false,
       "min": 1
     },
-    "duration": {
+    "schedule": {
       "type": "string",
-      "required": false
+      "required": true
     },
-    "instructor": {
+    "courseFamily": {
       "type": "string",
-      "required": false
-    },
-    "price": {
-      "type": "decimal",
-      "required": false,
-      "min": 0
-    },
-    "maxParticipants": {
-      "type": "integer",
-      "required": false,
-      "min": 1
-    },
-    "prerequisites": {
-      "type": "text",
       "required": false
     },
     "learningObjectives": {
@@ -97,18 +53,19 @@
       "type": "string",
       "required": false
     },
-    "trainingTime": {
-      "type": "string",
-      "required": false
-    },
-    "trainingDate": {
-      "type": "string",
-      "required": false
-    },
-    "featured": {
+    "popular": {
       "type": "boolean",
-      "default": false,
-      "required": false
+      "required": false,
+      "default": false
+    },
+    "status": {
+      "type": "enumeration",
+      "required": false,
+      "default": "enable",
+      "enum": [
+        "enable",
+        "disable"
+      ]
     }
   }
 }

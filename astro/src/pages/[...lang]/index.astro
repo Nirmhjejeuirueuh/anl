@@ -12,6 +12,7 @@ import Testimonial from "@/layouts/components/sections/TestimonialSection.astro"
 import ServicesSection from "@/layouts/components/sections/ServicesSection.astro";
 import PortfolioSection from "@/layouts/components/sections/PortfolioSection.astro";
 import SpotlightCarousel from "@/layouts/components/sections/SpotlightCarousel.astro";
+import BreakingNews from "@/layouts/components/sections/BreakingNews.astro";
 
 export function getStaticPaths() {
   return generatePaths();
@@ -22,6 +23,7 @@ const homepage = await getEntryCTM("homepage", "-index", Astro.currentLocale);
 
 <Base {...homepage?.data} homepage={true}>
   <HomeBanner />
+  <BreakingNews />
   <Customers />
   <AboutUs />
   <ServicesSection content={homepage?.data.servicesSection} />

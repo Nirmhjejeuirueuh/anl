@@ -28,11 +28,11 @@ if (/^\d+$/.test(slug)) {
 console.log('COURSE ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch course from Strapi by slug
-let course = null;
+let strapiCourse = null;
 try {
   console.log('Fetching Strapi course by slug:', slug);
-  course = await getCourseBySlug(slug);
-  if (!course) {
+  strapiCourse = await getCourseBySlug(slug);
+  if (!strapiCourse) {
     console.log('Strapi course not found for slug:', slug);
   }
 } catch (error) {
@@ -40,29 +40,33 @@ try {
 }
 
 // Handle 404 if course not found
-if (!course) {
+if (!strapiCourse) {
   console.log('No course found, redirecting to 404');
   return Astro.redirect('/404');
 }
 
+// Convert Strapi course to Astro format
+import { convertStrapiCourseToAstro } from "@/lib/utils/strapiApi";
+const course = convertStrapiCourseToAstro(strapiCourse);
+
 // Parse markdown content to HTML
-const parsedContent = await marked.parse(course.content || '');
+const parsedContent = await marked.parse(course.body || '');
 
 // Format categories
-const categories = course.categories ? course.categories.split(',').map(cat => cat.trim()) : [];
+const categories = course.data.courseFamily ? [course.data.courseFamily] : [];
 
 // Additional course details
-const tags = course.tags ? course.tags.split(',').map(tag => tag.trim()) : [];
-const learningObjectives = course.learningObjectives ? course.learningObjectives.split('\n').filter(obj => obj.trim()) : [];
-const prerequisites = course.prerequisites ? course.prerequisites.split('\n').filter(pre => pre.trim()) : [];
+const tags = [];
+const learningObjectives = course.data.learningObjectives ? course.data.learningObjectives.split('\n').filter(obj => obj.trim()) : [];
+const prerequisites = [];
 
 console.log('COURSE ROUTE: About to render course:', course.title);
 ---
 
 <Base
-  title={course.title}
-  description={course.excerpt}
-  image={course.image ? (course.image.url.startsWith('http') ? course.image.url : `${STRAPI_URL}${course.image.url}`) : undefined}
+  title={course.data.title}
+  description={course.data.description}
+  image={undefined}
 >
   <section class="py-12">
     <div class="container">
@@ -70,111 +74,78 @@ console.log('COURSE ROUTE: About to render course:', course.title);
         <!-- Course Meta -->
         <div class="max-w-full space-y-8 text-center lg:max-w-3xl">
           <div>
-            <h1 class="text-h3 md:text-h2">{course.title}</h1>
-            {course.excerpt && (
-              <p class="text-muted mt-6">{course.excerpt}</p>
-            )}
-            {course.instructor && (
-              <div class="mt-4">
-                <p class="text-sm text-muted">By {course.instructor}</p>
-              </div>
-            )}
+            <h1 class="text-h3 md:text-h2">{course.data.title}</h1>
             
             <!-- Course Info Row -->
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div class="flex flex-wrap justify-center items-center gap-4 text-sm text-muted">
-                {course.moduleCode && <span>Course ID: {course.moduleCode}</span>}
-                {course.moduleCode && (course.categories || course.duration) && <span class="text-gray-400">|</span>}
-                {course.categories && <span>Category: {course.categories}</span>}
-                {(course.moduleCode || course.categories) && course.duration && <span class="text-gray-400">|</span>}
-                {course.duration && <span>Duration: {course.duration}</span>}
+                {course.data.moduleCode && <span>{course.data.moduleCode}</span>}
+                {course.data.moduleCode && (course.data.courseFamily || course.data.trainingDays) && <span class="text-gray-400">|</span>}
+                {course.data.courseFamily && <span>{course.data.courseFamily}</span>}
+                {(course.data.moduleCode || course.data.courseFamily) && course.data.trainingDays && <span class="text-gray-400">|</span>}
+                {course.data.trainingDays && <span>{course.data.trainingDays} days</span>}
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Course Image -->
-        {course.image && (
-          <OptimizedImage
-            src={course.image.url.startsWith('http') ? course.image.url : `${STRAPI_URL}${course.image.url}`}
-            width={896}
-            height={384}
-            alt={course.title}
-            class="h-96 w-full object-cover lg:max-w-4xl"
-          />
-        )}
+        <!-- Course Details -->
+        <div class="w-full max-w-full space-y-12 lg:max-w-4xl">
+          <!-- Overview -->
+          {course.data.description && (
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold">Overview</h2>
+              <div class="prose prose-lg" set:html={markdownify(course.data.description)}></div>
+            </div>
+          )}
 
-        <div class="w-full max-w-full space-y-8 lg:max-w-4xl">
-          <!-- Main Content -->
-          <div class="prose-styles content">
-            <div set:html={parsedContent} />
-          </div>
+          <!-- Learning Objectives -->
+          {course.data.learningObjectives && (
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold">Learning Objectives</h2>
+              <div class="prose prose-lg" set:html={markdownify(course.data.learningObjectives)}></div>
+            </div>
+          )}
+
+          <!-- Target Audience -->
+          {course.data.targetAudience && (
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold">Target Audience</h2>
+              <div class="prose prose-lg" set:html={markdownify(course.data.targetAudience)}></div>
+            </div>
+          )}
+
+          <!-- Schedule -->
+          {course.data.schedule && (
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold">Schedule</h2>
+              <div class="flex items-center gap-3">
+                <span class="text-text-default">{course.data.schedule}</span>
+              </div>
+            </div>
+          )}
+
+          <!-- Brochure -->
+          {course.data.hyperlink && (
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold">Brochure</h2>
+              <a
+                href={course.data.hyperlink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
+              >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                View Course Brochure
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
   </section>
-
-  <!-- Target Audience & Schedule -->
-  {(course.targetAudience || course.trainingTime || course.trainingDate) && (
-    <section class="py-16 bg-theme-light">
-      <div class="container">
-        <div class="max-w-4xl mx-auto">
-          <div class="grid md:grid-cols-2 gap-12">
-            <!-- Target Audience -->
-            {course.targetAudience && (
-              <div>
-                <h2 class="text-3xl font-bold mb-8">Target Audience</h2>
-                <div class="prose prose-lg" set:html={markdownify(course.targetAudience)}></div>
-              </div>
-            )}
-
-            <!-- Schedule -->
-            {(course.trainingTime || course.trainingDate) && (
-              <div>
-                <h2 class="text-3xl font-bold mb-8">Schedule</h2>
-                <div class="space-y-4">
-                  {course.trainingTime && (
-                    <div class="flex items-center gap-3">
-                      <span class="font-semibold">Time:</span>
-                      <span class="text-text-default">{course.trainingTime}</span>
-                    </div>
-                  )}
-                  {course.trainingDate && (
-                    <div class="flex items-center gap-3">
-                      <span class="font-semibold">Training Date:</span>
-                      <span class="text-text-default">{course.trainingDate}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Brochure -->
-  {course.hyperlink && (
-    <section class="py-6 pb-30 bg-theme-light">
-      <div class="container">
-        <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl font-bold mb-8">Brochure</h2>
-          <a
-            href={course.hyperlink}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-            View Course Brochure
-          </a>
-        </div>
-      </div>
-    </section>
-  )}
 
   <CallToAction />
 </Base>

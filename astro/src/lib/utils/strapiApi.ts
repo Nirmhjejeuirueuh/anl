@@ -64,54 +64,19 @@ export interface StrapiCourse {
   documentId?: string;
   title: string;
   slug: string;
-  excerpt?: string;
-  description?: string;
-  content?: string;
-  instructor?: string;
-  duration?: string;
-  level?: string;
-  categories?: string;
-  tags?: string;
   publishedAt: string;
-  featured?: boolean;
   createdAt?: string;
   updatedAt?: string;
   moduleCode?: string;
-  icon?: string;
   trainingDays?: number;
-  price?: string;
-  maxParticipants?: number;
-  prerequisites?: string;
   learningObjectives?: string;
   targetAudience?: string;
-  trainingTime?: string;
-  trainingDate?: string;
   hyperlink?: string;
-  image?: {
-    id: number;
-    documentId: string;
-    name: string;
-    alternativeText: string;
-    caption: string;
-    width: number;
-    height: number;
-    formats: {
-      thumbnail: StrapiImageFormat;
-      medium: StrapiImageFormat;
-      small: StrapiImageFormat;
-    };
-    hash: string;
-    ext: string;
-    mime: string;
-    size: number;
-    url: string;
-    previewUrl: string | null;
-    provider: string;
-    provider_metadata: any;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-  };
+  courseFamily?: string;
+  status?: string;
+  overview?: string;
+  popular?: boolean;
+  schedule?: string;
 }
 
 export interface StrapiTraining {
@@ -354,6 +319,101 @@ export interface StrapiSpotlight {
   publishedAt?: string;
 }
 
+export interface StrapiNews {
+  id?: number;
+  documentId?: string;
+  title: string;
+  description: string;
+  source: string;
+  date: string;
+  tag?: string;
+  url?: string;
+  image?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+export interface StrapiTestimonial {
+  id?: number;
+  documentId?: string;
+  shortTestimonial: string;
+  fullStory?: string;
+  personName?: string;
+  personRole?: string;
+  companyName?: string;
+  logoText?: string;
+  backgroundColor?: 'yellow' | 'red' | 'cyan' | 'blue' | 'dark-green' | 'green' | 'nil';
+  isFeatured?: boolean;
+  order?: number;
+  hasStory?: boolean;
+  companyLogo?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+  avatar?: {
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
 export interface StrapiBook {
   id?: number;
   documentId?: string;
@@ -509,15 +569,35 @@ export async function getCategories(): Promise<{ name: string; slug: string; cou
 export async function getCourses(): Promise<StrapiCourse[]> {
   try {
     console.log('getCourses: Starting API call to Strapi');
-    const response = await cachedFetch(`${STRAPI_URL}/api/courses?populate=image&fields=title,slug,instructor,duration,level,categories,moduleCode,icon,description,excerpt,publishedAt`);
-    console.log('getCourses: Response status:', response.status);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch courses: ${response.status}`);
+
+    // First, get the total count to determine how many pages we need
+    const countResponse = await cachedFetch(`${STRAPI_URL}/api/courses?pagination[pageSize]=1`);
+    if (!countResponse.ok) {
+      throw new Error(`Failed to fetch course count: ${countResponse.status}`);
     }
-    const data: StrapiResponse<StrapiCourse> = await response.json();
-    console.log('getCourses: Received data:', data.data?.length || 0, 'courses');
-    console.log('getCourses: Sample course slugs:', data.data?.slice(0, 3).map(c => ({ title: c.title, slug: c.slug })));
-    return data.data;
+    const countData: StrapiResponse<StrapiCourse> = await countResponse.json();
+    const totalCourses = countData.meta.pagination.total;
+    const pageSize = 100; // Fetch 100 courses per page
+    const totalPages = Math.ceil(totalCourses / pageSize);
+
+    console.log(`getCourses: Total courses: ${totalCourses}, will fetch ${totalPages} pages`);
+
+    const allCourses: StrapiCourse[] = [];
+
+    // Fetch all pages
+    for (let page = 1; page <= totalPages; page++) {
+      console.log(`getCourses: Fetching page ${page}/${totalPages}`);
+      const response = await cachedFetch(`${STRAPI_URL}/api/courses?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch courses page ${page}: ${response.status}`);
+      }
+      const data: StrapiResponse<StrapiCourse> = await response.json();
+      allCourses.push(...data.data);
+    }
+
+    console.log('getCourses: Received data:', allCourses.length, 'courses total');
+    console.log('getCourses: Sample course slugs:', allCourses.slice(0, 3).map(c => ({ title: c.title, slug: c.slug })));
+    return allCourses;
   } catch (error) {
     console.error('Error fetching courses:', error);
     return [];
@@ -954,23 +1034,22 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
     collection: "courses",
     data: {
       title: course.title,
-      image: course.image ? (course.image.url.startsWith('http') ? course.image.url : `${STRAPI_URL}${course.image.url}`) : undefined,
       date: date,
-      instructor: course.instructor,
-      duration: course.duration,
-      level: course.level,
-      categories: course.categories ? course.categories.split(',').map(cat => cat.trim()) : [],
-      moduleCode: (course as any).moduleCode,
-      icon: (course as any).icon,
+      moduleCode: course.moduleCode,
       draft: false,
-      excerpt: course.excerpt,
-      description: course.description || course.excerpt,
-      tags: course.tags ? course.tags.split(',').map(tag => tag.trim()) : [],
-      featured: course.featured,
+      description: course.overview,
+      featured: course.popular,
+      trainingDays: course.trainingDays,
+      courseFamily: course.courseFamily,
+      status: course.status,
+      schedule: course.schedule,
+      learningObjectives: course.learningObjectives,
+      targetAudience: course.targetAudience,
+      hyperlink: course.hyperlink,
     },
-    body: course.content || '',
+    body: course.learningObjectives || '',
     rendered: {
-      html: course.content || '',
+      html: course.learningObjectives || '',
     },
   };
 }
@@ -1103,6 +1182,40 @@ export async function getSpotlights(): Promise<StrapiSpotlight[]> {
     return data.data;
   } catch (error) {
     console.error('Error fetching spotlights:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all news from Strapi CMS
+ */
+export async function getNews(): Promise<StrapiNews[]> {
+  try {
+    const response = await cachedFetch(`${STRAPI_URL}/api/news-items?populate=*`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch news: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiNews> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all testimonials from Strapi CMS
+ */
+export async function getTestimonials(): Promise<StrapiTestimonial[]> {
+  try {
+    const response = await cachedFetch(`${STRAPI_URL}/api/testimonials?populate=*&sort=order:asc`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch testimonials: ${response.status}`);
+    }
+    const data: StrapiResponse<StrapiTestimonial> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching testimonials:', error);
     return [];
   }
 }

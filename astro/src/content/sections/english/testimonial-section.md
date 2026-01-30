@@ -22,7 +22,7 @@ marquee:
   marqueeElementWidthAuto: false
   marqueePauseOnHover: true
   marqueeReverse: "" # reverse / ""
-  marqueeDuration: "50s"
+  marqueeDuration: "100s"
 
 list:
   - enable: true

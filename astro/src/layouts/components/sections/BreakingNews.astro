@@ -1,0 +1,212 @@
+---
+// Breaking News Section
+// Displays latest cybersecurity and regulatory news relevant to AgileN Lite
+
+import CustomButton from "../CustomButton.astro";
+import { getNews } from "@/lib/utils/strapiApi";
+
+interface NewsItem {
+  title: string;
+  description: string;
+  source: string;
+  date: string;
+  image?: string;
+  tag?: string;
+  url?: string;
+}
+
+// Fetch news from Strapi CMS
+const strapiNews = await getNews();
+
+// Convert Strapi data to component format
+const newsItems: NewsItem[] = strapiNews.map(news => ({
+  title: news.title,
+  description: news.description,
+  source: news.source,
+  date: news.date,
+  tag: news.tag,
+  url: news.url || "#",
+  image: news.image?.url.startsWith('http') ? news.image.url : `http://localhost:1337${news.image?.url || ''}`
+}));
+
+// Section header
+const sectionTitle = "Breaking News";
+const sectionSubtitle = "Stay informed with the latest cybersecurity updates";
+---
+
+<section class="py-16 md:py-20 lg:py-24 bg-primary text-white">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div data-aos="fade-up-sm" class="text-center mb-12 lg:mb-16">
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
+        {sectionTitle}
+      </h2>
+      {sectionSubtitle && (
+        <p class="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
+          {sectionSubtitle}
+        </p>
+      )}
+    </div>
+
+    <!-- News Layout: Featured + Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+      <!-- Featured News - Large Card (Left Side) -->
+      {newsItems[0] && (
+        <article
+          data-aos="fade-up-sm"
+          class="lg:col-span-7 group relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all duration-500 hover:shadow-2xl"
+        >
+          <a href={newsItems[0].url} class="block h-full">
+            <!-- Featured Image with Overlay -->
+            <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden bg-gradient-to-br from-accent/20 to-primary/40">
+              {newsItems[0].image ? (
+                <img
+                  src={newsItems[0].image}
+                  alt={newsItems[0].title}
+                  class="w-full h-full object-cover"
+                />
+              ) : (
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-32 h-32 bg-accent/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-16 h-16 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                  </div>
+                </div>
+              )}
+              <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent z-10"></div>
+              <!-- Featured Badge -->
+              <div class="absolute top-6 left-6 z-20">
+                <span class="px-4 py-2 bg-danger text-white text-xs font-bold tracking-wider uppercase rounded-full shadow-lg">
+                  Featured
+                </span>
+              </div>
+            </div>
+
+            <!-- Featured Content -->
+            <div class="p-8 lg:p-10">
+              <!-- Tag -->
+              {newsItems[0].tag && (
+                <span class="inline-block px-4 py-1.5 text-xs font-semibold tracking-wider uppercase bg-accent/20 text-white rounded-full mb-5">
+                  {newsItems[0].tag}
+                </span>
+              )}
+
+              <!-- Title -->
+              <h3 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-5 text-white group-hover:text-accent transition-colors duration-300 leading-tight">
+                {newsItems[0].title}
+              </h3>
+
+              <!-- Description -->
+              <p class="text-lg text-white opacity-80 mb-6 leading-relaxed">
+                {newsItems[0].description}
+              </p>
+
+              <!-- Metadata -->
+              <div class="flex flex-wrap items-center gap-4 text-sm text-white opacity-70 pt-5 border-t border-white">
+                <span class="font-medium">
+                  <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                  </svg>
+                  {newsItems[0].source}
+                </span>
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  {newsItems[0].date}
+                </span>
+              </div>
+            </div>
+          </a>
+        </article>
+      )}
+
+      <!-- Secondary News Items (Right Side) -->
+      <div class="lg:col-span-5 flex flex-col gap-6">
+        {newsItems.slice(1).map((item, index) => (
+          <article
+            data-aos="fade-up-sm"
+            data-aos-delay={(index + 1) * 100}
+            class="group relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-xl flex-1"
+          >
+            <a href={item.url} class="block h-full">
+              <div class="flex flex-col h-full">
+                <!-- Compact Image -->
+                <div class="relative h-40 overflow-hidden bg-gradient-to-br from-accent/20 to-primary/40">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      class="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                  <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/60 to-transparent z-10"></div>
+                </div>
+
+                <!-- Compact Content -->
+                <div class="p-6 flex-1 flex flex-col">
+                  <!-- Tag -->
+                  {item.tag && (
+                    <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider uppercase bg-accent/20 text-white rounded-full mb-3 self-start">
+                      {item.tag}
+                    </span>
+                  )}
+
+                  <!-- Title -->
+                  <h3 class="text-lg md:text-xl font-bold mb-3 text-white group-hover:text-accent transition-colors duration-300 leading-tight flex-1">
+                    {item.title}
+                  </h3>
+
+                  <!-- Description -->
+                  <p class="text-sm text-white opacity-80 mb-4 leading-relaxed line-clamp-2">
+                    {item.description}
+                  </p>
+
+                  <!-- Metadata -->
+                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-white opacity-70 pt-3 border-t border-white">
+                    <span class="font-medium truncate">
+                      {item.source}
+                    </span>
+                    <span class="whitespace-nowrap">
+                      {item.date}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Optional: View All News Button -->
+    <div class="text-center mt-12" data-aos="fade-up-sm" data-aos-delay="300">
+      <CustomButton
+        label="View All News"
+        url="/news"
+        variant="outline-white"
+        size="md"
+        showIcon="true"
+        hoverEffect="creative-fill"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

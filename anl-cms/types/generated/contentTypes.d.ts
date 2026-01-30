@@ -583,49 +583,28 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    categories: Schema.Attribute.String;
-    content: Schema.Attribute.RichText & Schema.Attribute.Required;
+    courseFamily: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Text & Schema.Attribute.Required;
-    duration: Schema.Attribute.String;
-    excerpt: Schema.Attribute.Text;
-    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     hyperlink: Schema.Attribute.String;
-    icon: Schema.Attribute.String;
-    image: Schema.Attribute.Media<'images'>;
-    instructor: Schema.Attribute.String;
     learningObjectives: Schema.Attribute.Text;
-    level: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::course.course'
     > &
       Schema.Attribute.Private;
-    maxParticipants: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      >;
-    moduleCode: Schema.Attribute.String;
-    prerequisites: Schema.Attribute.Text;
-    price: Schema.Attribute.Decimal &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
+    moduleCode: Schema.Attribute.String & Schema.Attribute.Required;
+    overview: Schema.Attribute.Text & Schema.Attribute.Required;
+    popular: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     publishedAt: Schema.Attribute.DateTime;
+    schedule: Schema.Attribute.String & Schema.Attribute.Required;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    tags: Schema.Attribute.String;
+    status: Schema.Attribute.Enumeration<['enable', 'disable']> &
+      Schema.Attribute.DefaultTo<'enable'>;
     targetAudience: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;
-    trainingDate: Schema.Attribute.String;
     trainingDays: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -633,7 +612,6 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
         },
         number
       >;
-    trainingTime: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -669,6 +647,38 @@ export interface ApiMediaLibraryMediaLibrary extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNewsNews extends Struct.CollectionTypeSchema {
+  collectionName: 'news';
+  info: {
+    displayName: 'News';
+    pluralName: 'news-items';
+    singularName: 'news';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.String & Schema.Attribute.Required;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    featured: Schema.Attribute.Boolean;
+    image: Schema.Attribute.Media<'images'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::news.news'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    source: Schema.Attribute.String & Schema.Attribute.Required;
+    tag: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    url: Schema.Attribute.String;
   };
 }
 
@@ -758,7 +768,7 @@ export interface ApiSpotlightSpotlight extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     date: Schema.Attribute.String;
     description: Schema.Attribute.Text & Schema.Attribute.Required;
-    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -804,6 +814,48 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.String & Schema.Attribute.Required;
     slug: Schema.Attribute.UID<'name'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
+  collectionName: 'testimonials';
+  info: {
+    displayName: 'Testimonial';
+    pluralName: 'testimonials';
+    singularName: 'testimonial';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    avatar: Schema.Attribute.Media<'images'>;
+    backgroundColor: Schema.Attribute.Enumeration<
+      ['yellow', 'red', 'cyan', 'blue', 'dark-green', 'green', 'nil']
+    > &
+      Schema.Attribute.DefaultTo<'nil'>;
+    companyLogo: Schema.Attribute.Media<'images'>;
+    companyName: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    fullStory: Schema.Attribute.RichText;
+    hasStory: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    isFeatured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    > &
+      Schema.Attribute.Private;
+    logoText: Schema.Attribute.String;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    personName: Schema.Attribute.String;
+    personRole: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    shortTestimonial: Schema.Attribute.Text & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1372,10 +1424,12 @@ declare module '@strapi/strapi' {
       'api::consultant.consultant': ApiConsultantConsultant;
       'api::course.course': ApiCourseCourse;
       'api::media-library.media-library': ApiMediaLibraryMediaLibrary;
+      'api::news.news': ApiNewsNews;
       'api::resource-library.resource-library': ApiResourceLibraryResourceLibrary;
       'api::services-page.services-page': ApiServicesPageServicesPage;
       'api::spotlight.spotlight': ApiSpotlightSpotlight;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
+      'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'api::training.training': ApiTrainingTraining;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
