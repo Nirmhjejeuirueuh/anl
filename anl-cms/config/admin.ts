@@ -9,6 +9,10 @@ export default ({ env }) => ({
     token: {
       salt: env('TRANSFER_TOKEN_SALT'),
     },
+    remote: {
+      enabled: true,
+      timeout: 600000, // 10 minutes in milliseconds
+    },
   },
   secrets: {
     encryptionKey: env('ENCRYPTION_KEY'),
