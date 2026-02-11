@@ -20,7 +20,7 @@ mainBlock:
         variant: "outline-white" # "fill", "outline", "outline-white", "outline-danger", "text", "danger"
         hoverEffect: "creative-fill" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
     - title: "Comprehensive **Training Programs**"
-      description: "Enhance your skills with our expert-led courses in Agile, DevOps, cybersecurity, and digital transformation."
+      description: "Enhance your skills with our expert-led courses in Cybersecurity, Cloud Computing, Agile IT Project Management, Anti-Money Laundering, and Technology Management."
       backgroundImage: "/images/hero/2.webp"
       button:
         enable: true
@@ -37,7 +37,7 @@ mainBlock:
       button:
         enable: true
         label: "Browse Gallery"
-        url: "/gallery/"
+        url: "/media-library/"
         rel: ""
         target: ""
         showIcon: "true"
@@ -56,7 +56,7 @@ mainBlock:
         variant: "outline-white"
         hoverEffect: "creative-fill"
     - title: "**Contact Us** Today"
-      description: "Ready to transform your organization? Get in touch with our experts for personalized solutions."
+      description: "Ready to transform your organisation? Get in touch with our experts for personalised solutions."
       backgroundImage: "/images/hero/5.webp"
       button:
         enable: true

@@ -29,7 +29,7 @@ social:
 
 # Check config.toml file for form action related settings
 form:
-  emailSubject: "Nouvelle soumission de formulaire du site web Looka" # Customized email subject (applicable when anyone submit form, form submission may receive by email depend on provider)
+  emailSubject: "Nouvelle soumission de formulaire du site web Looka" # Customised email subject (applicable when anyone submit form, form submission may receive by email depend on provider)
   submitButton:
     label: "Envoyer votre réponse"
     showIcon: "true"

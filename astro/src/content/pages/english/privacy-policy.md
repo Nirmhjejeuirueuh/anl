@@ -42,7 +42,7 @@ We use cookies and similar tracking technologies to enhance your experience on o
 
 - **Essential Cookies:** Required for the operation of our Website.
 - **Performance Cookies:** Help us understand how you use our site.
-- **Marketing Cookies:** Track your browsing behavior for targeted advertising.
+- **Marketing Cookies:** Track your browsing behaviour for targeted advertising.
 
 You can control cookies through your browser settings.
 

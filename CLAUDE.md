@@ -9,7 +9,7 @@ Create a complete revamp of the AgileN Lite website by combining layout from Ast
 
 ### 1. Layout & Architecture (from `/astro` folder)
 - Use the Astro folder's site structure and layout patterns
-- Follow the component organization from the Astro reference
+- Follow the component organisation from the Astro reference
 - Maintain the routing and page structure from Astro reference
 - **Single language only** - no multi-language support needed (we'll add later)
 
@@ -24,7 +24,7 @@ Create a complete revamp of the AgileN Lite website by combining layout from Ast
   - Any other textual content
 
 ### 3. Branding & Styling
-**New Brand Colors** (use these throughout):
+**New Brand Colours** (use these throughout):
 - Primary Cyan: `#8af3ff`
 - Primary Navy: `#00025d`
 - Accent Yellow: `#FFEB3B`
@@ -41,33 +41,33 @@ Create a complete revamp of the AgileN Lite website by combining layout from Ast
 ### 4. Integration Approach
 1. Analyze both folders:
    - Astro layout structure
-   - Next.js content organization
+   - Next.js content organisation
    
 2. Map content from Next.js to Astro layout:
    - Identify corresponding pages
    - Extract content systematically
-   - Apply new color scheme
+   - Apply new colour scheme
    - Port to Astro components
 
-3. Ensure brand consistency with new colors
+3. Ensure brand consistency with new colours
 
 ## Deliverables
 - Fully functional Astro site (single language)
 - All content from Next.js site preserved
 - Astro folder's layout structure maintained
-- New color scheme applied consistently
+- New colour scheme applied consistently
 - Production-ready, optimized code
 
 ## Critical Notes
 - **DO NOT** create new content - only use existing content from Next.js site
 - **DO NOT** implement multi-language support yet
-- **DO** use the new 6-color palette throughout
+- **DO** use the new 6-colour palette throughout
 - **DO** use Astro folder as the structural foundation
 - **DO** preserve all functionality from the original site
 
 # AgileN Lite Revamp - Development Guidelines
 
-## Color Palette
+## Colour Palette
 ```css
 :root {
   --primary-cyan: #8af3ff;

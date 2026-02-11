@@ -7,7 +7,7 @@ bgPatternImage: "/images/line-pattern.svg"
 list:
   - title: "Assess & Understand Your Needs"
     description: |
-      We begin by conducting a thorough assessment of your organization's current capabilities, competency gaps, and strategic objectives.
+      We begin by conducting a thorough assessment of your organisation's current capabilities, competency gaps, and strategic objectives.
 
       Our team works closely with you to understand your unique challenges in cybersecurity, agile transformation, and digital readiness.
     images:
@@ -19,7 +19,7 @@ list:
 
   - title: "Design Tailored Solutions"
     description: |
-      Leveraging insights from our assessment, we design customized training programs and consulting solutions aligned with industry standards and regulatory requirements.
+      Leveraging insights from our assessment, we design customised training programs and consulting solutions aligned with industry standards and regulatory requirements.
 
       Whether it's IBF-accredited courses, bespoke corporate training, or strategic consulting, we craft solutions that deliver measurable outcomes.
     images:

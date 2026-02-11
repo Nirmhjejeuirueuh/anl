@@ -3,7 +3,7 @@ import { markdownify, toSentenceCase } from "@/lib/utils/textConverter";
 import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
 import Icons from "@/helpers/Icons.astro";
 
-const { class: className } = Astro.props;
+const { class: className, strapiUrl = 'http://localhost:1337' } = Astro.props;
 let { enable, testimonial } = Astro.props.content || {};
 
 const getTextColor = (bgColor: string) => {
@@ -73,7 +73,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
         <div class="t-action mt-auto">
           <button
             class="text-primary hover:text-primary/80 font-semibold text-sm uppercase tracking-wide transition-colors"
-            onclick={`openTestimonialModal('${testimonial.documentId}')`}
+            onclick={`openTestimonialModal('${testimonial.documentId}', '${strapiUrl}')`}
           >
             READ THE STORY ›
           </button>
@@ -98,10 +98,10 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
 
 <script>
   // Modal functionality for testimonials
-  window.openTestimonialModal = async (documentId) => {
+  window.openTestimonialModal = async (documentId, strapiUrl) => {
     try {
       // Fetch the full testimonial data
-      const response = await fetch(`http://localhost:1337/api/testimonials/${documentId}?populate=*`);
+      const response = await fetch(`${strapiUrl}/api/testimonials/${documentId}?populate=*`);
       const data = await response.json();
       const testimonial = data.data;
 
@@ -119,7 +119,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
             <button onclick="this.closest('.fixed').remove()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
 
             <div class="mb-6">
-              ${testimonial.companyLogo ? `<img src="${testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `http://localhost:1337${testimonial.companyLogo.url}`}" alt="${testimonial.companyName || 'Company logo'}" class="max-h-12 w-auto object-contain mb-4">` : ''}
+              ${testimonial.companyLogo ? `<img src="${testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${strapiUrl}${testimonial.companyLogo.url}`}" alt="${testimonial.companyName || 'Company logo'}" class="max-h-12 w-auto object-contain mb-4">` : ''}
               ${testimonial.companyName ? `<h3 class="text-xl font-bold mb-2">${testimonial.companyName}</h3>` : ''}
             </div>
 
@@ -136,7 +136,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
 
             ${testimonial.avatar ? `
               <div class="mt-4">
-                <img src="${testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `http://localhost:1337${testimonial.avatar.url}`}" alt="${testimonial.personName || 'Testimonial author'}" class="w-16 h-16 rounded-full object-cover">
+                <img src="${testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `${strapiUrl}${testimonial.avatar.url}`}" alt="${testimonial.personName || 'Testimonial author'}" class="w-16 h-16 rounded-full object-cover">
               </div>
             ` : ''}
           </div>

@@ -1,6 +1,6 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-description: "Trusted by leading financial institutions and organizations across Asia-Pacific"
+description: "Trusted by leading financial institutions and organisations across Asia-Pacific"
 
 marquee:
   marqueeElementWidth: "11.25rem"

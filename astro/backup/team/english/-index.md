@@ -23,14 +23,14 @@ ourTeam:
 leadershipTeam:
   enable: true # Control the visibility of this section across all pages where it is used
   title: "Executive Leadership and Management"
-  description: "At the heart of our organization is a team of dedicated and experienced leaders who drive our mission forward with passion and expertise."
+  description: "At the heart of our organisation is a team of dedicated and experienced leaders who drive our mission forward with passion and expertise."
   subtitle: "Leadership Team"
   layout: "horizontal"
   leadershipTeam: true
 
   quote:
     enable: true
-    value: "Partner with us for customized business solutions that elevate your corporate performance and ensure long-term success"
+    value: "Partner with us for customised business solutions that elevate your corporate performance and ensure long-term success"
     attribution: "- John C. Maxwell"
 
   button:

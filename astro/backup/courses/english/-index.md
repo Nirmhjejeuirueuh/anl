@@ -79,28 +79,28 @@ faqSection:
     hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
 ---
 
-# Transform Your Organization with Industry-Leading Training
+# Transform Your Organisation with Industry-Leading Training
 
 In today's rapidly evolving digital landscape, staying ahead requires continuous learning and adaptation. AgileN Lite offers comprehensive professional training courses designed to equip your team with the skills and knowledge needed to thrive in the modern business environment.
 
 ## Why Choose AgileN Lite Training?
 
 ### Expert-Led Programs
-Our courses are developed and delivered by seasoned industry practitioners with real-world experience in implementing successful transformations across leading organizations. You're learning from experts who have walked the path themselves.
+Our courses are developed and delivered by seasoned industry practitioners with real-world experience in implementing successful transformations across leading organisations. You're learning from experts who have walked the path themselves.
 
 ### Practical, Hands-On Learning
-We believe in learning by doing. Our training programs emphasize practical application through simulations, case studies, and interactive workshops that mirror real-world scenarios you'll encounter in your organization.
+We believe in learning by doing. Our training programs emphasize practical application through simulations, case studies, and interactive workshops that mirror real-world scenarios you'll encounter in your organisation.
 
 ### Tailored for Financial Services
 With deep expertise in the highly regulated financial services industry, our courses address the unique challenges, compliance requirements, and risk management considerations specific to this sector.
 
 ### Industry Recognition
-Our training programs are delivered in partnership with prestigious institutions like SMU Academy, providing you with recognized certifications that enhance your professional credentials.
+Our training programs are delivered in partnership with prestigious institutions like SMU Academy, providing you with recognised certifications that enhance your professional credentials.
 
 ## Our Course Categories
 
 ### Agile & DevOps Practice
-Master modern project management methodologies and embrace the cultural transformation required for organizational agility. Learn to implement Scrum, Kanban, and DevOps practices that accelerate delivery while maintaining quality and control.
+Master modern project management methodologies and embrace the cultural transformation required for organisational agility. Learn to implement Scrum, Kanban, and DevOps practices that accelerate delivery while maintaining quality and control.
 
 **Featured Courses:**
 - Agile for Successful Project Implementation
@@ -108,7 +108,7 @@ Master modern project management methodologies and embrace the cultural transfor
 - Breakthrough Project Management from Stakeholders' Perspectives
 
 ### Cybersecurity, Risks, Governance & Control
-Build robust security frameworks and risk management capabilities to protect your organization in an increasingly complex threat landscape. Understand regulatory requirements and implement comprehensive governance structures.
+Build robust security frameworks and risk management capabilities to protect your organisation in an increasingly complex threat landscape. Understand regulatory requirements and implement comprehensive governance structures.
 
 **Featured Courses:**
 - Managing Expanding Cyber Risks
@@ -155,7 +155,7 @@ Develop in-demand technical skills essential for modern IT professionals. From P
 Join professionals from across industries in our interactive public training sessions. Network with peers, share experiences, and learn from diverse perspectives.
 
 ### Corporate In-House Training
-Bring our training programs to your organization. We customize content to address your specific challenges, use your real-world scenarios, and train your entire team together for maximum impact.
+Bring our training programs to your organisation. We customise content to address your specific challenges, use your real-world scenarios, and train your entire team together for maximum impact.
 
 ### Blended Learning
 Combine the flexibility of online learning with the engagement of classroom sessions. Our blended programs offer pre-work, virtual modules, and in-person workshops for optimal learning outcomes.
@@ -165,11 +165,11 @@ Beyond training, we offer ongoing consultation and coaching to support your impl
 
 ## What Our Participants Say
 
-> "The Agile course transformed how we think about project delivery. The simulation exercises made the concepts come alive, and we immediately saw how to apply them in our organization." - *Senior Manager, Global Bank*
+> "The Agile course transformed how we think about project delivery. The simulation exercises made the concepts come alive, and we immediately saw how to apply them in our organisation." - *Senior Manager, Global Bank*
 
 > "Outstanding cybersecurity training. The instructor's real-world experience was invaluable, and the risk assessment frameworks we learned are now core to our security program." - *Chief Risk Officer, Financial Institution*
 
-> "The best professional training I've attended. Practical, relevant, and immediately actionable. The investment has already paid dividends for our organization." - *IT Director, Fintech Company*
+> "The best professional training I've attended. Practical, relevant, and immediately actionable. The investment has already paid dividends for our organisation." - *IT Director, Fintech Company*
 
 ## Training Partners
 
@@ -181,14 +181,14 @@ We collaborate with leading educational institutions and technology providers to
 
 ## Continuous Professional Development
 
-Our courses provide CPD (Continuing Professional Development) hours recognized by major professional bodies, helping you maintain your certifications and demonstrate ongoing commitment to professional excellence.
+Our courses provide CPD (Continuing Professional Development) hours recognised by major professional bodies, helping you maintain your certifications and demonstrate ongoing commitment to professional excellence.
 
 ## Corporate Training Solutions
 
 ### Assessment & Gap Analysis
-We begin by understanding your organization's current capabilities and future requirements, identifying skill gaps and training priorities.
+We begin by understanding your organisation's current capabilities and future requirements, identifying skill gaps and training priorities.
 
-### Customized Curriculum
+### Customised Curriculum
 Based on the assessment, we develop a tailored training roadmap that aligns with your business objectives and transformation initiatives.
 
 ### Implementation Support
@@ -203,13 +203,13 @@ Track the impact of training through defined metrics and success criteria, demon
 Browse our comprehensive course offerings below. Each course page provides detailed curriculum, learning objectives, and participant requirements.
 
 ### Step 2: Discuss Your Needs
-Contact us to discuss your training requirements. Whether you need individual course enrollment or a comprehensive organizational training program, we're here to help.
+Contact us to discuss your training requirements. Whether you need individual course enrollment or a comprehensive organisational training program, we're here to help.
 
-### Step 3: Enroll or Customize
-Register for public sessions or work with us to develop a customized training program for your organization.
+### Step 3: Enroll or Customise
+Register for public sessions or work with us to develop a customised training program for your organisation.
 
 ### Step 4: Learn & Transform
-Engage with expert instructors, participate in hands-on exercises, and return to your organization ready to drive change.
+Engage with expert instructors, participate in hands-on exercises, and return to your organisation ready to drive change.
 
 ## Funding and Grants
 
@@ -217,7 +217,7 @@ Many of our courses qualify for government training grants and funding programs.
 
 ## Contact Us
 
-Ready to transform your organization through professional development?
+Ready to transform your organisation through professional development?
 
 **Email**: enquiry@agilenlite.com  
 **Phone**: +65 XXXX XXXX  
@@ -229,4 +229,4 @@ For corporate training inquiries, partnership opportunities, or custom program d
 
 ## Browse Our Course Catalog
 
-Explore our comprehensive range of professional training courses below. Each program is designed to deliver practical skills and knowledge you can apply immediately in your organization.
+Explore our comprehensive range of professional training courses below. Each program is designed to deliver practical skills and knowledge you can apply immediately in your organisation.

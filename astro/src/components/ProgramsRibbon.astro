@@ -1,4 +1,6 @@
 ---
+import ProgramVideoModal from "@/components/utilities/ProgramVideoModal.astro";
+
 interface Props {
   programs: any[];
   currentSlug?: string;
@@ -10,36 +12,132 @@ interface Props {
 const { programs, currentSlug, basePath, label, lang } = Astro.props;
 ---
 
-<section class="py-8 bg-theme-light border-y border-gray-100">
+<style>
+  #programs-container::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<section class="py-8 bg-theme-light border-y border-gray-100 flex items-center">
   <div class="container">
-    <div class="flex items-center gap-4 overflow-x-auto scrollbar-hide pb-2">
-      <span class="text-sm font-semibold text-gray-600 whitespace-nowrap mr-2">{label}:</span>
-      {programs && programs.map((program: any, index: number) => {
-        const isActive = currentSlug === program.slug;
-        // If program has a URL field, use it directly, otherwise construct slug-based URL
-        const href = program.URL 
-          ? program.URL 
-          : (lang ? `/${lang}${basePath}/${program.slug}` : `${basePath}/${program.slug}`);
-        return (
-          <a
-            href={href}
-            class={`inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
-              isActive
-                ? 'bg-primary text-white border border-primary shadow-md'
-                : 'bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40'
-            }`}
-            data-aos="fade-up-sm"
-            data-aos-delay={index * 50}
-            target={program.URL ? "_blank" : "_self"}
-            rel={program.URL ? "noopener noreferrer" : undefined}
-          >
-            {program.title}
-            <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        );
-      })}
+    <div class="relative px-12">
+      <!-- Left Arrow -->
+      <button
+        id="scroll-left"
+        class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-md hover:bg-gray-50 transition-colors opacity-0 pointer-events-none"
+        aria-label="Scroll left"
+      >
+        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <!-- Right Arrow -->
+      <button
+        id="scroll-right"
+        class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-md hover:bg-gray-50 transition-colors opacity-0 pointer-events-none"
+        aria-label="Scroll right"
+      >
+        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+
+      <div id="programs-container" class="flex items-center gap-4 overflow-x-auto pb-2" style="scrollbar-width: none; -ms-overflow-style: none;">
+        {programs && programs.map((program: any, index: number) => {
+          const isActive = currentSlug === program.slug;
+          // If program has a URL field, use it directly, otherwise construct slug-based URL
+          const href = program.URL
+            ? program.URL
+            : (lang ? `/${lang}${basePath}/${program.slug}` : `${basePath}/${program.slug}`);
+          return (
+            <a
+              href={href}
+              data-video-url={program.URL ? program.URL : undefined}
+              data-video-title={program.URL ? program.title : undefined}
+              class={`program-link inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
+                isActive
+                  ? 'bg-primary text-white border border-primary shadow-md'
+                  : 'bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40'
+              }`}
+              data-aos="fade-up-sm"
+              data-aos-delay={index * 50}
+            >
+              {program.title}
+              <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          );
+        })}
+      </div>
     </div>
   </div>
 </section>
+
+<ProgramVideoModal id="ribbon-video-modal" />
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('programs-container');
+    const leftArrow = document.getElementById('scroll-left');
+    const rightArrow = document.getElementById('scroll-right');
+
+    if (!container || !leftArrow || !rightArrow) return;
+
+    function updateArrows() {
+      const hasOverflow = container.scrollWidth > container.clientWidth;
+      const atStart = container.scrollLeft <= 0;
+      const atEnd = container.scrollLeft >= container.scrollWidth - container.clientWidth - 1;
+
+      if (hasOverflow) {
+        leftArrow.style.opacity = atStart ? '0' : '1';
+        leftArrow.style.pointerEvents = atStart ? 'none' : 'auto';
+        rightArrow.style.opacity = atEnd ? '0' : '1';
+        rightArrow.style.pointerEvents = atEnd ? 'none' : 'auto';
+      } else {
+        leftArrow.style.opacity = '0';
+        leftArrow.style.pointerEvents = 'none';
+        rightArrow.style.opacity = '0';
+        rightArrow.style.pointerEvents = 'none';
+      }
+    }
+
+    // Scroll functions
+    leftArrow.addEventListener('click', function() {
+      container.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+
+    rightArrow.addEventListener('click', function() {
+      container.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+
+    // Update arrows on scroll and resize
+    container.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+
+    // Initial check
+    updateArrows();
+
+    // Check again after a short delay to ensure content is loaded
+    setTimeout(updateArrows, 100);
+
+    // Video Modal Functionality
+    const programLinks = document.querySelectorAll('.program-link');
+
+    // Add click handlers to program links
+    programLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const videoUrl = this.getAttribute('data-video-url');
+        const videoTitle = this.getAttribute('data-video-title');
+        
+        // If it has a video URL, prevent default and open modal
+        if (videoUrl && window.openVideoModal) {
+          e.preventDefault();
+          window.openVideoModal(videoUrl, videoTitle, 'ribbon-video-modal');
+        }
+        // Otherwise, let the link work normally
+      });
+    });
+  });
+</script>

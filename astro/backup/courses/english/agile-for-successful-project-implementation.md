@@ -1,6 +1,6 @@
 ---
 title: "Agile for Successful Project Implementation"
-description: "Know the difference of being Agile rather than doing Agile and understand the organizational impact and value of Agile on businesses. Imbue a fundamental view of Agile, not as a process change, but a culture change. Experience Agile through simulation to implement the knowledge within their teams, departments and organizations."
+description: "Know the difference of being Agile rather than doing Agile and understand the organisational impact and value of Agile on businesses. Imbue a fundamental view of Agile, not as a process change, but a culture change. Experience Agile through simulation to implement the knowledge within their teams, departments and organisations."
 image: "/images/placeholder.jpg"
 icon: "Zap"
 category: "Agile & DevOps Practice"
@@ -19,7 +19,7 @@ trainingDate: "2026: To be advised (2 days)"
 
 ## Overview
 
-Know the difference of being Agile rather than doing Agile and understand the organizational impact and value of Agile on businesses. Imbue a fundamental view of Agile, not as a process change, but a culture change. Experience Agile through simulation to implement the knowledge within their teams, departments and organizations.
+Know the difference of being Agile rather than doing Agile and understand the organisational impact and value of Agile on businesses. Imbue a fundamental view of Agile, not as a process change, but a culture change. Experience Agile through simulation to implement the knowledge within their teams, departments and organisations.
 
 ## Learning Objectives
 

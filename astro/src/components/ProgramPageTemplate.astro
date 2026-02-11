@@ -4,6 +4,7 @@ import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import ProgramsRibbon from "@/components/ProgramsRibbon.astro";
 import CallToAction from "@/components/sections/CallToAction.astro";
 import HtmlContentContainer from "@/components/HtmlContentContainer.astro";
+import ProgramVideoModal from "@/components/utilities/ProgramVideoModal.astro";
 import { STRAPI_URL } from "@/lib/strapiApi";
 import { markdownify } from "@/lib/utils/textConverter";
 
@@ -65,16 +66,6 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
     <section class="relative bg-theme-light">
       <div class="container">
         <div class="mx-auto max-w-5xl text-center pt-12">
-          <!-- Subtitle -->
-          <span class="bg-primary/5 border-gray-300 text-primary mb-2.5 inline-block rounded-full border px-5 py-px text-sm font-semibold tracking-wider" data-aos="fade-up-sm">
-            {subtitle.toUpperCase()}
-          </span>
-
-          <!-- Main Heading -->
-          <h1 class="text-h1 mb-12 text-inherit capitalize" data-aos="fade-up-sm" data-aos-delay="100">
-            {title.split(' ').slice(0, -1).join(' ')} <span class="text-primary">{title.split(' ').slice(-1)}</span>
-          </h1>
-
           <!-- Description -->
           <div class="text-base md:text-lg text-gray-700 leading-relaxed space-y-4 mb-12 text-left" data-aos="fade-up-sm" data-aos-delay="200">
             {description.split('\n\n').map((paragraph: string) => (
@@ -105,7 +96,7 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
                 data-aos-delay={index * 200}
                 class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
                 {program.image && (
-                  <div class="aspect-[16/9] overflow-hidden">
+                  <div class="aspect-[5/2] overflow-hidden">
                     <img
                       src={program.image.url.startsWith('http') ? program.image.url : `${STRAPI_URL}${program.image.url}`}
                       alt={program.title}
@@ -121,7 +112,12 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
                     )}
                   </div>
                   <div class="mt-6">
-                    <a href={`${lang ? `/${lang}` : ''}${basePath}/${program.slug}`} class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                    <a 
+                      href={program.URL ? program.URL : `${lang ? `/${lang}` : ''}${basePath}/${program.slug}`}
+                      data-video-url={program.URL ? program.URL : undefined}
+                      data-video-title={program.URL ? program.title : undefined}
+                      class="program-card-link inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors"
+                    >
                       Learn More
                       <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -138,4 +134,47 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
   )}
 
   <CallToAction />
+
+  <ProgramVideoModal id="program-video-modal" />
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('ProgramPageTemplate script loaded');
+      console.log('window.openVideoModal available:', typeof window.openVideoModal);
+      
+      // Add click handlers to program card links
+      const programCardLinks = document.querySelectorAll('.program-card-link');
+      console.log('Found program card links:', programCardLinks.length);
+      
+      programCardLinks.forEach(link => {
+        const videoUrl = link.getAttribute('data-video-url');
+        if (videoUrl) {
+          console.log('Link with video URL found:', videoUrl);
+        }
+        
+        link.addEventListener('click', function(e) {
+          const videoUrl = this.getAttribute('data-video-url');
+          const videoTitle = this.getAttribute('data-video-title');
+          
+          console.log('Link clicked, videoUrl:', videoUrl, 'videoTitle:', videoTitle);
+          
+          // If it has a video URL, prevent default and open modal
+          if (videoUrl) {
+            e.preventDefault();
+            console.log('Preventing default navigation');
+            
+            if (window.openVideoModal) {
+              console.log('Calling window.openVideoModal');
+              window.openVideoModal(videoUrl, videoTitle, 'program-video-modal');
+            } else {
+              console.error('window.openVideoModal not found!');
+              // Fallback to opening in new tab
+              window.open(videoUrl, '_blank');
+            }
+          }
+          // Otherwise, let the link work normally
+        });
+      });
+    });
+  </script>
 </Base>

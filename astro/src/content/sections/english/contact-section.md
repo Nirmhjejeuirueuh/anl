@@ -1,7 +1,7 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
 title: "Let's Start a **Conversation**"
-description: "Ready to transform your organization? Our team of experts is here to help you embrace the evolving technological landscape. Whether you're looking for training, consulting, or partnership opportunities, we're here to support your journey."
+description: "Ready to transform your organisation? Our team of experts is here to help you embrace the evolving technological landscape. Whether you're looking for training, consulting, or partnership opportunities, we're here to support your journey."
 subtitle: "Get In Touch"
 
 contactList:

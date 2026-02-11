@@ -14,18 +14,21 @@ button:
 achievements:
   enable: true
   list:
-    - value: "15"
-      prependValue: ""
+    - prependValue: ""
+      value: "260"
       appendValue: "+"
-      description: "Years of delivering excellence in Agile transformation and DevOps consulting across the APAC region"
-    - value: "100"
-      prependValue: ""
+      title: "Professionals Trained"
+      description: "Through Career Conversion Programs in IT Security & Cybersecurity"
+    - prependValue: ""
+      value: "2000"
       appendValue: "+"
-      description: "Successful training programs and consulting projects helping organizations embrace technological change"
-    - value: "95"
-      prependValue: ""
-      appendValue: "%"
-      description: "Client satisfaction rate - our clients trust us to deliver measurable results and lasting transformation"
+      title: "Corporate Professionals"
+      description: "Trained in cybersecurity, fraud risk, AML, and cloud security"
+    - prependValue: ""
+      value: "15"
+      appendValue: "+"
+      title: "Years of Excellence"
+      description: "Delivering cutting-edge training and consulting solutions"
 
 banner:
   enable: false

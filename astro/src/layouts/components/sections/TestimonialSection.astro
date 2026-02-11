@@ -9,6 +9,7 @@ import CustomButton from "../CustomButton.astro";
 import type { marqueeConfig } from "@/content.config";
 import type { TypeOf } from "astro:schema";
 import { getTestimonials } from "@/lib/utils/strapiApi";
+import { STRAPI_URL } from "@/lib/utils/strapiApi";
 
 // Type for this section data
 export type sectionType = Section & {
@@ -40,11 +41,11 @@ const processTestimonial = (testimonial: any) => ({
   ...testimonial,
   companyLogo: testimonial.companyLogo ? {
     ...testimonial.companyLogo,
-    url: testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `http://localhost:1337${testimonial.companyLogo.url}`
+    url: testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${STRAPI_URL}${testimonial.companyLogo.url}`
   } : undefined,
   avatar: testimonial.avatar ? {
     ...testimonial.avatar,
-    url: testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `http://localhost:1337${testimonial.avatar.url}`
+    url: testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `${STRAPI_URL}${testimonial.avatar.url}`
   } : undefined
 });
 
@@ -93,7 +94,7 @@ const { enable, title, subtitle, button, marquee } = sectionData;
             >
               {sortedTestimonials.map((testimonial) => (
                 <div class="min-w-(--marquee-element-width-responsive) h-full px-4 md:min-w-(--marquee-element-width)">
-                  <TestimonialCard class="h-full" content={{
+                  <TestimonialCard class="h-full" strapiUrl={STRAPI_URL} content={{
                     enable: true,
                     testimonial: processTestimonial(testimonial)
                   }} />
@@ -104,7 +105,7 @@ const { enable, title, subtitle, button, marquee } = sectionData;
                   class="min-w-(--marquee-element-width-responsive) h-full px-4 md:min-w-(--marquee-element-width)"
                   aria-hidden="true"
                 >
-                  <TestimonialCard class="h-full" content={{
+                  <TestimonialCard class="h-full" strapiUrl={STRAPI_URL} content={{
                     enable: true,
                     testimonial: processTestimonial(testimonial)
                   }} />

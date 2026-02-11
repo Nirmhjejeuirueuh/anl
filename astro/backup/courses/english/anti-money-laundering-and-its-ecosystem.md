@@ -25,7 +25,7 @@ Money laundering incidents are on the rise in terms of both frequency and comple
 
 ## Learning Objectives
 
-- Gain an IT perspective of the process, measures and initiatives taken by organizations to combat money laundering and financing of terrorism
+- Gain an IT perspective of the process, measures and initiatives taken by organisations to combat money laundering and financing of terrorism
 - Understand the implications of offshore financial centres and non-cooperative countries on money laundering
 - Learn about the measures undertaken by financial institutions to deter money laundering and terrorist financing
 - Know the relevant AML regulations

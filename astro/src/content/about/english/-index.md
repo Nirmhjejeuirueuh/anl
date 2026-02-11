@@ -37,16 +37,16 @@ team:
 
 ## Welcome to AgilenLite
 
-AgilenLite is your trusted partner for Agile transformation, DevOps consulting, and cutting-edge training solutions. We help organizations and individuals stay ahead in the rapidly evolving IT landscape.
+AgilenLite is your trusted partner for Agile transformation, DevOps consulting, and cutting-edge training solutions. We help organisations and individuals stay ahead in the rapidly evolving IT landscape.
 
 ### What We Do
 
 We specialize in:
 - **Agile Training & Certification** - Scrum, Kanban, SAFe, and more
 - **DevOps Consulting** - Implementation, automation, and best practices
-- **Cybersecurity Training** - Protect your organization with the latest security practices
+- **Cybersecurity Training** - Protect your organisation with the latest security practices
 - **Process Optimization** - Streamline your workflows for maximum efficiency
 
 ### Our Approach
 
-We believe in practical, hands-on learning combined with strategic consulting that delivers real results. Our team works closely with you to understand your unique challenges and create customized solutions that drive transformation.
+We believe in practical, hands-on learning combined with strategic consulting that delivers real results. Our team works closely with you to understand your unique challenges and create customised solutions that drive transformation.

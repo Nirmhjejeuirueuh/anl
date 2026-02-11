@@ -26,7 +26,7 @@ Participants will acquire the know-how to support, manage and be equipped with t
 The participants will
 
 - learn to relate specific threat activities to the respective aspects of security threat management
-- understand the goals of threat detection, threat defense and threat intelligence, threat modeling and threat monitoring
+- understand the goals of threat detection, threat defence and threat intelligence, threat modeling and threat monitoring
 - learn about how to adopt cyber threat hunting as the proactive approach in threat management.
 - understand how to analyse security logs and identify patterns that are threats-related
 - understand the role of SIEM in threat management and on how cyber kill chain and attack framework are adopted.

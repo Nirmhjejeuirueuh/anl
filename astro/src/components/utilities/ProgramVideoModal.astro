@@ -1,0 +1,241 @@
+---
+import Icons from "@/helpers/Icons.astro";
+
+interface Props {
+  id?: string;
+}
+
+const { id = "video-modal" } = Astro.props;
+---
+
+<!-- Video Modal -->
+<div
+  id={id}
+  class="hs-overlay pointer-events-none fixed start-0 top-0 z-60 hidden size-full overflow-x-hidden overflow-y-auto"
+  role="dialog"
+  tabindex="-1">
+  <div class="hs-overlay-animation-target hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 flex min-h-[calc(100%-3.5rem)] items-center opacity-0 transition-[margin,opacity] ease-out sm:mx-auto sm:w-full sm:max-w-4xl">
+    <div class="has-video-player pointer-events-auto container flex flex-col">
+      <button
+        type="button"
+        aria-label="Close"
+        data-close-video-modal={id}
+        class="mb-2 ml-auto flex h-10 w-10 items-center justify-center rounded-full bg-white ring-0 ring-white/50 duration-300 hover:rotate-90 hover:ring-4">
+        <span class="sr-only">Close</span>
+        <Icons icon="X" class="text-dark/80 h-6 w-6" />
+      </button>
+      <div data-video-container={id} class="video-player"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // @ts-nocheck
+  import Plyr from 'plyr';
+  import 'plyr/dist/plyr.css';
+  
+  // Only initialize once
+  if (!window.videoModalInitialized) {
+    window.videoModalInitialized = true;
+    
+    // Store players by modal ID
+    if (!window.videoModalPlayers) {
+      window.videoModalPlayers = new Map();
+    }
+    const players = window.videoModalPlayers;
+
+    // Function to extract YouTube video ID from URL
+    function getYouTubeVideoId(url) {
+      if (!url) return null;
+      
+      // Handle different YouTube URL formats
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=)([^&]+)/,
+        /(?:youtu\.be\/)([^?]+)/,
+        /(?:youtube\.com\/embed\/)([^?]+)/,
+        /(?:youtube\.com\/v\/)([^?]+)/
+      ];
+      
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+          return match[1];
+        }
+      }
+      
+      return null;
+    }
+
+  // Function to open video modal
+  function openVideoModal(videoUrl, title, modalId = 'video-modal') {
+    if (!videoUrl) {
+      console.error('No video URL provided');
+      return;
+    }
+
+    // Check if it's a YouTube URL
+    const videoId = getYouTubeVideoId(videoUrl);
+    const isYouTube = videoId !== null;
+    const isDirectVideo = videoUrl.match(/\.(mp4|webm|ogg|mov)(\?|$)/i);
+
+    console.log('Opening video modal:', { videoUrl, isYouTube, isDirectVideo, videoId });
+
+    // If it's not YouTube or a direct video, open in new tab
+    if (!isYouTube && !isDirectVideo) {
+      console.log('Not a supported video format, opening in new tab');
+      window.open(videoUrl, '_blank');
+      return;
+    }
+
+    // Get modal and container
+    const modal = document.getElementById(modalId);
+    const videoContainer = document.querySelector(`[data-video-container="${modalId}"]`);
+    
+    if (!modal || !videoContainer) {
+      console.error('Modal or container not found:', { modal, videoContainer });
+      return;
+    }
+
+    // Clear previous content
+    videoContainer.innerHTML = '';
+
+    if (isYouTube) {
+      // YouTube video
+      console.log('Setting up YouTube video');
+      videoContainer.setAttribute('data-plyr-provider', 'youtube');
+      videoContainer.setAttribute('data-plyr-embed-id', videoId);
+    } else {
+      // Direct video file (MP4, WebM, etc.)
+      console.log('Setting up direct video');
+      const videoElement = document.createElement('video');
+      videoElement.setAttribute('playsinline', '');
+      videoElement.setAttribute('controls', '');
+      
+      const sourceElement = document.createElement('source');
+      sourceElement.setAttribute('src', videoUrl);
+      sourceElement.setAttribute('type', 'video/mp4');
+      
+      videoElement.appendChild(sourceElement);
+      videoContainer.appendChild(videoElement);
+    }
+
+    // Initialize Plyr
+    const player = new Plyr(videoContainer.querySelector('video') || videoContainer, {
+      hideControls: false,
+      youtube: {
+        noCookie: true
+      }
+    });
+
+    // Store player reference
+    window.videoModalPlayers.set(modalId, player);
+
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('hs-overlay-open');
+    document.body.style.overflow = 'hidden';
+
+    // Play video after a short delay to ensure it's loaded
+    setTimeout(() => {
+      if (player.ready) {
+        player.play().catch(err => console.log('Autoplay prevented:', err));
+      }
+    }, 300);
+  }
+
+  // Function to close video modal
+  function closeVideoModal(modalId = 'video-modal') {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    // Get and destroy player
+    const player = window.videoModalPlayers.get(modalId);
+    if (player) {
+      player.pause();
+      player.destroy();
+      window.videoModalPlayers.delete(modalId);
+    }
+
+    // Hide modal
+    modal.classList.remove('hs-overlay-open');
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+
+    // Clear video container
+    const videoContainer = document.querySelector(`[data-video-container="${modalId}"]`);
+    if (videoContainer) {
+      videoContainer.innerHTML = '';
+    }
+  }
+
+  // Setup video modal functionality
+  function setupVideoModal(modalId = 'video-modal') {
+    // Close modal button
+    const closeButton = document.querySelector(`[data-close-video-modal="${modalId}"]`);
+    if (closeButton) {
+      closeButton.addEventListener('click', () => closeVideoModal(modalId));
+    }
+
+    // Close modal when clicking outside
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeVideoModal(modalId);
+        }
+      });
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const openModals = document.querySelectorAll('.hs-overlay-open');
+        openModals.forEach(openModal => {
+          const id = openModal.getAttribute('id');
+          if (id && window.videoModalPlayers.has(id)) {
+            closeVideoModal(id);
+          }
+        });
+      }
+    });
+  }
+
+  // Export functions globally
+  if (typeof window !== 'undefined') {
+    window.openVideoModal = openVideoModal;
+    window.closeVideoModal = closeVideoModal;
+    window.setupVideoModal = setupVideoModal;
+    console.log('VideoModal functions exported to window');
+  }
+
+  // Auto-setup on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('VideoModal auto-setup running');
+      // Setup all video modals on the page
+      const allModals = document.querySelectorAll('[data-video-container]');
+      console.log('Found video modal containers:', allModals.length);
+      allModals.forEach(container => {
+        const modalId = container.getAttribute('data-video-container');
+        if (modalId) {
+          console.log('Setting up video modal:', modalId);
+          setupVideoModal(modalId);
+        }
+      });
+    });
+  } else {
+    console.log('VideoModal auto-setup running (already loaded)');
+    // Setup immediately if DOM is already loaded
+    const allModals = document.querySelectorAll('[data-video-container]');
+    console.log('Found video modal containers:', allModals.length);
+    allModals.forEach(container => {
+      const modalId = container.getAttribute('data-video-container');
+      if (modalId) {
+        console.log('Setting up video modal:', modalId);
+        setupVideoModal(modalId);
+      }
+    });
+  }
+  
+  } // End of videoModalInitialized check
+</script>
