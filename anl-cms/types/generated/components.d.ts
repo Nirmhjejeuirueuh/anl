@@ -33,6 +33,7 @@ export interface MediaLibraryMediaSection extends Struct.ComponentSchema {
   };
   attributes: {
     photos: Schema.Attribute.Media<'images', true>;
+    stage: Schema.Attribute.Enumeration<['active', 'pastHighlights']>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }

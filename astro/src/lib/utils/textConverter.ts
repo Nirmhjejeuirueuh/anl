@@ -8,26 +8,54 @@ export const slugifyyy = (content: string) => {
   return slug_maker(content, { lower: true });
 };
 
+// pluralize
+export const pluralize = (count: number, singular: string, plural: string = singular + 's') => {
+  return count === 1 ? singular : plural;
+};
+
 // markdownify
 export const markdownify = (content: string, container?: boolean) => {
   if (!content) return "";
 
+  // Pre-process content to handle custom button syntax first
+  let processedContent = content;
+  
+  // Convert [text](url){.button .center} to centered red button
+  processedContent = processedContent.replace(
+    /\[([^\]]+)\]\(([^)]+)\)\{\.button\s+\.center\}/g,
+    '<div class="text-center my-6"><a href="$2" class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-md" style="color: white;">$1</a></div>'
+  );
+  
+  // Convert [text](url){.button} to regular red button
+  processedContent = processedContent.replace(
+    /\[([^\]]+)\]\(([^)]+)\)\{\.button\}/g,
+    '<a href="$2" class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-md" style="color: white;">$1</a>'
+  );
+
   const renderer = new marked.Renderer();
 
-  // Override the link renderer
-  renderer.link = (link) => {
-    const isExternal = link.href.startsWith("http");
-    const targetAttrs = link.href.includes("getastrothemes")
+  // Override the link renderer to handle both text and image links
+  renderer.link = ({href, title, text}) => {
+    const isExternal = href.startsWith("http");
+    const targetAttrs = href.includes("getastrothemes")
       ? `target="_blank" rel="noopener"`
       : isExternal
         ? `target="_blank" rel="noopener noreferrer nofollow"`
         : "";
+    
+    const titleAttr = title ? ` title="${title}"` : '';
+    
+    return `<a href="${href}" ${targetAttrs}${titleAttr}>${text}</a>`;
+  };
 
-    return `<a href="${link.href}" ${targetAttrs}>${link.text}</a>`;
+  // Override image renderer to ensure proper styling
+  renderer.image = ({href, title, text}) => {
+    const titleAttr = title ? ` title="${title}"` : '';
+    const alt = text || '';
+    return `<img src="${href}" alt="${alt}"${titleAttr} class="rounded-lg shadow-md max-w-full h-auto" loading="lazy" />`;
   };
 
   // Pre-process content to handle markdown inside <details> tags
-  let processedContent = content;
 
   // Find all <details> blocks and process markdown inside them
   const detailsRegex = /<details>([\s\S]*?)<\/details>/g;

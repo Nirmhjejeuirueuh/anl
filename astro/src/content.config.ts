@@ -288,6 +288,7 @@ const courseCollection = defineCollection({
       category: z.string().optional(),
       moduleCode: z.string().optional(),
       trainingDays: z.number().optional(),
+      dropdown: z.string().optional(),
       primaryOwner: z.string().optional(),
       secondaryOwner: z.string().optional(),
       targetAudience: z.string().optional(),

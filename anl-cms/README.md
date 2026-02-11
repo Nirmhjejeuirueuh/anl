@@ -40,7 +40,49 @@ Strapi gives you many possible deployment options for your project including [St
 yarn strapi deploy
 ```
 
-## 📚 Learn more
+## � Backup & Restore
+
+### Creating a Backup
+
+To create a complete backup of your Strapi project including data, configurations, and uploaded files:
+
+```bash
+# Using Strapi CLI (recommended - when Strapi is not running)
+npx strapi export --file backups/strapi-backup-$(date +%Y%m%d-%H%M%S).tar.gz.enc --encrypt
+
+# Alternative: Manual backup (when CLI fails)
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+BACKUP_DIR="backups/manual-backup-${TIMESTAMP}"
+mkdir -p "$BACKUP_DIR"
+cp -r .strapi "$BACKUP_DIR/"
+cp -r config "$BACKUP_DIR/"
+cp -r database "$BACKUP_DIR/"
+cp -r public/uploads "$BACKUP_DIR/" 2>/dev/null || echo "No uploads"
+cp .tmp/data.db "$BACKUP_DIR/" 2>/dev/null || echo "No data.db"
+tar -czf "backups/manual-backup-${TIMESTAMP}.tar.gz" -C backups "manual-backup-${TIMESTAMP}"
+rm -rf "$BACKUP_DIR"
+```
+
+### Restoring from Backup
+
+To restore from a Strapi export:
+
+```bash
+# Using Strapi CLI
+npx strapi import --file backups/your-backup-file.tar.gz.enc
+
+# For manual backups, extract and replace the relevant directories
+tar -xzf backups/manual-backup-YYYYMMDD-HHMMSS.tar.gz
+cp -r manual-backup-YYYYMMDD-HHMMSS/.strapi ./
+cp -r manual-backup-YYYYMMDD-HHMMSS/config ./
+cp -r manual-backup-YYYYMMDD-HHMMSS/database ./
+cp -r manual-backup-YYYYMMDD-HHMMSS/uploads public/ 2>/dev/null || echo "No uploads"
+cp manual-backup-YYYYMMDD-HHMMSS/data.db .tmp/ 2>/dev/null || echo "No data.db"
+```
+
+**Note:** Always backup before major changes or deployments. The `backups/` directory contains all your backup files.
+
+## �📚 Learn more
 
 - [Resource center](https://strapi.io/resource-center) - Strapi resource center.
 - [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.

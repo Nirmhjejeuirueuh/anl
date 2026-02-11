@@ -2,8 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import { getCourses, convertStrapiCourseToAstro } from "@/lib/utils/strapiApi";
 import CallToAction from "@/components/sections/CallToAction.astro";
-import CoursesSection from "@/layouts/components/sections/CoursesSection.astro";
-import CourseFilters from "@/layouts/components/widgets/CourseFilters.astro";
+import ServiceCard from "@/layouts/components/cards/ServiceCard.astro";
 import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
@@ -17,6 +16,23 @@ export const prerender = false;
 // Fetch courses from Strapi and convert to Astro format
 const strapiCourses = await getCourses();
 const courses = strapiCourses.map(convertStrapiCourseToAstro);
+
+// Group courses by their display logic
+const popularCourses = courses.filter(course => course.data.featured === true);
+const coursesWithDropdown = courses.filter(course => course.data.dropdown && course.data.dropdown.trim() !== '');
+const pastProgrammes = courses.filter(course => 
+  course.data.featured !== true && (!course.data.dropdown || course.data.dropdown.trim() === '')
+);
+
+// Group courses by dropdown value
+const dropdownGroups: { [key: string]: typeof courses } = {};
+coursesWithDropdown.forEach(course => {
+  const dropdown = course.data.dropdown!.trim();
+  if (!dropdownGroups[dropdown]) {
+    dropdownGroups[dropdown] = [];
+  }
+  dropdownGroups[dropdown].push(course);
+});
 
 // Get current page from URL query parameter
 const url = new URL(Astro.request.url);
@@ -58,12 +74,240 @@ const indexData = {
 >
   <PageHeader {...indexData} />
 
-  <!-- Course Filters Section -->
-  <section class="pt-4 pb-8 bg-theme-light">
+  <!-- Search Bar -->
+  <section class="py-8">
     <div class="container">
-      <CourseFilters courses={courses} />
+      <div class="max-w-2xl mx-auto">
+        <div class="relative">
+          <input
+            type="text"
+            id="course-search"
+            placeholder="Search for courses, topics, or skills..."
+            class="w-full px-6 py-4 pr-16 pl-4 text-gray-900 bg-white/90 backdrop-blur-sm border-0 rounded-2xl shadow-lg focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all duration-300 placeholder:text-gray-500 text-lg"
+          />
+          <button
+            id="search-button"
+            class="absolute inset-y-0 right-0 flex items-center pr-4 text-primary hover:text-primary/80 transition-colors"
+            type="button"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <CoursesSection content={indexData.indexCoursesSection} courses={courses} />
+  <!-- Search Results Section -->
+  <div id="search-results" class="hidden">
+    <section class="py-12 bg-white">
+      <div class="container">
+        <div class="text-center mb-8">
+          <h2 class="text-h2 text-primary mb-4">Search Results</h2>
+          <p class="text-lg text-gray-600" id="search-term-display"></p>
+        </div>
+        <div id="search-results-grid" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <!-- Search results will be populated here -->
+        </div>
+        <div id="no-results" class="text-center py-12 hidden">
+          <div class="max-w-md mx-auto">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">No courses found</h3>
+            <p class="text-gray-500">Try adjusting your search terms or browse our course categories below.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Normal Content (Popular + Dropdowns) -->
+  <div id="normal-content">
+  {popularCourses.length > 0 && (
+    <section class="py-12 bg-white">
+      <div class="container">
+        <div class="text-center mb-8">
+          <h2 class="text-h2 text-primary mb-4">Popular Courses</h2>
+          <p class="text-lg text-gray-600">Our most sought-after training programs</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {popularCourses.map((course, index) => (
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden course-card-container">
+              <ServiceCard
+                data-aos="fade-up-sm"
+                data-aos-delay={index * 100}
+                content={course as any}
+                showImage={false}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Dropdown Sections -->
+  {(Object.keys(dropdownGroups).length > 0 || pastProgrammes.length > 0) && (
+    <section class="py-12 bg-white">
+      <div class="container">
+        {Object.entries(dropdownGroups).map(([dropdownTitle, groupCourses]) => {
+          const dropdownSlug = dropdownTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          return (
+          <div class="mb-12">
+            <details id={`dropdown-${dropdownSlug}`} class="group">
+              <summary class="flex items-center justify-between cursor-pointer bg-theme-light p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                <h3 class="text-xl font-semibold text-primary">{dropdownTitle}</h3>
+                <svg class="w-5 h-5 text-primary group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </summary>
+              <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {groupCourses.map((course, index) => (
+                  <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden course-card-container">
+                    <ServiceCard
+                      data-aos="fade-up-sm"
+                      data-aos-delay={index * 100}
+                      content={course as any}
+                      showImage={false}
+                    />
+                  </div>
+                ))}
+              </div>
+            </details>
+          </div>
+          );
+        })}
+
+        <!-- Past Programmes -->
+        {pastProgrammes.length > 0 && (
+          <div class="mb-12">
+            <details id="dropdown-past-programmes" class="group">
+              <summary class="flex items-center justify-between cursor-pointer bg-theme-light p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                <h3 class="text-xl font-semibold text-primary">Past Programmes</h3>
+                <svg class="w-5 h-5 text-primary group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </summary>
+              <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {pastProgrammes.map((course, index) => (
+                  <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden course-card-container">
+                    <ServiceCard
+                      data-aos="fade-up-sm"
+                      data-aos-delay={index * 100}
+                      content={course as any}
+                      showImage={false}
+                    />
+                  </div>
+                ))}
+              </div>
+            </details>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+  </div>
+
+  <CallToAction />
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('course-search');
+      const searchButton = document.getElementById('search-button');
+      const searchResults = document.getElementById('search-results');
+      const normalContent = document.getElementById('normal-content');
+      const searchResultsGrid = document.getElementById('search-results-grid');
+      const noResults = document.getElementById('no-results');
+      const searchTermDisplay = document.getElementById('search-term-display');
+      const courseCards = document.querySelectorAll('.course-card-container');
+
+      function performSearch() {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm.length === 0) {
+          // Show normal content
+          searchResults.classList.add('hidden');
+          normalContent.classList.remove('hidden');
+          return;
+        }
+
+        const term = searchTerm.toLowerCase();
+        let visibleCount = 0;
+        const results = [];
+
+        courseCards.forEach(card => {
+          const title = card.querySelector('h3, h4')?.textContent?.toLowerCase() || '';
+          const description = card.querySelector('p')?.textContent?.toLowerCase() || '';
+          const category = card.querySelector('.inline-flex')?.textContent?.toLowerCase() || '';
+          const moduleCode = Array.from(card.querySelectorAll('.inline-flex')).map(el => el.textContent?.toLowerCase() || '').join(' ');
+
+          const searchableText = `${title} ${description} ${category} ${moduleCode}`;
+
+          if (searchableText.includes(term)) {
+            results.push(card.cloneNode(true));
+            visibleCount++;
+          }
+        });
+
+        // Update UI
+        searchTermDisplay.textContent = `Showing results for "${searchTerm}"`;
+        searchResultsGrid.innerHTML = '';
+
+        if (visibleCount > 0) {
+          results.forEach(card => {
+            searchResultsGrid.appendChild(card);
+          });
+          noResults.classList.add('hidden');
+        } else {
+          noResults.classList.remove('hidden');
+        }
+
+        // Show search results, hide normal content
+        searchResults.classList.remove('hidden');
+        normalContent.classList.add('hidden');
+
+        // Update search input styling
+        if (visibleCount === 0) {
+          searchInput.classList.add('ring-red-200', 'bg-red-50/90');
+          searchInput.classList.remove('ring-primary/20', 'bg-white/90');
+        } else {
+          searchInput.classList.add('ring-primary/20', 'bg-white/90');
+          searchInput.classList.remove('ring-red-200', 'bg-red-50/90');
+        }
+      }
+
+      function clearSearch() {
+        searchInput.value = '';
+        searchResults.classList.add('hidden');
+        normalContent.classList.remove('hidden');
+        searchInput.classList.remove('ring-red-200', 'bg-red-50/90', 'ring-primary/20');
+        searchInput.classList.add('bg-white/90');
+      }
+
+      // Search button click
+      searchButton?.addEventListener('click', performSearch);
+
+      // Enter key in search input
+      searchInput?.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performSearch();
+        } else if (e.key === 'Escape') {
+          clearSearch();
+        }
+      });
+
+      // Keyboard shortcut (Cmd/Ctrl + K)
+      document.addEventListener('keydown', function(e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          searchInput?.focus();
+        }
+      });
+
+      // Clear search on page load
+      clearSearch();
+    });
+  </script>
 </Base>

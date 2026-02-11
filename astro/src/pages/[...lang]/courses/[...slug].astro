@@ -3,7 +3,7 @@ import Base from "@/layouts/Base.astro";
 import { getCourseBySlug, STRAPI_URL } from "@/lib/utils/strapiApi";
 import CallToAction from "@/layouts/components/sections/CallToAction.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
-import { markdownify } from "@/lib/utils/textConverter";
+import { markdownify, pluralize } from "@/lib/utils/textConverter";
 import { marked } from "marked";
 import OptimizedImage from "@/layouts/components/utilities/OptimizedImage.astro";
 
@@ -83,7 +83,7 @@ console.log('COURSE ROUTE: About to render course:', course.title);
                 {course.data.moduleCode && (course.data.courseFamily || course.data.trainingDays) && <span class="text-gray-400">|</span>}
                 {course.data.courseFamily && <span>{course.data.courseFamily}</span>}
                 {(course.data.moduleCode || course.data.courseFamily) && course.data.trainingDays && <span class="text-gray-400">|</span>}
-                {course.data.trainingDays && <span>{course.data.trainingDays} days</span>}
+                {course.data.trainingDays && <span>{course.data.trainingDays} {pluralize(course.data.trainingDays, 'day')}</span>}
               </div>
             </div>
           </div>

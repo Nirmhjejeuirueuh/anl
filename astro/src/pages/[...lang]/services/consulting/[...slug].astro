@@ -2,7 +2,7 @@
 import ProgramPageTemplate from "@/components/ProgramPageTemplate.astro";
 import { getConsultantBySlug, getConsultants } from "@/lib/utils/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { marked } from "marked";
+import { markdownify } from "@/lib/utils/textConverter";
 
 export function getStaticPaths() {
   return generatePaths();
@@ -27,8 +27,8 @@ if (!consultant) {
   throw new Error(`Consultant with slug "${slug}" not found`);
 }
 
-// Parse markdown content to HTML
-const parsedContent = await marked.parse(consultant.content || '');
+// Parse markdown content to HTML using markdownify
+const parsedContent = markdownify(consultant.content || '', true);
 
 const pageData = {
   title: consultant.title,

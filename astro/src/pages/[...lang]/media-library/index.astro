@@ -17,9 +17,33 @@ export const prerender = false;
 // Fetch media library from Strapi
 const mediaLibrary = await getMediaLibrary();
 
+// Separate sections by stage
+const activeSections = mediaLibrary?.sections?.filter(section => section.stage === 'active') || [];
+const pastHighlightsSections = mediaLibrary?.sections?.filter(section => section.stage === 'pastHighlights') || [];
+const allSections = [...activeSections, ...pastHighlightsSections];
+
 // Get current section from URL query parameter
 const url = new URL(Astro.request.url);
-const currentSection = url.searchParams.get('section') || (mediaLibrary?.sections?.[0]?.id?.toString() || '0');
+const currentSection = url.searchParams.get('section') || (activeSections?.[0]?.id?.toString() || '0');
+
+// Helper function to sort photos by date (newest first)
+function sortPhotosByDate(photos: any[]) {
+  if (!photos) return [];
+
+  return photos.sort((a, b) => {
+    // Extract date from filename (format: YYYYMMDD)
+    const extractDate = (filename: string) => {
+      const dateMatch = filename.match(/(\d{8})/); // Match 8 digits
+      return dateMatch ? dateMatch[1] : '00000000'; // Default to oldest if no date found
+    };
+
+    const dateA = extractDate(a.name || '');
+    const dateB = extractDate(b.name || '');
+
+    // Sort by date descending (newest first)
+    return dateB.localeCompare(dateA);
+  });
+}
 
 // Helper function to get photo caption
 function getPhotoCaption(photo: any, index: number): string {
@@ -44,33 +68,64 @@ function getPhotoCaption(photo: any, index: number): string {
     subtitle="Explore our collection of media resources"
   />
 
-  {mediaLibrary?.sections && mediaLibrary.sections.length > 0 ? (
+  {activeSections && activeSections.length > 0 ? (
     <>
       <!-- Sections Ribbon -->
       <section class="py-6 bg-theme-light border-y border-gray-100">
         <div class="container">
-          <div class={`flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap ${mediaLibrary.sections.length <= 4 ? 'justify-center' : ''}`}>
-            {mediaLibrary.sections.map((section, index: number) => {
-              const isActive = currentSection === section.id?.toString();
-              const sectionUrl = index === 0 ? '/media-library/' : `/media-library/?section=${section.id}`;
-              return (
-                <a
-                  href={sectionUrl}
-                  class={`inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
-                    isActive
-                      ? 'bg-primary text-white border border-primary shadow-md'
-                      : 'bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40'
-                  }`}
-                  data-aos="fade-up-sm"
-                  data-aos-delay={index * 50}
-                >
-                  {section.title}
-                  <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </a>
-              );
-            })}
+          <div class="flex items-center justify-between gap-4">
+            {/* Active Sections - Left Side */}
+            <div class={`flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap ${activeSections.length <= 4 ? 'justify-start' : ''}`}>
+              {activeSections.map((section, index: number) => {
+                const isActive = currentSection === section.id?.toString();
+                const sectionUrl = index === 0 ? '/media-library/' : `/media-library/?section=${section.id}`;
+                return (
+                  <a
+                    href={sectionUrl}
+                    class={`inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
+                      isActive
+                        ? 'bg-primary text-white border border-primary shadow-md'
+                        : 'bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40'
+                    }`}
+                    data-aos="fade-up-sm"
+                    data-aos-delay={index * 50}
+                  >
+                    {section.title}
+                    <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Past Highlights - Right Side */}
+            {pastHighlightsSections && pastHighlightsSections.length > 0 && (
+              <div class="flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap">
+                <span class="text-gray-500 font-medium whitespace-nowrap mr-2">Past Highlights:</span>
+                {pastHighlightsSections.map((section, index: number) => {
+                  const isActive = currentSection === section.id?.toString();
+                  const sectionUrl = `/media-library/?section=${section.id}`;
+                  return (
+                    <a
+                      href={sectionUrl}
+                      class={`inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
+                        isActive
+                          ? 'bg-gray-600 text-white border border-gray-600 shadow-md'
+                          : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 hover:border-gray-400'
+                      }`}
+                      data-aos="fade-up-sm"
+                      data-aos-delay={(activeSections.length + index) * 50}
+                    >
+                      {section.title}
+                      <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -79,24 +134,33 @@ function getPhotoCaption(photo: any, index: number): string {
       <section class="py-6 bg-gray-50">
         <div class="container">
           {(() => {
-            // Find current section or default to first
-            const activeSection = mediaLibrary.sections.find(s => s.id?.toString() === currentSection) || mediaLibrary.sections[0];
+            // Find current section from all sections (active + past highlights)
+            const currentSectionData = allSections?.find(s => s?.id?.toString() === currentSection) || allSections?.[0];
+
+            // If no sections available, return null
+            if (!currentSectionData) {
+              return null;
+            }
+
+            // Sort photos by date (newest first)
+            const sortedPhotos = sortPhotosByDate(currentSectionData.photos);
+
             return (
               <>
                 <div class="text-center mb-12">
                   <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                    {activeSection.title}
+                    {currentSectionData.title}
                   </h2>
-                  {activeSection.description && (
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-4">{activeSection.description}</p>
+                  {currentSectionData.description && (
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-4">{currentSectionData.description}</p>
                   )}
                   <p class="text-sm text-gray-500">
-                    {activeSection.photos?.length || 0} {(activeSection.photos?.length || 0) === 1 ? 'image' : 'images'} loaded
+                    {currentSectionData.photos?.length || 0} {(currentSectionData.photos?.length || 0) === 1 ? 'image' : 'images'} loaded
                   </p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-8xl mx-auto">
-                  {activeSection.photos?.map((photo, index) => (
+                  {sortedPhotos.map((photo, index) => (
                     <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}', '${getPhotoCaption(photo, index)}', '${photo.alternativeText || getPhotoCaption(photo, index)}', '${getPhotoCaption(photo, index)}')`}>
                       <div class="aspect-[16/9] overflow-hidden">
                         <img

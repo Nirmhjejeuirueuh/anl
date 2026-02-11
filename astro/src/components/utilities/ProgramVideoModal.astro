@@ -14,18 +14,43 @@ const { id = "video-modal" } = Astro.props;
   class="hs-overlay group pointer-events-none fixed start-0 top-0 z-[9999] hidden size-full overflow-x-hidden overflow-y-auto"
   role="dialog"
   tabindex="-1">
-  <div class="hs-overlay-animation-target hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 flex min-h-[calc(100%-3.5rem)] items-center opacity-0 transition-[margin,opacity] ease-out sm:mx-auto sm:w-full sm:max-w-4xl group-[.hs-overlay-open]:mt-7 group-[.hs-overlay-open]:opacity-100 group-[.hs-overlay-open]:duration-500">
-    <div class="has-video-player pointer-events-auto container flex flex-col">
-      <button
-        type="button"
-        aria-label="Close"
-        data-close-video-modal={id}
-        class="mb-4 ml-auto flex h-10 w-10 items-center justify-center rounded-full bg-white ring-0 ring-white/50 duration-300 hover:rotate-90 hover:ring-4 shadow-lg">
-        <span class="sr-only">Close</span>
-        <Icons icon="X" class="text-dark/80 h-6 w-6" />
-      </button>
-      <div class="video-player rounded-xl overflow-hidden bg-black shadow-2xl">
-        <div data-video-container={id}></div>
+  
+  <!-- Fixed Backdrop -->
+  <div class="fixed inset-0 bg-black opacity-0 transition-opacity duration-500 pointer-events-none group-[.hs-overlay-open]:opacity-60 -z-10 backdrop-blur-sm"></div>
+
+  <div class="hs-overlay-animation-target mt-0 flex min-h-[calc(100%-3.5rem)] items-center opacity-0 transition-[margin,opacity] ease-out sm:mx-auto sm:w-full sm:max-w-4xl group-[.hs-overlay-open]:mt-7 group-[.hs-overlay-open]:opacity-100 group-[.hs-overlay-open]:duration-500 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full flex flex-col pointer-events-auto overflow-hidden border border-gray-100">
+      <!-- Top Title Bar -->
+      <div class="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+        <h3 class="video-title text-lg md:text-xl font-bold text-primary line-clamp-1"></h3>
+        <button
+          type="button"
+          aria-label="Close"
+          data-close-video-modal={id}
+          class="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200/50 text-gray-600 hover:bg-red-500 hover:text-white transition-all duration-300">
+          <Icons icon="X" class="h-5 w-5" />
+        </button>
+      </div>
+
+      <!-- Video Section -->
+      <div class="relative aspect-video bg-black overflow-hidden">
+        <div data-video-container={id} class="w-full h-full"></div>
+      </div>
+
+      <!-- Footer CTA Section -->
+      <div class="p-6 flex justify-center bg-gray-50/30 border-t border-gray-100">
+        <a 
+          href="#" 
+          target="_blank"
+          rel="noopener noreferrer"
+          class="learn-more-btn inline-flex items-center px-10 py-3.5 bg-primary text-white font-bold rounded-full hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
+          style="display: none;"
+        >
+          Learn More
+          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
       </div>
     </div>
   </div>
@@ -62,7 +87,7 @@ const { id = "video-modal" } = Astro.props;
     }
 
   // Function to open video modal
-  function openVideoModal(videoUrl, title, modalId = 'video-modal') {
+  function openVideoModal(videoUrl, title, ctaUrl, modalId = 'video-modal') {
     if (!videoUrl) return;
 
     const videoId = getYouTubeVideoId(videoUrl);
@@ -83,6 +108,23 @@ const { id = "video-modal" } = Astro.props;
 
     videoContainer.innerHTML = '';
 
+    // Update video info (title and button)
+    const titleElement = modal.querySelector('.video-title');
+    const learnMoreBtn = modal.querySelector('.learn-more-btn');
+    
+    if (titleElement) {
+      titleElement.textContent = title || '';
+    }
+    
+    if (learnMoreBtn) {
+      if (ctaUrl) {
+        learnMoreBtn.href = ctaUrl;
+        learnMoreBtn.style.display = 'inline-flex';
+      } else {
+        learnMoreBtn.style.display = 'none';
+      }
+    }
+
     if (isYouTube) {
       videoContainer.setAttribute('data-plyr-provider', 'youtube');
       videoContainer.setAttribute('data-plyr-embed-id', videoId);
@@ -99,6 +141,7 @@ const { id = "video-modal" } = Astro.props;
 
     const player = new Plyr(videoContainer.querySelector('video') || videoContainer, {
       hideControls: false,
+      controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'fullscreen'],
       youtube: { noCookie: true }
     });
 
@@ -141,10 +184,15 @@ const { id = "video-modal" } = Astro.props;
       modal.style.display = '';
       document.body.style.overflow = '';
       
-      // Clear video container
+      // Clear video container and info
       const videoContainer = document.querySelector(`[data-video-container="${modalId}"]`);
       if (videoContainer) {
         videoContainer.innerHTML = '';
+      }
+      
+      const learnMoreBtn = modal.querySelector('.learn-more-btn');
+      if (learnMoreBtn) {
+        learnMoreBtn.style.display = 'none';
       }
     }, 300);
   }

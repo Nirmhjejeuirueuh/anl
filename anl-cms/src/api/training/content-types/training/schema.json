@@ -53,7 +53,10 @@
         "images"
       ]
     },
-    "URL": {
+    "videoUrl": {
+      "type": "string"
+    },
+    "ctaUrl": {
       "type": "string"
     },
     "order": {

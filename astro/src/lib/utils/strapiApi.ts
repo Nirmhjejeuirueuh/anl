@@ -1,5 +1,7 @@
 // Strapi CMS API utilities for Astro integration
 
+import { pluralize } from './textConverter';
+
 export const STRAPI_URL = import.meta.env.STRAPI_URL || 'http://localhost:1337';
 
 // Cached fetch function with browser caching
@@ -76,6 +78,7 @@ export interface StrapiCourse {
   status?: string;
   overview?: string;
   popular?: boolean;
+  dropdown?: string;
   schedule?: string;
 }
 
@@ -420,7 +423,7 @@ export interface StrapiBook {
   title: string;
   description: string;
   author: string;
-  pages: number;
+  order?: number;
   publishedDate: string;
   buttonText: string;
   buttonLink: string;
@@ -1039,8 +1042,11 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
       draft: false,
       description: course.overview,
       featured: course.popular,
+      dropdown: course.dropdown,
       trainingDays: course.trainingDays,
+      duration: course.trainingDays ? `${course.trainingDays} ${pluralize(course.trainingDays, 'day')}` : undefined,
       courseFamily: course.courseFamily,
+      categories: course.courseFamily ? [course.courseFamily] : [],
       status: course.status,
       schedule: course.schedule,
       learningObjectives: course.learningObjectives,
@@ -1242,6 +1248,7 @@ export interface StrapiMediaSection {
   id: number;
   title: string;
   description?: string;
+  stage?: string;
   photos: StrapiMedia[];
 }
 

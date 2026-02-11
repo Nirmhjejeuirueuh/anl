@@ -2,7 +2,7 @@
 import ProgramPageTemplate from "@/components/ProgramPageTemplate.astro";
 import { getTrainingBySlug, getTrainings } from "@/lib/utils/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { marked } from "marked";
+import { markdownify } from "@/lib/utils/textConverter";
 
 export function getStaticPaths() {
   return generatePaths();
@@ -27,8 +27,8 @@ if (!training) {
   throw new Error(`Training with slug "${slug}" not found`);
 }
 
-// Parse markdown content to HTML
-const parsedContent = await marked.parse(training.content || '');
+// Parse markdown content to HTML using markdownify
+const parsedContent = markdownify(training.content || '', true);
 
 const pageData = {
   title: training.title,

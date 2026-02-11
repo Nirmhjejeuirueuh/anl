@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { useTranslations } from "@/lib/utils/i18nUtils.ts";
 import Icons from "@/helpers/Icons.astro";
+import { pluralize } from "@/lib/utils/textConverter";
 
 // Type for converted Strapi courses
 interface ConvertedCourse {
@@ -22,6 +23,7 @@ interface ConvertedCourse {
     status?: string;
     draft: boolean;
     featured?: boolean;
+    dropdown?: string;
   };
   body: string;
   rendered: {
@@ -39,7 +41,7 @@ const t = await useTranslations(Astro.currentLocale as string);
 
 // Extract unique categories and other filter options
 const categories = [...new Set(courses.map(course => course.data.courseFamily).filter(Boolean))];
-const durations = [...new Set(courses.map(course => course.data.trainingDays).filter(Boolean).map(days => `${days} days`))];
+const durations = [...new Set(courses.map(course => course.data.trainingDays).filter(Boolean).map(days => `${days} ${pluralize(days, 'day')}`))];
 
 // Create course data for JavaScript
 const coursesData = courses.map(course => ({
@@ -47,7 +49,8 @@ const coursesData = courses.map(course => ({
   title: course.data.title,
   description: course.data.description || course.data.learningObjectives || '',
   categories: course.data.courseFamily ? [course.data.courseFamily] : [],
-  duration: course.data.trainingDays ? `${course.data.trainingDays} days` : undefined,
+  moduleCode: course.data.moduleCode,
+  duration: course.data.trainingDays ? `${course.data.trainingDays} ${pluralize(course.data.trainingDays, 'day')}` : undefined,
   featured: course.data.featured === true || course.data.featured === 'true',
   tags: [],
   image: undefined,
@@ -255,6 +258,7 @@ const coursesData = courses.map(course => ({
         const matchesSearch = !searchTerm ||
           course.title.toLowerCase().includes(searchTerm) ||
           course.description.toLowerCase().includes(searchTerm) ||
+          (course.moduleCode && course.moduleCode.toLowerCase().includes(searchTerm)) ||
           course.categories?.some(cat => cat.toLowerCase().includes(searchTerm));
 
         // Category filter
@@ -356,10 +360,10 @@ const coursesData = courses.map(course => ({
             <h3 class="text-h4 after:bg-primary relative inline-block pb-2 opacity-80 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-10">${course.title}</h3>
           </div>
 
-          ${course.categories?.length || course.featured || course.duration ? `
+          ${course.categories?.length || course.moduleCode || course.duration ? `
             <div class="flex flex-wrap gap-3 mb-3 text-xs">
               ${course.categories?.[0] ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#00025d]/10 text-[#00025d] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>${course.categories[0]}</span>` : ''}
-              ${course.featured ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#FFEB3B]/10 text-[#14342B] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>Popular</span>` : ''}
+              ${course.moduleCode ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#FFEB3B]/10 text-[#14342B] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>${course.moduleCode}</span>` : ''}
               ${course.duration ? `<span class="inline-flex items-center gap-1 px-2 py-1 bg-[#43b14b]/10 text-[#43b14b] rounded-full"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${course.duration}</span>` : ''}
             </div>
           ` : ''}

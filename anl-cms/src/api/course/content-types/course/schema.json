@@ -58,14 +58,8 @@
       "required": false,
       "default": false
     },
-    "status": {
-      "type": "enumeration",
-      "required": false,
-      "default": "enable",
-      "enum": [
-        "enable",
-        "disable"
-      ]
+    "dropdown": {
+      "type": "string"
     }
   }
 }

@@ -39,13 +39,12 @@
       "type": "text",
       "required": true
     },
-    "pages": {
-      "type": "integer",
-      "required": true
-    },
     "publishedDate": {
       "type": "date",
       "required": true
+    },
+    "order": {
+      "type": "integer"
     }
   }
 }

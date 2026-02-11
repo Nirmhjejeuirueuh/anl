@@ -47,14 +47,15 @@ const { programs, currentSlug, basePath, label, lang } = Astro.props;
         {programs && programs.map((program: any, index: number) => {
           const isActive = currentSlug === program.slug;
           // If program has a URL field, use it directly, otherwise construct slug-based URL
-          const href = program.URL
-            ? program.URL
+          const href = program.videoUrl
+            ? '#'
             : (lang ? `/${lang}${basePath}/${program.slug}` : `${basePath}/${program.slug}`);
           return (
             <a
               href={href}
-              data-video-url={program.URL ? program.URL : undefined}
-              data-video-title={program.URL ? program.title : undefined}
+              data-video-url={program.videoUrl ? program.videoUrl : undefined}
+              data-video-title={program.videoUrl ? program.title : undefined}
+              data-cta-url={program.ctaUrl ? program.ctaUrl : undefined}
               class={`program-link inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
                 isActive
                   ? 'bg-primary text-white border border-primary shadow-md'
@@ -130,13 +131,26 @@ const { programs, currentSlug, basePath, label, lang } = Astro.props;
       link.addEventListener('click', function(e) {
         const videoUrl = this.getAttribute('data-video-url');
         const videoTitle = this.getAttribute('data-video-title');
+        const ctaUrl = this.getAttribute('data-cta-url');
+        
+        console.log('Ribbon link clicked, videoUrl:', videoUrl, 'videoTitle:', videoTitle, 'ctaUrl:', ctaUrl);
         
         // If it has a video URL, prevent default and open modal
-        if (videoUrl && window.openVideoModal) {
+        if (videoUrl) {
           e.preventDefault();
-          window.openVideoModal(videoUrl, videoTitle, 'ribbon-video-modal');
+          console.log('Preventing default navigation for ribbon, opening video modal');
+          
+          if (window.openVideoModal) {
+            console.log('Calling window.openVideoModal for ribbon');
+            window.openVideoModal(videoUrl, videoTitle, ctaUrl, 'ribbon-video-modal');
+          } else {
+            console.error('window.openVideoModal not found for ribbon!');
+            // Fallback to opening in new tab
+            window.open(videoUrl, '_blank');
+          }
+        } else {
+          console.log('No video URL in ribbon, allowing normal navigation');
         }
-        // Otherwise, let the link work normally
       });
     });
   });

@@ -105,7 +105,7 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
                   </div>
                 )}
                 <div class="p-8 md:p-10">
-                  <h3 class="text-h4 text-primary mb-4">{program.title}</h3>
+                  <h3 class="text-h3 text-primary mb-4">{program.title}</h3>
                   <div class="text-base md:text-lg text-gray-700 leading-relaxed text-left">
                     {program.description && (
                       <div set:html={markdownify(program.description, true)}></div>
@@ -113,10 +113,11 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
                   </div>
                   <div class="mt-6">
                     <a 
-                      href={program.URL ? program.URL : `${lang ? `/${lang}` : ''}${basePath}/${program.slug}`}
-                      data-video-url={program.URL ? program.URL : undefined}
-                      data-video-title={program.URL ? program.title : undefined}
-                      class="program-card-link inline-flex items-center text-primary font-medium hover:text-primary/80 transition-colors"
+                      href={program.videoUrl ? '#' : `${lang ? `/${lang}` : ''}${basePath}/${program.slug}`}
+                      data-video-url={program.videoUrl ? program.videoUrl : undefined}
+                      data-video-title={program.videoUrl ? program.title : undefined}
+                      data-cta-url={program.ctaUrl ? program.ctaUrl : undefined}
+                      class="program-card-link inline-flex items-center text-cyan-600 font-medium text-lg hover:text-cyan-500 transition-colors"
                     >
                       Learn More
                       <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,24 +156,26 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
         link.addEventListener('click', function(e) {
           const videoUrl = this.getAttribute('data-video-url');
           const videoTitle = this.getAttribute('data-video-title');
+          const ctaUrl = this.getAttribute('data-cta-url');
           
-          console.log('Link clicked, videoUrl:', videoUrl, 'videoTitle:', videoTitle);
+          console.log('Link clicked, videoUrl:', videoUrl, 'videoTitle:', videoTitle, 'ctaUrl:', ctaUrl);
           
           // If it has a video URL, prevent default and open modal
           if (videoUrl) {
             e.preventDefault();
-            console.log('Preventing default navigation');
+            console.log('Preventing default navigation, opening video modal');
             
             if (window.openVideoModal) {
-              console.log('Calling window.openVideoModal');
-              window.openVideoModal(videoUrl, videoTitle, 'program-video-modal');
+              console.log('Calling window.openVideoModal with:', videoUrl, videoTitle, ctaUrl, 'program-video-modal');
+              window.openVideoModal(videoUrl, videoTitle, ctaUrl, 'program-video-modal');
             } else {
               console.error('window.openVideoModal not found!');
               // Fallback to opening in new tab
               window.open(videoUrl, '_blank');
             }
+          } else {
+            console.log('No video URL, allowing normal navigation');
           }
-          // Otherwise, let the link work normally
         });
       });
     });
