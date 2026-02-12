@@ -43,7 +43,8 @@
       "default": false
     },
     "keywords": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 500
     },
     "image": {
       "type": "media",
@@ -54,10 +55,12 @@
       ]
     },
     "videoUrl": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 1000
     },
     "ctaUrl": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 1000
     },
     "order": {
       "type": "integer"
