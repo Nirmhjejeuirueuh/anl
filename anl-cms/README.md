@@ -50,7 +50,8 @@ To create a complete backup of your Strapi project including data, configuration
 # Using Strapi CLI (recommended - when Strapi is not running)
 npx strapi export --file backups/strapi-backup-$(date +%Y%m%d-%H%M%S).tar.gz.enc
 
-ENCRYPTION_KEY=TTuClHRZpbxJcOCEzX1kpw==
+ENCRYPTION_KEY is below
+"TTuClHRZpbxJcOCEzX1kpw=="
 
 # Alternative: Manual backup (when CLI fails)
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)

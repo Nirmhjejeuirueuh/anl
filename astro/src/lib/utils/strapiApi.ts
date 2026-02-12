@@ -328,22 +328,14 @@ export interface StrapiTeamPage {
 export interface StrapiSpotlight {
   id?: number;
   documentId?: string;
-  tag?: string;
-  date?: string;
-  title: string;
-  subtitle?: string;
-  description: string;
-  buttonText: string;
-  buttonLink: string;
-  order?: number;
-  image?: {
+  video?: {
     id: number;
     documentId: string;
     name: string;
     alternativeText: string | null;
     caption: string | null;
-    width: number;
-    height: number;
+    width: number | null;
+    height: number | null;
     formats?: any;
     hash: string;
     ext: string;
@@ -357,6 +349,7 @@ export interface StrapiSpotlight {
     updatedAt: string;
     publishedAt: string;
   };
+  videoUrl?: string;
   createdAt?: string;
   updatedAt?: string;
   publishedAt?: string;
