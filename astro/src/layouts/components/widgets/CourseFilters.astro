@@ -41,7 +41,7 @@ const t = await useTranslations(Astro.currentLocale as string);
 
 // Extract unique categories and other filter options
 const categories = [...new Set(courses.map(course => course.data.courseFamily).filter(Boolean))];
-const durations = [...new Set(courses.map(course => course.data.trainingDays).filter(Boolean).map(days => `${days} ${pluralize(days, 'day')}`))];
+const durations = [...new Set(courses.map(course => course.data.trainingDays).filter((days): days is number => days != null).map(days => `${days} ${pluralize(days, 'day')}`))];
 
 // Create course data for JavaScript
 const coursesData = courses.map(course => ({
@@ -51,7 +51,7 @@ const coursesData = courses.map(course => ({
   categories: course.data.courseFamily ? [course.data.courseFamily] : [],
   moduleCode: course.data.moduleCode,
   duration: course.data.trainingDays ? `${course.data.trainingDays} ${pluralize(course.data.trainingDays, 'day')}` : undefined,
-  featured: course.data.featured === true || course.data.featured === 'true',
+  featured: Boolean(course.data.featured) || course.data.featured === 'true',
   tags: [],
   image: undefined,
   slug: course.slug,

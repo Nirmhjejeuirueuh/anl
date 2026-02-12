@@ -4,6 +4,46 @@ import { pluralize } from './textConverter';
 
 export const STRAPI_URL = import.meta.env.STRAPI_URL || 'http://localhost:1337';
 
+// Image format interface for Strapi images
+export interface StrapiImageFormat {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: string | null;
+  width: number;
+  height: number;
+  size: number;
+  url: string;
+}
+
+// Media interface for photos in media library
+export interface StrapiMedia {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string;
+  caption: string;
+  width: number;
+  height: number;
+  formats: {
+    thumbnail: StrapiImageFormat;
+    medium: StrapiImageFormat;
+    small: StrapiImageFormat;
+  };
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: string | null;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
 // Cached fetch function with browser caching
 async function cachedFetch(url: string, options: RequestInit = {}): Promise<Response> {
   const cacheOptions: RequestInit = {
@@ -1090,16 +1130,16 @@ export function convertStrapiTrainingToAstro(training: StrapiTraining) {
     collection: "trainings",
     data: {
       title: training.title,
-      image: training.images && training.images.length > 0 ? (training.images[0].url.startsWith('http') ? training.images[0].url : `${STRAPI_URL}${training.images[0].url}`) : undefined,
+      image: training.image ? (training.image.url.startsWith('http') ? training.image.url : `${STRAPI_URL}${training.image.url}`) : undefined,
       date: date,
       trainingType: training.trainingType || 'other',
-      categories: training.categories ? training.categories.map(cat => cat.name) : [],
-      tags: training.tags ? training.tags.map(tag => tag.name) : [],
+      categories: [], // Not available in StrapiTraining type
+      tags: [], // Not available in StrapiTraining type
       draft: false,
       description: training.description,
-      featured: training.featured,
-      seoTitle: training.seoTitle,
-      seoDescription: training.seoDescription,
+      featured: false, // Not available in StrapiTraining type
+      seoTitle: training.title, // Use title as fallback
+      seoDescription: training.description, // Use description as fallback
       keywords: training.keywords,
     },
     body: training.content || '',
@@ -1263,7 +1303,7 @@ export interface StrapiMediaLibrary {
   publishedAt?: string;
 }
 
-export async function getMediaLibrary(): Promise<StrapiMediaLibrary | null> {
+export async function getMediaLibrary(): Promise<StrapiMediaLibrary[] | null> {
   try {
     const response = await cachedFetch(`${STRAPI_URL}/api/media-library?populate[sections][populate]=photos`);
     if (!response.ok) {

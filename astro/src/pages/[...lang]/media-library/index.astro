@@ -45,8 +45,36 @@ function sortPhotosByDate(photos: any[]) {
   });
 }
 
-// Helper function to get photo caption
+// Helper function to get photo caption for card display (short version)
 function getPhotoCaption(photo: any, index: number): string {
+  // First check if caption field is available
+  if (photo.caption && photo.caption.trim()) {
+    const fullCaption = photo.caption.trim();
+
+    // Look for date pattern (Month DD, YYYY or Month DD - DD, YYYY) and hide everything after it
+    const datePattern = /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:\s*-\s*\d{1,2})?,\s+\d{4}/;
+    const dateMatch = fullCaption.match(datePattern);
+
+    if (dateMatch) {
+      const dateIndex = fullCaption.indexOf(dateMatch[0]) + dateMatch[0].length;
+      return fullCaption.substring(0, dateIndex).trim();
+    }
+
+    // If no date pattern found, return the full caption
+    return fullCaption;
+  }
+
+  // If not, use the image name and remove extension, then replace underscores with spaces
+  if (photo.name) {
+    return photo.name.replace(/\.[^/.]+$/, '').replace(/_/g, ' '); // Remove file extension and replace underscores with spaces
+  }
+
+  // Fallback
+  return `Photo ${index + 1}`;
+}
+
+// Helper function to get full photo caption for modal display
+function getFullPhotoCaption(photo: any, index: number): string {
   // First check if caption field is available
   if (photo.caption && photo.caption.trim()) {
     return photo.caption.trim();
@@ -161,13 +189,13 @@ function getPhotoCaption(photo: any, index: number): string {
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-8xl mx-auto">
                   {sortedPhotos.map((photo, index) => (
-                    <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}', '${getPhotoCaption(photo, index)}', '${photo.alternativeText || getPhotoCaption(photo, index)}', '${getPhotoCaption(photo, index)}')`}>
+                    <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${(photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, index).replace(/'/g, "\\'")}', '${(photo.alternativeText || getPhotoCaption(photo, index)).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, index).replace(/'/g, "\\'")}')`}>
                       <div class="aspect-[16/9] overflow-hidden">
                         <img
                           src={photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}
                           alt={photo.alternativeText || getPhotoCaption(photo, index)}
                           loading="lazy"
-                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div class="p-4">

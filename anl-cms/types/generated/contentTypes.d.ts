@@ -695,6 +695,7 @@ export interface ApiResourceLibraryResourceLibrary
     draftAndPublish: true;
   };
   attributes: {
+    archive: Schema.Attribute.Boolean;
     article: Schema.Attribute.RichText;
     category: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;

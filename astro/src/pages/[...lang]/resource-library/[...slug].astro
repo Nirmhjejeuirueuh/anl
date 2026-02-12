@@ -27,11 +27,14 @@ if (resource.resourceType === 'video') {
   return Astro.redirect(`/${['en', 'fr'].includes(Astro.params.lang) ? Astro.params.lang : ''}/resource-library`.replace(/^\//, ''));
 }
 
+// At this point, resourceType cannot be 'video'
+const nonVideoResource = resource as Omit<typeof resource, 'resourceType'> & { resourceType: Exclude<typeof resource.resourceType, 'video'> };
+
 // Page data
 const pageData = {
-  title: resource.title,
-  subtitle: resource.title,
-  metaDescription: resource.title,
+  title: nonVideoResource.title,
+  subtitle: nonVideoResource.title,
+  metaDescription: nonVideoResource.title,
   draft: false
 };
 ---
@@ -46,55 +49,55 @@ const pageData = {
         <!-- Resource Type Badge -->
         <div class="flex items-center justify-center mb-8">
           <span class={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
-            resource.resourceType === 'video' ? 'bg-red-100 text-red-800' :
-            resource.resourceType === 'pdf' ? 'bg-blue-100 text-blue-800' :
-            resource.resourceType === 'document' ? 'bg-green-100 text-green-800' :
-            resource.resourceType === 'article' ? 'bg-purple-100 text-purple-800' :
+            nonVideoResource.resourceType === 'video' ? 'bg-red-100 text-red-800' :
+            nonVideoResource.resourceType === 'pdf' ? 'bg-blue-100 text-blue-800' :
+            nonVideoResource.resourceType === 'document' ? 'bg-green-100 text-green-800' :
+            nonVideoResource.resourceType === 'article' ? 'bg-purple-100 text-purple-800' :
             'bg-gray-100 text-gray-800'
           }`}>
-            {resource.resourceType === 'video' && (
+            {nonVideoResource.resourceType === 'video' && (
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
               </svg>
             )}
-            {resource.resourceType === 'pdf' && (
+            {nonVideoResource.resourceType === 'pdf' && (
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
               </svg>
             )}
-            {resource.resourceType === 'document' && (
+            {nonVideoResource.resourceType === 'document' && (
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
               </svg>
             )}
-            {resource.resourceType === 'article' && (
+            {nonVideoResource.resourceType === 'article' && (
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"/>
               </svg>
             )}
-            {resource.resourceType || 'Resource'}
+            {nonVideoResource.resourceType || 'Resource'}
           </span>
         </div>
 
         <!-- Resource Image -->
-        {resource.image && (
+        {nonVideoResource.image && (
           <div class="mb-8">
             <img
-              src={resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`}
-              alt={resource.title}
+              src={nonVideoResource.image.url.startsWith('http') ? nonVideoResource.image.url : `${STRAPI_URL}${nonVideoResource.image.url}`}
+              alt={nonVideoResource.title}
               class="w-full h-auto rounded-2xl shadow-lg"
             />
           </div>
         )}
 
         <!-- Video Embed -->
-        {resource.resourceType === 'video' && resource.videoUrl && (
+        {nonVideoResource.resourceType === 'video' && nonVideoResource.videoUrl && (
           <div class="mb-8">
             <div class="aspect-video rounded-2xl overflow-hidden shadow-lg">
-              {resource.videoUrl.includes('youtube.com') || resource.videoUrl.includes('youtu.be') ? (
+              {nonVideoResource.videoUrl.includes('youtube.com') || nonVideoResource.videoUrl.includes('youtu.be') ? (
                 <iframe
-                  src={`https://www.youtube.com/embed/${getYouTubeVideoId(resource.videoUrl)}`}
-                  title={resource.title}
+                  src={`https://www.youtube.com/embed/${getYouTubeVideoId(nonVideoResource.videoUrl)}`}
+                  title={nonVideoResource.title}
                   class="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
@@ -103,9 +106,9 @@ const pageData = {
                 <video
                   controls
                   class="w-full h-full"
-                  poster={resource.image ? (resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`) : undefined}
+                  poster={nonVideoResource.image ? (nonVideoResource.image.url.startsWith('http') ? nonVideoResource.image.url : `${STRAPI_URL}${nonVideoResource.image.url}`) : undefined}
                 >
-                  <source src={resource.videoUrl} type="video/mp4" />
+                  <source src={nonVideoResource.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               )}
@@ -114,14 +117,14 @@ const pageData = {
         )}
 
         <!-- PDF/Document Viewer -->
-        {(resource.resourceType === 'pdf' || resource.resourceType === 'document') && (resource.pdfUrl || resource.externalUrl) && (
+        {(nonVideoResource.resourceType === 'pdf' || nonVideoResource.resourceType === 'document') && (nonVideoResource.pdfUrl || nonVideoResource.externalUrl) && (
           <div class="mb-8">
             <div class="bg-gray-50 rounded-2xl p-8 text-center">
               <div class="mb-4">
                 <svg class={`w-16 h-16 mx-auto ${
-                  resource.resourceType === 'pdf' ? 'text-red-500' : 'text-blue-500'
+                  nonVideoResource.resourceType === 'pdf' ? 'text-red-500' : 'text-blue-500'
                 }`} fill="currentColor" viewBox="0 0 20 20">
-                  {resource.resourceType === 'pdf' ? (
+                  {nonVideoResource.resourceType === 'pdf' ? (
                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
                   ) : (
                     <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
@@ -129,10 +132,10 @@ const pageData = {
                 </svg>
               </div>
               <h3 class="text-xl font-semibold text-gray-900 mb-4">
-                {resource.resourceType === 'pdf' ? 'Download PDF Document' : 'View Document'}
+                {nonVideoResource.resourceType === 'pdf' ? 'Download PDF Document' : 'View Document'}
               </h3>
               <a
-                href={resource.pdfUrl || resource.externalUrl}
+                href={nonVideoResource.pdfUrl || nonVideoResource.externalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
@@ -140,14 +143,14 @@ const pageData = {
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                {resource.resourceType === 'pdf' ? 'Download PDF' : 'Open Document'}
+                {nonVideoResource.resourceType === 'pdf' ? 'Download PDF' : 'Open Document'}
               </a>
             </div>
           </div>
         )}
 
         <!-- External Link -->
-        {resource.resourceType === 'other' && resource.externalUrl && (
+        {nonVideoResource.resourceType === 'other' && nonVideoResource.externalUrl && (
           <div class="mb-8">
             <div class="bg-blue-50 rounded-2xl p-8 text-center">
               <div class="mb-4">
@@ -157,7 +160,7 @@ const pageData = {
               </div>
               <h3 class="text-xl font-semibold text-gray-900 mb-4">External Resource</h3>
               <a
-                href={resource.externalUrl}
+                href={nonVideoResource.externalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"

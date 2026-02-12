@@ -224,11 +224,12 @@ const indexData = {
       const courseCards = document.querySelectorAll('.course-card-container');
 
       function performSearch() {
+        if (!searchInput) return;
         const searchTerm = searchInput.value.trim();
         if (searchTerm.length === 0) {
           // Show normal content
-          searchResults.classList.add('hidden');
-          normalContent.classList.remove('hidden');
+          if (searchResults) searchResults.classList.add('hidden');
+          if (normalContent) normalContent.classList.remove('hidden');
           return;
         }
 
@@ -251,38 +252,46 @@ const indexData = {
         });
 
         // Update UI
-        searchTermDisplay.textContent = `Showing results for "${searchTerm}"`;
-        searchResultsGrid.innerHTML = '';
+        if (searchTermDisplay) searchTermDisplay.textContent = `Showing results for "${searchTerm}"`;
+        if (searchResultsGrid) searchResultsGrid.innerHTML = '';
 
         if (visibleCount > 0) {
-          results.forEach(card => {
-            searchResultsGrid.appendChild(card);
-          });
-          noResults.classList.add('hidden');
+          if (searchResultsGrid) {
+            results.forEach(card => {
+              searchResultsGrid.appendChild(card);
+            });
+          }
+          if (noResults) noResults.classList.add('hidden');
         } else {
-          noResults.classList.remove('hidden');
+          if (noResults) noResults.classList.remove('hidden');
         }
 
         // Show search results, hide normal content
-        searchResults.classList.remove('hidden');
-        normalContent.classList.add('hidden');
+        if (searchResults) searchResults.classList.remove('hidden');
+        if (normalContent) normalContent.classList.add('hidden');
 
         // Update search input styling
         if (visibleCount === 0) {
-          searchInput.classList.add('ring-red-200', 'bg-red-50/90');
-          searchInput.classList.remove('ring-primary/20', 'bg-white/90');
+          if (searchInput) {
+            searchInput.classList.add('ring-red-200', 'bg-red-50/90');
+            searchInput.classList.remove('ring-primary/20', 'bg-white/90');
+          }
         } else {
-          searchInput.classList.add('ring-primary/20', 'bg-white/90');
-          searchInput.classList.remove('ring-red-200', 'bg-red-50/90');
+          if (searchInput) {
+            searchInput.classList.add('ring-primary/20', 'bg-white/90');
+            searchInput.classList.remove('ring-red-200', 'bg-red-50/90');
+          }
         }
       }
 
       function clearSearch() {
-        searchInput.value = '';
-        searchResults.classList.add('hidden');
-        normalContent.classList.remove('hidden');
-        searchInput.classList.remove('ring-red-200', 'bg-red-50/90', 'ring-primary/20');
-        searchInput.classList.add('bg-white/90');
+        if (searchInput) searchInput.value = '';
+        if (searchResults) searchResults.classList.add('hidden');
+        if (normalContent) normalContent.classList.remove('hidden');
+        if (searchInput) {
+          searchInput.classList.remove('ring-red-200', 'bg-red-50/90', 'ring-primary/20');
+          searchInput.classList.add('bg-white/90');
+        }
       }
 
       // Search button click
