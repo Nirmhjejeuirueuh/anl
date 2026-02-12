@@ -1213,7 +1213,7 @@ export async function getTeamPage(): Promise<StrapiTeamPage | null> {
  */
 export async function getSpotlights(): Promise<StrapiSpotlight[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/spotlights?populate=*&sort=order:asc`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/spotlights?populate=*`);
     if (!response.ok) {
       throw new Error(`Failed to fetch spotlights: ${response.status}`);
     }
