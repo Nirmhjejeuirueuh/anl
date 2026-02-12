@@ -13,8 +13,8 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "maxLength": 500
+      "maxLength": 500,
+      "required": true
     },
     "slug": {
       "type": "uid",
@@ -57,7 +57,7 @@
       ]
     },
     "videoUrl": {
-      "type": "string",
+      "type": "text",
       "maxLength": 1000
     },
     "ctaUrl": {
