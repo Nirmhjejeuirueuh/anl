@@ -13,12 +13,14 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true
+      "required": true,
+      "maxLength": 500
     },
     "slug": {
       "type": "uid",
       "targetField": "title",
-      "required": true
+      "required": true,
+      "maxLength": 500
     },
     "description": {
       "type": "richtext"
