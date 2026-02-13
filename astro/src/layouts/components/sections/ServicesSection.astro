@@ -193,9 +193,7 @@ services =
                           {service.type}
                         </span>
                       </div>
-                      <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                        {service.description?.length > 120 ? service.description.substring(0, 120) + '...' : service.description}
-                      </p>
+                      <p class="text-gray-600 text-sm leading-relaxed line-clamp-3" set:html={markdownify(service.description?.length > 120 ? service.description.substring(0, 120) + '...' : service.description)}>
                       <div class="mt-4">
                         <a
                           href={service.type === 'training' ? `/services/training/${service.slug}` : `/services/consulting/${service.slug}`}
@@ -233,9 +231,7 @@ services =
                                 {service.type}
                               </span>
                             </div>
-                            <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                              {service.description?.length > 200 ? service.description.substring(0, 200) + '...' : service.description}
-                            </p>
+                            <p class="text-gray-600 text-sm leading-relaxed line-clamp-3" set:html={markdownify(service.description?.length > 200 ? service.description.substring(0, 200) + '...' : service.description)}>
                             <div class="mt-4">
                               <a
                                 href={service.type === 'training' ? `/services/training/${service.slug}` : `/services/consulting/${service.slug}`}

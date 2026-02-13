@@ -7,6 +7,7 @@ import {
 } from "@/lib/utils/i18nUtils.ts";
 import CustomButton from "../CustomButton.astro";
 import Icons from "@/helpers/Icons.astro";
+import { markdownify } from "@/lib/utils/textConverter";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -93,7 +94,7 @@ let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection
       </div>
     )}
 
-    {description && <p class="text-text-default opacity-80 flex-1" set:html={description.length > 200 ? description.substring(0, 200) + '...' : description} />}
+    {description && <p class="text-text-default opacity-80 flex-1" set:html={markdownify(description.length > 200 ? description.substring(0, 200) + '...' : description)} />}
     <div class="mt-auto pt-4">
       <CustomButton
         variant="text"
