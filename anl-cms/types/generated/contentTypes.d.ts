@@ -576,7 +576,9 @@ export interface ApiConsultantConsultant extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    videoUrl: Schema.Attribute.String &
+    video: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    videoFile: Schema.Attribute.Media<'videos'>;
+    videoUrl: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 1000;
       }>;
@@ -923,6 +925,8 @@ export interface ApiTrainingTraining extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    video: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    videoFile: Schema.Attribute.Media<'videos'>;
     videoUrl: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 1000;

@@ -5,7 +5,7 @@ import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import HtmlContentContainer from "@/components/HtmlContentContainer.astro";
 import { getTrainingBySlug } from "@/lib/utils/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { marked } from "marked";
+import { Marked } from "marked";
 
 // Enable SSR for dynamic Strapi content
 export const prerender = false;
@@ -19,8 +19,37 @@ if (!training) {
   throw new Error(`Training with slug "${slug}" not found`);
 }
 
+// Create a new marked instance with custom renderer for marked v16+
+const marked = new Marked({
+  gfm: true,
+  breaks: true,
+});
+
+// Override the renderer methods using the new API
+marked.use({
+  renderer: {
+    // Handle images with proper img tags
+    image(token: any) {
+      const titleAttr = token.title ? ` title="${token.title}"` : '';
+      return `<img src="${token.href}" alt="${token.text}"${titleAttr} class="markdown-image" />`;
+    },
+    // Handle links with target="_blank"
+    link(token: any) {
+      const titleAttr = token.title ? ` title="${token.title}"` : '';
+      return `<a href="${token.href}"${titleAttr} target="_blank" rel="noopener noreferrer">${token.text}</a>`;
+    }
+  }
+});
+
+// Debug: Log content before and after parsing
+console.log('=== Training Content Debug ===');
+console.log('Raw markdown (first 500 chars):', training.content?.substring(0, 500));
+
 // Parse markdown content to HTML
-const parsedContent = await marked.parse(training.content || '', { gfm: true, breaks: true });
+const parsedContent = await marked.parse(training.content || '');
+
+console.log('Parsed HTML (first 500 chars):', parsedContent.substring(0, 500));
+console.log('==============================');
 ---
 
 <Base title={training.title} metaDescription={training.description}>

@@ -53,16 +53,47 @@
         "images"
       ]
     },
-    "videoUrl": {
-      "type": "string",
-      "maxLength": 1000
-    },
     "ctaUrl": {
       "type": "string",
       "maxLength": 1000
     },
     "order": {
       "type": "integer"
+    },
+    "video": {
+      "type": "boolean",
+      "default": false
+    },
+    "videoUrl": {
+      "type": "text",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "video"
+            },
+            true
+          ]
+        }
+      },
+      "maxLength": 1000
+    },
+    "videoFile": {
+      "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "video"
+            },
+            true
+          ]
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "videos"
+      ]
     }
   }
 }

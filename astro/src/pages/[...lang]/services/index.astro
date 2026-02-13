@@ -82,7 +82,7 @@ const pageData = strapiData.data;
                   {service.image && service.image.url && (
                     <div class="relative w-full aspect-[2/1] mb-6 rounded-xl overflow-hidden bg-gray-100">
                       <img 
-                        src={`${STRAPI_URL}${service.image.url}`} 
+                        src={service.image.url.startsWith('http') ? service.image.url : `${STRAPI_URL}${service.image.url}`} 
                         alt={service.title} 
                         class="w-full h-full object-cover"
                       />

@@ -1,5 +1,5 @@
 import slug_maker from "slugify";
-import { marked } from "marked";
+import { Marked } from "marked";
 
 // slugify
 export const slugifyyy = (content: string) => {
@@ -19,44 +19,59 @@ export const markdownify = (content: string, container?: boolean) => {
 
   // Pre-process content to handle custom button syntax first
   let processedContent = content;
-  
+
   // Convert [text](url){.button .center} to centered red button
   processedContent = processedContent.replace(
     /\[([^\]]+)\]\(([^)]+)\)\{\.button\s+\.center\}/g,
     '<div class="text-center my-6"><a href="$2" class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-md" style="color: white;">$1</a></div>'
   );
-  
+
   // Convert [text](url){.button} to regular red button
   processedContent = processedContent.replace(
     /\[([^\]]+)\]\(([^)]+)\)\{\.button\}/g,
     '<a href="$2" class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-md" style="color: white;">$1</a>'
   );
 
-  const renderer = new marked.Renderer();
+  // Create a new Marked instance with custom renderer for marked v16+
+  const marked = new Marked({
+    breaks: true,
+    gfm: true,
+  });
 
-  // Override the link renderer to handle both text and image links
-  renderer.link = ({href, title, text}) => {
-    const isExternal = href.startsWith("http");
-    const targetAttrs = href.includes("getastrothemes")
-      ? `target="_blank" rel="noopener"`
-      : isExternal
-        ? `target="_blank" rel="noopener noreferrer nofollow"`
-        : "";
-    
-    const titleAttr = title ? ` title="${title}"` : '';
-    
-    return `<a href="${href}" ${targetAttrs}${titleAttr}>${text}</a>`;
-  };
+  // Use the new marked v16 API for custom renderers
+  marked.use({
+    renderer: {
+      // Override the link renderer to handle both text and image links
+      link(token: any) {
+        const isExternal = token.href.startsWith("http");
+        const targetAttrs = token.href.includes("getastrothemes")
+          ? `target="_blank" rel="noopener"`
+          : isExternal
+            ? `target="_blank" rel="noopener noreferrer nofollow"`
+            : "";
 
-  // Override image renderer to ensure proper styling
-  renderer.image = ({href, title, text}) => {
-    const titleAttr = title ? ` title="${title}"` : '';
-    const alt = text || '';
-    return `<img src="${href}" alt="${alt}"${titleAttr} class="rounded-lg shadow-md max-w-full h-auto" loading="lazy" />`;
-  };
+        const titleAttr = token.title ? ` title="${token.title}"` : '';
+
+        // Check if the link contains an image token
+        let linkContent = token.text;
+        if (token.tokens && token.tokens.length > 0) {
+          // If there are child tokens, render them (this handles images inside links)
+          linkContent = this.parser.parseInline(token.tokens);
+        }
+
+        return `<a href="${token.href}" ${targetAttrs}${titleAttr}>${linkContent}</a>`;
+      },
+
+      // Override image renderer to ensure proper styling
+      image(token: any) {
+        const titleAttr = token.title ? ` title="${token.title}"` : '';
+        const alt = token.text || '';
+        return `<img src="${token.href}" alt="${alt}"${titleAttr} class="rounded-lg shadow-md max-w-full h-auto" loading="lazy" />`;
+      }
+    }
+  });
 
   // Pre-process content to handle markdown inside <details> tags
-
   // Find all <details> blocks and process markdown inside them
   const detailsRegex = /<details>([\s\S]*?)<\/details>/g;
   processedContent = processedContent.replace(detailsRegex, (match, innerContent) => {
@@ -68,24 +83,12 @@ export const markdownify = (content: string, container?: boolean) => {
       : innerContent;
 
     // Process the markdown content inside details
-    marked.setOptions({
-      renderer,
-      breaks: true,
-      gfm: true,
-    });
     const processedInner = marked.parse(contentAfterSummary.trim());
 
     // Reconstruct the details block with processed content
     return summary
       ? `<details><summary>${summary}</summary>\n${processedInner}</details>`
       : `<details>${processedInner}</details>`;
-  });
-
-  // Set the custom renderer for the main content
-  marked.setOptions({
-    renderer,
-    breaks: true,
-    gfm: true,
   });
 
   return container ? marked.parse(processedContent) : marked.parseInline(processedContent);
@@ -119,7 +122,8 @@ export const titleify = (content: string) => {
 
 // plainify
 export const plainify = (content: string) => {
-  const parseMarkdown: any = marked.parse(content);
+  const markedInstance = new Marked();
+  const parseMarkdown: any = markedInstance.parse(content);
   const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
   const filterSpaces = filterBrackets.replace(/[\r\n]\s*[\r\n]/gm, "");
   const stripHTML = htmlEntityDecoder(filterSpaces);
