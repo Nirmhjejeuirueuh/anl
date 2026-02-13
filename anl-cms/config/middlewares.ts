@@ -5,7 +5,12 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:4321', 'http://127.0.0.1:4321'],
+      origin: [
+        'http://localhost:4321', 
+        'http://127.0.0.1:4321',
+        'https://anl-jet.vercel.app',
+        'https://anl-revamp.vercel.app' // Add staging/preview URLs if needed
+      ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,
