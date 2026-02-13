@@ -14,6 +14,7 @@ export function getStaticPaths() {
 }
 
 export const prerender = false;
+export const revalidate = 300; // Revalidate every 5 minutes (300 seconds)
 
 // Fetch about page from Strapi
 const response = await fetch(`${STRAPI_URL}/api/about-page?populate=*`);

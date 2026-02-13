@@ -46,14 +46,18 @@ export interface StrapiMedia {
 
 // Cached fetch function with browser caching
 async function cachedFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  // In server environment (build time), don't cache to ensure fresh data
+  const isServer = typeof window === 'undefined';
+
   const cacheOptions: RequestInit = {
     ...options,
     headers: {
       ...options.headers,
-      'Cache-Control': 'max-age=300', // Cache for 5 minutes
+      // Only add cache headers in browser environment
+      ...(isServer ? {} : { 'Cache-Control': 'max-age=300' }), // Cache for 5 minutes in browser
     },
-    // Use browser cache when available
-    cache: 'default', // Let browser decide caching strategy
+    // Use browser cache when available, no-cache for server
+    cache: isServer ? 'no-cache' : 'default',
   };
 
   return fetch(url, cacheOptions);
