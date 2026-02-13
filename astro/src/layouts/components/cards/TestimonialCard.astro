@@ -25,7 +25,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
 
 {
   enable && testimonial && (
-    <div class:list={["relative flex flex-col w-full h-full p-6 rounded-lg shadow-md", bgClass, testimonial.avatar && testimonial.isFeatured ? 'pb-24' : '', className]} style={`color: ${textColor}`}>
+    <div class:list={["relative flex flex-col w-full p-6 rounded-lg shadow-md overflow-visible", bgClass, testimonial.avatar && testimonial.isFeatured ? 'pb-24' : '', className]} style={`color: ${textColor}`}>
       {/* Company Logo/Name Section */}
       {(testimonial.companyLogo || testimonial.logoText || testimonial.companyName) && (
         <div class="t-logo mb-4">
