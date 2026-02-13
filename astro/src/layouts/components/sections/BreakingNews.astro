@@ -13,6 +13,7 @@ interface NewsItem {
   image?: string;
   tag?: string;
   url?: string;
+  featured?: boolean;
 }
 
 // Fetch news from Strapi CMS
@@ -26,6 +27,7 @@ const newsItems: NewsItem[] = strapiNews.map(news => ({
   date: news.date,
   tag: news.tag,
   url: news.url || "#",
+  featured: news.featured,
   image: news.image?.url.startsWith('http') ? news.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${news.image?.url || ''}`
 }));
 

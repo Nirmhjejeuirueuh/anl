@@ -368,6 +368,7 @@ export interface StrapiNews {
   date: string;
   tag?: string;
   url?: string;
+  featured?: boolean;
   image?: {
     id: number;
     documentId: string;
@@ -1239,7 +1240,12 @@ export async function getNews(): Promise<StrapiNews[]> {
       throw new Error(`Failed to fetch news: ${response.status}`);
     }
     const data: StrapiResponse<StrapiNews> = await response.json();
-    return data.data;
+    // Sort by featured status (featured items first), then by creation date (newest first)
+    return data.data.sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+    });
   } catch (error) {
     console.error('Error fetching news:', error);
     return [];
