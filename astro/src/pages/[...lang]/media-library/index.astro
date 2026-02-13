@@ -15,7 +15,8 @@ export function getStaticPaths() {
 export const prerender = false;
 
 // Fetch media library from Strapi
-const mediaLibrary = await getMediaLibrary();
+// Pass Astro.request to enable hard refresh detection
+const mediaLibrary = await getMediaLibrary(Astro.request);
 
 // Separate sections by stage
 const activeSections = mediaLibrary?.sections?.filter(section => section.stage === 'active') || [];

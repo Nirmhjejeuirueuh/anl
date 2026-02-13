@@ -16,7 +16,8 @@ export const prerender = false;
 const { slug } = Astro.params;
 
 // Fetch resource library by slug
-const resource = await getResourceLibraryBySlug(slug as string);
+// Pass Astro.request to enable hard refresh detection
+const resource = await getResourceLibraryBySlug(slug as string, Astro.request);
 
 if (!resource) {
   return Astro.redirect('/404');

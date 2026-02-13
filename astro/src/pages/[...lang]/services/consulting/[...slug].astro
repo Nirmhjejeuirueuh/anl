@@ -13,7 +13,8 @@ export const prerender = false;
 const { slug } = Astro.params as any;
 
 // Fetch consultant by slug
-const consultant = await getConsultantBySlug(slug);
+// Pass Astro.request to enable hard refresh detection
+const consultant = await getConsultantBySlug(slug, Astro.request);
 
 // If consultant has a URL field, redirect to it
 if (consultant?.URL) {
@@ -21,7 +22,7 @@ if (consultant?.URL) {
 }
 
 // Fetch all consultants for the ribbon
-const allConsultants = await getConsultants();
+const allConsultants = await getConsultants(Astro.request);
 
 if (!consultant) {
   throw new Error(`Consultant with slug "${slug}" not found`);

@@ -44,23 +44,101 @@ export interface StrapiMedia {
   publishedAt: string;
 }
 
-// Cached fetch function with browser caching
-async function cachedFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  // In server environment (build time), don't cache to ensure fresh data
-  const isServer = typeof window === 'undefined';
+// Server-side cache with TTL
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
 
-  const cacheOptions: RequestInit = {
+class ServerCache {
+  private cache = new Map<string, CacheEntry<any>>();
+  private ttl = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+  get<T>(key: string): T | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+
+    const now = Date.now();
+    const age = now - entry.timestamp;
+
+    // Check if cache entry is still valid
+    if (age > this.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return entry.data as T;
+  }
+
+  set<T>(key: string, data: T): void {
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now(),
+    });
+  }
+
+  clear(key?: string): void {
+    if (key) {
+      this.cache.delete(key);
+    } else {
+      this.cache.clear();
+    }
+  }
+}
+
+// Global cache instance
+const cache = new ServerCache();
+
+// Cached fetch function with server-side caching and hard-refresh detection
+async function cachedFetch(url: string, options: RequestInit = {}, request?: Request): Promise<Response> {
+  // Check if this is a hard refresh (user pressed Ctrl+F5 or Cmd+Shift+R)
+  const isHardRefresh = request?.headers.get('cache-control')?.includes('no-cache') ||
+                        request?.headers.get('pragma') === 'no-cache';
+
+  const cacheKey = url;
+
+  // If hard refresh, bypass cache
+  if (isHardRefresh) {
+    console.log(`[Strapi Cache] Hard refresh detected, bypassing cache for: ${url}`);
+    cache.clear(cacheKey);
+  } else {
+    // Try to get from cache
+    const cachedResponse = cache.get<any>(cacheKey);
+    if (cachedResponse) {
+      console.log(`[Strapi Cache] Cache hit for: ${url}`);
+      // Return a mock Response object with cached data
+      return new Response(JSON.stringify(cachedResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  }
+
+  console.log(`[Strapi Cache] Cache miss, fetching from API: ${url}`);
+
+  // Fetch from API
+  const response = await fetch(url, {
     ...options,
     headers: {
       ...options.headers,
-      // Only add cache headers in browser environment
-      ...(isServer ? {} : { 'Cache-Control': 'max-age=300' }), // Cache for 5 minutes in browser
     },
-    // Use browser cache when available, no-cache for server
-    cache: isServer ? 'no-cache' : 'default',
-  };
+  });
 
-  return fetch(url, cacheOptions);
+  // If successful, cache the response
+  if (response.ok) {
+    const data = await response.clone().json();
+    cache.set(cacheKey, data);
+    console.log(`[Strapi Cache] Cached response for: ${url}`);
+  }
+
+  return response;
+}
+
+// Helper function to pass request context to API functions
+export function setRequestContext(request: Request) {
+  // Store request in a way that can be accessed by cachedFetch
+  // We'll pass it directly to the functions instead
+  return request;
 }
 
 export interface StrapiBlog {
@@ -539,11 +617,11 @@ export interface StrapiTermsAndConditions {
 /**
  * Fetch all blogs from Strapi CMS (optimized for blog list - only essential fields)
  */
-export async function getBlogs(): Promise<StrapiBlog[]> {
+export async function getBlogs(request?: Request): Promise<StrapiBlog[]> {
   try {
     console.log('getBlogs: Starting API call to Strapi');
     // Ultra-optimized: only fields actually used in BlogCard component
-    const response = await cachedFetch(`${STRAPI_URL}/api/blogs?populate=image&fields=title,slug,author,categories,publishDate`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/blogs?populate=image&fields=title,slug,author,categories,publishDate`, {}, request);
     // const response = await fetch(`${STRAPI_URL}/api/blogs?populate=*`);
     console.log('getBlogs: Response status:', response.status);
     if (!response.ok) {
@@ -561,9 +639,9 @@ export async function getBlogs(): Promise<StrapiBlog[]> {
 /**
  * Fetch a single blog by slug from Strapi CMS
  */
-export async function getBlogBySlug(slug: string): Promise<StrapiBlog | null> {
+export async function getBlogBySlug(slug: string, request?: Request): Promise<StrapiBlog | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/blogs?filters[slug][$eq]=${slug}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/blogs?filters[slug][$eq]=${slug}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch blog: ${response.status}`);
     }
@@ -578,9 +656,9 @@ export async function getBlogBySlug(slug: string): Promise<StrapiBlog | null> {
 /**
  * Fetch featured blogs from Strapi CMS
  */
-export async function getFeaturedBlogs(): Promise<StrapiBlog[]> {
+export async function getFeaturedBlogs(request?: Request): Promise<StrapiBlog[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/blogs?filters[featured][$eq]=true&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/blogs?filters[featured][$eq]=true&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch featured blogs: ${response.status}`);
     }
@@ -595,9 +673,9 @@ export async function getFeaturedBlogs(): Promise<StrapiBlog[]> {
 /**
  * Fetch unique categories from Strapi CMS
  */
-export async function getCategories(): Promise<{ name: string; slug: string; count: number }[]> {
+export async function getCategories(request?: Request): Promise<{ name: string; slug: string; count: number }[]> {
   try {
-    const blogs = await getBlogs();
+    const blogs = await getBlogs(request);
     const categoryMap = new Map<string, number>();
 
     // Count occurrences of each category
@@ -627,12 +705,12 @@ export async function getCategories(): Promise<{ name: string; slug: string; cou
 /**
  * Fetch all courses from Strapi CMS
  */
-export async function getCourses(): Promise<StrapiCourse[]> {
+export async function getCourses(request?: Request): Promise<StrapiCourse[]> {
   try {
     console.log('getCourses: Starting API call to Strapi');
 
     // First, get the total count to determine how many pages we need
-    const countResponse = await cachedFetch(`${STRAPI_URL}/api/courses?pagination[pageSize]=1`);
+    const countResponse = await cachedFetch(`${STRAPI_URL}/api/courses?pagination[pageSize]=1`, {}, request);
     if (!countResponse.ok) {
       throw new Error(`Failed to fetch course count: ${countResponse.status}`);
     }
@@ -648,7 +726,7 @@ export async function getCourses(): Promise<StrapiCourse[]> {
     // Fetch all pages
     for (let page = 1; page <= totalPages; page++) {
       console.log(`getCourses: Fetching page ${page}/${totalPages}`);
-      const response = await cachedFetch(`${STRAPI_URL}/api/courses?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`);
+      const response = await cachedFetch(`${STRAPI_URL}/api/courses?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`, {}, request);
       if (!response.ok) {
         throw new Error(`Failed to fetch courses page ${page}: ${response.status}`);
       }
@@ -668,10 +746,10 @@ export async function getCourses(): Promise<StrapiCourse[]> {
 /**
  * Fetch a single course by slug from Strapi CMS
  */
-export async function getCourseBySlug(slug: string): Promise<StrapiCourse | null> {
+export async function getCourseBySlug(slug: string, request?: Request): Promise<StrapiCourse | null> {
   try {
     console.log('getCourseBySlug: Searching for slug:', slug);
-    const response = await cachedFetch(`${STRAPI_URL}/api/courses?filters[slug][$eq]=${slug}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/courses?filters[slug][$eq]=${slug}&populate=*`, {}, request);
     console.log('getCourseBySlug: Response status:', response.status);
     if (!response.ok) {
       throw new Error(`Failed to fetch course: ${response.status}`);
@@ -691,10 +769,10 @@ export async function getCourseBySlug(slug: string): Promise<StrapiCourse | null
 /**
  * Fetch courses by category from Strapi CMS
  */
-export async function getCoursesByCategory(category: string): Promise<StrapiCourse[]> {
+export async function getCoursesByCategory(category: string, request?: Request): Promise<StrapiCourse[]> {
   try {
     console.log('getCoursesByCategory: Searching for category:', category);
-    const response = await cachedFetch(`${STRAPI_URL}/api/courses?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/courses?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch courses by category: ${response.status}`);
     }
@@ -710,9 +788,9 @@ export async function getCoursesByCategory(category: string): Promise<StrapiCour
 /**
  * Fetch all trainings from Strapi CMS
  */
-export async function getTrainings(): Promise<StrapiTraining[]> {
+export async function getTrainings(request?: Request): Promise<StrapiTraining[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch trainings: ${response.status}`);
     }
@@ -742,9 +820,9 @@ export async function getTrainings(): Promise<StrapiTraining[]> {
 /**
  * Fetch training by slug from Strapi CMS
  */
-export async function getTrainingBySlug(slug: string): Promise<StrapiTraining | null> {
+export async function getTrainingBySlug(slug: string, request?: Request): Promise<StrapiTraining | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[slug][$eq]=${slug}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[slug][$eq]=${slug}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch training: ${response.status}`);
     }
@@ -759,10 +837,10 @@ export async function getTrainingBySlug(slug: string): Promise<StrapiTraining | 
 /**
  * Fetch trainings by category from Strapi CMS
  */
-export async function getTrainingsByCategory(category: string): Promise<StrapiTraining[]> {
+export async function getTrainingsByCategory(category: string, request?: Request): Promise<StrapiTraining[]> {
   try {
     console.log('getTrainingsByCategory: Searching for category:', category);
-    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch trainings by category: ${response.status}`);
     }
@@ -791,10 +869,10 @@ export async function getTrainingsByCategory(category: string): Promise<StrapiTr
 /**
  * Fetch trainings by type from Strapi CMS
  */
-export async function getTrainingsByType(trainingType: string): Promise<StrapiTraining[]> {
+export async function getTrainingsByType(trainingType: string, request?: Request): Promise<StrapiTraining[]> {
   try {
     console.log('getTrainingsByType: Searching for type:', trainingType);
-    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[trainingType][$eq]=${trainingType}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[trainingType][$eq]=${trainingType}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch trainings by type: ${response.status}`);
     }
@@ -823,9 +901,9 @@ export async function getTrainingsByType(trainingType: string): Promise<StrapiTr
 /**
  * Fetch featured trainings from Strapi CMS
  */
-export async function getFeaturedTrainings(): Promise<StrapiTraining[]> {
+export async function getFeaturedTrainings(request?: Request): Promise<StrapiTraining[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[featured][$eq]=true&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/trainings?filters[featured][$eq]=true&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch featured trainings: ${response.status}`);
     }
@@ -840,9 +918,9 @@ export async function getFeaturedTrainings(): Promise<StrapiTraining[]> {
 /**
  * Fetch all consultants from Strapi CMS
  */
-export async function getConsultants(): Promise<StrapiConsultant[]> {
+export async function getConsultants(request?: Request): Promise<StrapiConsultant[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch consultants: ${response.status}`);
     }
@@ -870,9 +948,9 @@ export async function getConsultants(): Promise<StrapiConsultant[]> {
 /**
  * Fetch consultant by slug from Strapi CMS
  */
-export async function getConsultantBySlug(slug: string): Promise<StrapiConsultant | null> {
+export async function getConsultantBySlug(slug: string, request?: Request): Promise<StrapiConsultant | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[slug][$eq]=${slug}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[slug][$eq]=${slug}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch consultant: ${response.status}`);
     }
@@ -887,10 +965,10 @@ export async function getConsultantBySlug(slug: string): Promise<StrapiConsultan
 /**
  * Fetch consultants by category from Strapi CMS
  */
-export async function getConsultantsByCategory(category: string): Promise<StrapiConsultant[]> {
+export async function getConsultantsByCategory(category: string, request?: Request): Promise<StrapiConsultant[]> {
   try {
     console.log('getConsultantsByCategory: Searching for category:', category);
-    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch consultants by category: ${response.status}`);
     }
@@ -919,10 +997,10 @@ export async function getConsultantsByCategory(category: string): Promise<Strapi
 /**
  * Fetch consultants by type from Strapi CMS
  */
-export async function getConsultantsByType(consultantType: string): Promise<StrapiConsultant[]> {
+export async function getConsultantsByType(consultantType: string, request?: Request): Promise<StrapiConsultant[]> {
   try {
     console.log('getConsultantsByType: Searching for type:', consultantType);
-    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[consultantType][$eq]=${consultantType}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[consultantType][$eq]=${consultantType}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch consultants by type: ${response.status}`);
     }
@@ -951,9 +1029,9 @@ export async function getConsultantsByType(consultantType: string): Promise<Stra
 /**
  * Fetch featured consultants from Strapi CMS
  */
-export async function getFeaturedConsultants(): Promise<StrapiConsultant[]> {
+export async function getFeaturedConsultants(request?: Request): Promise<StrapiConsultant[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[featured][$eq]=true&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/consultants?filters[featured][$eq]=true&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch featured consultants: ${response.status}`);
     }
@@ -968,9 +1046,9 @@ export async function getFeaturedConsultants(): Promise<StrapiConsultant[]> {
 /**
  * Fetch all resource libraries from Strapi CMS
  */
-export async function getResourceLibraries(): Promise<StrapiResourceLibrary[]> {
+export async function getResourceLibraries(request?: Request): Promise<StrapiResourceLibrary[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch resource libraries: ${response.status}`);
     }
@@ -985,9 +1063,9 @@ export async function getResourceLibraries(): Promise<StrapiResourceLibrary[]> {
 /**
  * Fetch resource library by slug from Strapi CMS
  */
-export async function getResourceLibraryBySlug(slug: string): Promise<StrapiResourceLibrary | null> {
+export async function getResourceLibraryBySlug(slug: string, request?: Request): Promise<StrapiResourceLibrary | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?filters[slug][$eq]=${slug}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?filters[slug][$eq]=${slug}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch resource library: ${response.status}`);
     }
@@ -1002,9 +1080,9 @@ export async function getResourceLibraryBySlug(slug: string): Promise<StrapiReso
 /**
  * Fetch featured resource libraries from Strapi CMS
  */
-export async function getFeaturedResourceLibraries(): Promise<StrapiResourceLibrary[]> {
+export async function getFeaturedResourceLibraries(request?: Request): Promise<StrapiResourceLibrary[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?filters[featured][$eq]=true&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?filters[featured][$eq]=true&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch featured resource libraries: ${response.status}`);
     }
@@ -1019,9 +1097,9 @@ export async function getFeaturedResourceLibraries(): Promise<StrapiResourceLibr
 /**
  * Fetch resource libraries by type from Strapi CMS
  */
-export async function getResourceLibrariesByType(resourceType: string): Promise<StrapiResourceLibrary[]> {
+export async function getResourceLibrariesByType(resourceType: string, request?: Request): Promise<StrapiResourceLibrary[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?filters[resourceType][$eq]=${resourceType}&populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/resource-libraries?filters[resourceType][$eq]=${resourceType}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch resource libraries by type: ${response.status}`);
     }
@@ -1036,27 +1114,27 @@ export async function getResourceLibrariesByType(resourceType: string): Promise<
 /**
  * Fetch blogs by category from Strapi CMS
  */
-export async function getBlogsByCategory(category: string): Promise<StrapiBlog[]> {
+export async function getBlogsByCategory(category: string, request?: Request): Promise<StrapiBlog[]> {
   try {
     console.log('getBlogsByCategory: Searching for category:', category);
     // First try exact match
-    let response = await cachedFetch(`${STRAPI_URL}/api/blogs?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    let response = await cachedFetch(`${STRAPI_URL}/api/blogs?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch blogs by category: ${response.status}`);
     }
     let data: StrapiResponse<StrapiBlog> = await response.json();
-    
+
     // If no results, try case-insensitive search by fetching all and filtering
     if (data.data.length === 0) {
       console.log('getBlogsByCategory: No exact matches, trying case-insensitive search');
-      const allBlogs = await getBlogs();
+      const allBlogs = await getBlogs(request);
       data.data = allBlogs.filter(blog => {
         if (!blog.categories) return false;
         const blogCategories = blog.categories.split(',').map(cat => cat.trim().toLowerCase());
         return blogCategories.includes(category.toLowerCase());
       });
     }
-    
+
     console.log('getBlogsByCategory: Found', data.data.length, 'blogs for category:', category);
     return data.data;
   } catch (error) {
@@ -1216,10 +1294,10 @@ export function convertStrapiBlogToAstro(blog: StrapiBlog) {
 /**
  * Fetch team page from Strapi CMS
  */
-export async function getTeamPage(): Promise<StrapiTeamPage | null> {
+export async function getTeamPage(request?: Request): Promise<StrapiTeamPage | null> {
   try {
     console.log('getTeamPage: Starting API call to Strapi');
-    const response = await cachedFetch(`${STRAPI_URL}/api/team-page?populate[members][fields][0]=name&populate[members][fields][1]=role&populate[members][populate][image][fields][0]=url&populate[members][populate][image][fields][1]=alternativeText`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/team-page?populate[members][fields][0]=name&populate[members][fields][1]=role&populate[members][populate][image][fields][0]=url&populate[members][populate][image][fields][1]=alternativeText`, {}, request);
     console.log('getTeamPage: Response status:', response.status);
     if (!response.ok) {
       throw new Error(`Failed to fetch team page: ${response.status}`);
@@ -1236,9 +1314,9 @@ export async function getTeamPage(): Promise<StrapiTeamPage | null> {
 /**
  * Fetch all spotlights from Strapi CMS
  */
-export async function getSpotlights(): Promise<StrapiSpotlight[]> {
+export async function getSpotlights(request?: Request): Promise<StrapiSpotlight[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/spotlights?populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/spotlights?populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch spotlights: ${response.status}`);
     }
@@ -1253,9 +1331,9 @@ export async function getSpotlights(): Promise<StrapiSpotlight[]> {
 /**
  * Fetch all news from Strapi CMS
  */
-export async function getNews(): Promise<StrapiNews[]> {
+export async function getNews(request?: Request): Promise<StrapiNews[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/news-items?populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/news-items?populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch news: ${response.status}`);
     }
@@ -1275,9 +1353,9 @@ export async function getNews(): Promise<StrapiNews[]> {
 /**
  * Fetch all testimonials from Strapi CMS
  */
-export async function getTestimonials(): Promise<StrapiTestimonial[]> {
+export async function getTestimonials(request?: Request): Promise<StrapiTestimonial[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/testimonials?populate=*&sort=order:asc`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/testimonials?populate=*&sort=order:asc`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch testimonials: ${response.status}`);
     }
@@ -1292,9 +1370,9 @@ export async function getTestimonials(): Promise<StrapiTestimonial[]> {
 /**
  * Fetch all books from Strapi CMS
  */
-export async function getBooks(): Promise<StrapiBook[]> {
+export async function getBooks(request?: Request): Promise<StrapiBook[]> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/books?populate=*`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/books?populate=*`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch books: ${response.status}`);
     }
@@ -1326,9 +1404,9 @@ export interface StrapiMediaLibrary {
   publishedAt?: string;
 }
 
-export async function getMediaLibrary(): Promise<StrapiMediaLibrary[] | null> {
+export async function getMediaLibrary(request?: Request): Promise<StrapiMediaLibrary[] | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/media-library?populate[sections][populate]=photos`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/media-library?populate[sections][populate]=photos`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch media library: ${response.status}`);
     }
@@ -1343,9 +1421,9 @@ export async function getMediaLibrary(): Promise<StrapiMediaLibrary[] | null> {
 /**
  * Fetch privacy policy from Strapi CMS
  */
-export async function getPrivacyPolicy(): Promise<StrapiPrivacyPolicy | null> {
+export async function getPrivacyPolicy(request?: Request): Promise<StrapiPrivacyPolicy | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/privacy-policy`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/privacy-policy`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch privacy policy: ${response.status}`);
     }
@@ -1360,9 +1438,9 @@ export async function getPrivacyPolicy(): Promise<StrapiPrivacyPolicy | null> {
 /**
  * Fetch terms and conditions from Strapi CMS
  */
-export async function getTermsAndConditions(): Promise<StrapiTermsAndConditions | null> {
+export async function getTermsAndConditions(request?: Request): Promise<StrapiTermsAndConditions | null> {
   try {
-    const response = await cachedFetch(`${STRAPI_URL}/api/terms-and-conditions`);
+    const response = await cachedFetch(`${STRAPI_URL}/api/terms-and-conditions`, {}, request);
     if (!response.ok) {
       throw new Error(`Failed to fetch terms and conditions: ${response.status}`);
     }

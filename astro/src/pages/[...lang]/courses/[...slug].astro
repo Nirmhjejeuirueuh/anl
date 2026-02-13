@@ -28,10 +28,11 @@ if (/^\d+$/.test(slug)) {
 console.log('COURSE ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch course from Strapi by slug
+// Pass Astro.request to enable hard refresh detection
 let strapiCourse = null;
 try {
   console.log('Fetching Strapi course by slug:', slug);
-  strapiCourse = await getCourseBySlug(slug);
+  strapiCourse = await getCourseBySlug(slug, Astro.request);
   if (!strapiCourse) {
     console.log('Strapi course not found for slug:', slug);
   }

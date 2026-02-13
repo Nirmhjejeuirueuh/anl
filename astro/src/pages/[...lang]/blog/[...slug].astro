@@ -23,10 +23,11 @@ if (!slug) {
 console.log('BLOG ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch blog from Strapi by slug
+// Pass Astro.request to enable hard refresh detection
 let blog = null;
 try {
   console.log('Fetching Strapi blog by slug:', slug);
-  blog = await getBlogBySlug(slug);
+  blog = await getBlogBySlug(slug, Astro.request);
   if (!blog) {
     console.log('Strapi blog not found for slug:', slug);
   }

@@ -13,7 +13,8 @@ export const prerender = false;
 const { slug } = Astro.params as any;
 
 // Fetch training by slug
-const training = await getTrainingBySlug(slug);
+// Pass Astro.request to enable hard refresh detection
+const training = await getTrainingBySlug(slug, Astro.request);
 
 // If training has a URL field, redirect to it
 if (training?.URL) {
@@ -21,7 +22,7 @@ if (training?.URL) {
 }
 
 // Fetch all trainings for the ribbon
-const allTrainings = await getTrainings();
+const allTrainings = await getTrainings(Astro.request);
 
 if (!training) {
   throw new Error(`Training with slug "${slug}" not found`);

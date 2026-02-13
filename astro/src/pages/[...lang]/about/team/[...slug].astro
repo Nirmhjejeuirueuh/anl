@@ -19,10 +19,11 @@ if (!slug) {
 console.log('TEAM MEMBER ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch team member from Strapi by slug
+// Pass Astro.request to enable hard refresh detection
 let member = null;
 try {
   console.log('Fetching Strapi team member by slug:', slug);
-  member = await getTeamMemberBySlug(slug);
+  member = await getTeamMemberBySlug(slug, Astro.request);
   if (!member) {
     console.log('Strapi team member not found for slug:', slug);
   }

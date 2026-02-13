@@ -12,7 +12,8 @@ export const prerender = false;
 export const revalidate = 300; // Revalidate every 5 minutes (300 seconds)
 
 // Fetch privacy policy from Strapi
-const privacyPolicy = await getPrivacyPolicy();
+// Pass Astro.request to enable hard refresh detection
+const privacyPolicy = await getPrivacyPolicy(Astro.request);
 
 // Create entry object similar to content parser format
 const entry = {
