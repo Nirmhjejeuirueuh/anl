@@ -516,6 +516,26 @@ export interface StrapiResponse<T> {
   };
 }
 
+export interface StrapiPrivacyPolicy {
+  id?: number;
+  documentId?: string;
+  title: string;
+  content: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
+export interface StrapiTermsAndConditions {
+  id?: number;
+  documentId?: string;
+  title: string;
+  content: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+}
+
 /**
  * Fetch all blogs from Strapi CMS (optimized for blog list - only essential fields)
  */
@@ -1316,6 +1336,40 @@ export async function getMediaLibrary(): Promise<StrapiMediaLibrary[] | null> {
     return data.data;
   } catch (error) {
     console.error('Error fetching media library:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch privacy policy from Strapi CMS
+ */
+export async function getPrivacyPolicy(): Promise<StrapiPrivacyPolicy | null> {
+  try {
+    const response = await cachedFetch(`${STRAPI_URL}/api/privacy-policy`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch privacy policy: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data || null;
+  } catch (error) {
+    console.error('Error fetching privacy policy:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch terms and conditions from Strapi CMS
+ */
+export async function getTermsAndConditions(): Promise<StrapiTermsAndConditions | null> {
+  try {
+    const response = await cachedFetch(`${STRAPI_URL}/api/terms-and-conditions`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch terms and conditions: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data || null;
+  } catch (error) {
+    console.error('Error fetching terms and conditions:', error);
     return null;
   }
 }

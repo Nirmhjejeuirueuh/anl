@@ -1,0 +1,43 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getPrivacyPolicy } from "@/lib/utils/strapiApi";
+import { generatePaths } from "@/lib/utils/i18nUtils.ts";
+import { markdownify } from "@/lib/utils/textConverter";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+export const prerender = false;
+export const revalidate = 300; // Revalidate every 5 minutes (300 seconds)
+
+// Fetch privacy policy from Strapi
+const privacyPolicy = await getPrivacyPolicy();
+
+// Create entry object similar to content parser format
+const entry = {
+  data: {
+    title: privacyPolicy?.title || "Privacy Policy",
+    metaDescription: "Privacy Policy - AgileN Lite",
+    draft: false,
+    content: privacyPolicy?.content || "<p>Privacy policy content is currently unavailable. Please check back later.</p>"
+  }
+};
+---
+
+<Base {...entry?.data}>
+  <section class="section py-12 md:py-16 lg:py-20">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="col-12 md:col-10 lg:col-8">
+          <div class="content">
+            <h1 class="h2 mb-8 text-center">{entry.data.title}</h1>
+            <div class="prose prose-lg max-w-none">
+              <div set:html={markdownify(entry.data.content, true)} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

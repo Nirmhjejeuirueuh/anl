@@ -62,7 +62,7 @@
     {
       "enable": true,
       "name": "Terms & Conditions",
-      "url": "/terms-conditions/"
+      "url": "/terms-and-conditions/"
     },
     {
       "enable": true,
@@ -83,8 +83,8 @@
     },
     {
       "enable": true,
-      "name": "Testimonials",
-      "url": "/testimonials/"
+      "name": "FAQ",
+      "url": "/faq/"
     },
     {
       "enable": true,
@@ -101,14 +101,14 @@
     {
       "enable": true,
       "name": "Consulting",
-      "url": "/consultants/"
+      "url": "/services/consulting/"
     }
   ],
   "footerMenuLegal": [
     {
       "enable": true,
       "name": "Terms & Conditions",
-      "url": "/terms-conditions/"
+      "url": "/terms-and-conditions/"
     },
     {
       "enable": true,

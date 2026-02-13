@@ -220,9 +220,9 @@ form:
       parentClass: "col-span-2 text-xs"
       content: "Required field indicated with *"
     - note: success
-      parentClass: "hidden text-sm message success"
-      content: Thank you for your enquiry! We'll get back to you within 24 hours.
-    - note: deprecated
-      parentClass: "hidden text-sm message error"
-      content: Something went wrong! Please email us directly at [enquiry@agilenlite.com](mailto:enquiry@agilenlite.com)
+      parentClass: "hidden text-sm message success text-green-600 bg-green-50 border border-green-200 p-3 rounded-md"
+      content: "**✓ Success!** Thank you for your enquiry! We'll get back to you within 24 hours."
+    - note: error
+      parentClass: "hidden text-sm message error text-red-600 bg-red-50 border border-red-200 p-3 rounded-md"
+      content: "**⚠️ Error:** Please fill in all required fields marked with * and try again. If the problem persists, contact us at [enquiry@agilenlite.com](mailto:enquiry@agilenlite.com)"
 ---

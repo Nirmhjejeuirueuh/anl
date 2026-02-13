@@ -305,6 +305,7 @@ form = {
                   "data-provider": contactFormProvider,
                 }}
                 method="post"
+                novalidate
                 class="grid grid-cols-2 gap-x-4 gap-y-4 md:gap-y-8">
                 {/* Some Hidden Inputs For provider */}
                 {form.emailSubject &&
@@ -378,25 +379,32 @@ form = {
                           ))}
                         </select>
                         <p class="hs-error:block mt-2 hidden text-sm text-red-600">
-                          Please select a valid state.
+                          Please select a valid option.
                         </p>
                         <p class="hs-success:flex mt-2 hidden text-sm text-teal-600">
-                          Perfect!
+                          ✓ Selection confirmed
                         </p>
                       </div>
                     ) : input.tag === "textarea" ? (
-                      <textarea
-                        rows={input.rows || "6"}
-                        name={
-                          input.name || input.label || "Please set name value"
-                        }
-                        placeholder={
-                          input.placeholder || "Please set placeholder"
-                        }
-                        class="form-input"
-                        {...(input.required && { required: true })}
-                        set:html={input.defaultValue || ""}
-                      />
+                      <div>
+                        <textarea
+                          rows={input.rows || "6"}
+                          name={
+                            input.name || input.label || "Please set name value"
+                          }
+                          placeholder={
+                            input.placeholder || "Please set placeholder"
+                          }
+                          class="form-input w-full"
+                          {...(input.required && { required: true })}
+                          set:html={input.defaultValue || ""}
+                        />
+                        {input.required && (
+                          <p class="mt-2 hidden text-sm text-red-600 error-message">
+                            This field is required. Please provide details.
+                          </p>
+                        )}
+                      </div>
                     ) : input.group || input.items ? (
                       <div class="form-check-wrapper">
                         {input.items?.map((input) => (
@@ -443,39 +451,46 @@ form = {
                         ))}
                       </div>
                     ) : input.type === "checkbox" || input.type === "radio" ? (
-                      <div class="form-check">
-                        <input
-                          {...{
-                            value:
-                              typeof input.value === "boolean"
-                                ? String(input.value)
-                                : input.value || input.label,
-                            checked: input.checked ? true : undefined,
-                          }}
-                          type={input.type || "text"}
-                          name={input.name || "Please set name value"}
-                          id={
-                            input.id ||
-                            genIdFromLabel(input.label || "example-id")
-                          }
-                          placeholder={
-                            input.placeholder || "Please set placeholder"
-                          }
-                          class:list={[
-                            input.type === "radio"
-                              ? "form-radio"
-                              : "form-checkbox",
-                          ]}
-                          {...(input.required && { required: true })}
-                        />
-                        <label
-                          for={
-                            input.id ||
-                            genIdFromLabel(input.label || "example-id")
-                          }
-                          class="form-check-label"
-                          set:html={markdownify(input.label) || "Example Label"}
-                        />
+                      <div>
+                        <div class="form-check">
+                          <input
+                            {...{
+                              value:
+                                typeof input.value === "boolean"
+                                  ? String(input.value)
+                                  : input.value || input.label,
+                              checked: input.checked ? true : undefined,
+                            }}
+                            type={input.type || "text"}
+                            name={input.name || "Please set name value"}
+                            id={
+                              input.id ||
+                              genIdFromLabel(input.label || "example-id")
+                            }
+                            placeholder={
+                              input.placeholder || "Please set placeholder"
+                            }
+                            class:list={[
+                              input.type === "radio"
+                                ? "form-radio"
+                                : "form-checkbox",
+                            ]}
+                            {...(input.required && { required: true })}
+                          />
+                          <label
+                            for={
+                              input.id ||
+                              genIdFromLabel(input.label || "example-id")
+                            }
+                            class="form-check-label"
+                            set:html={markdownify(input.label) || "Example Label"}
+                          />
+                        </div>
+                        {input.required && input.type === "checkbox" && (
+                          <p class="mt-2 hidden text-sm text-red-600 error-message">
+                            You must agree to the privacy policy to continue.
+                          </p>
+                        )}
                       </div>
                     ) : input.note ? (
                       <div
@@ -497,23 +512,40 @@ form = {
                         set:html={markdownify(input.content || "", true)}
                       />
                     ) : (
-                      <input
-                        {...(input.defaultValue && {
-                          value: input.defaultValue,
-                        })}
-                        type={input.type || "text"}
-                        name={
-                          input.name || input.label || "Please set name value"
-                        }
-                        placeholder={
-                          input.placeholder || "Please set placeholder"
-                        }
-                        class="form-input"
-                        {...(input.required && { required: true })}
-                      />
+                      <div>
+                        <input
+                          {...(input.defaultValue && {
+                            value: input.defaultValue,
+                          })}
+                          type={input.type || "text"}
+                          name={
+                            input.name || input.label || "Please set name value"
+                          }
+                          placeholder={
+                            input.placeholder || "Please set placeholder"
+                          }
+                          class="form-input"
+                          {...(input.required && { required: true })}
+                        />
+                        {input.required && (
+                          <p class="mt-2 hidden text-sm text-red-600 error-message">
+                            {input.type === "email" 
+                              ? "Please enter a valid email address." 
+                              : "This field is required. Please fill it in."
+                            }
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
                 ))}
+
+                {/* Training of interest group error message */}
+                <div class="col-span-2">
+                  <p class="mt-2 hidden text-sm text-red-600 error-message training-error">
+                    Please select at least one training area of interest.
+                  </p>
+                </div>
 
                 {form.submitButton && (
                   <div class="col-span-2 flex flex-col">
@@ -606,11 +638,94 @@ form = {
       });
     });
 
+    // Add real-time validation to clear error styling
+    const allInputs = form?.querySelectorAll('input, textarea, select');
+    allInputs?.forEach((input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
+      input.addEventListener('input', () => {
+        // Clear error styling when user starts typing
+        input.classList.remove('border-red-500', 'ring-red-500', 'ring-1');
+        const wrapper = input.closest('[input-wrapper]') || input.parentElement;
+        const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+        if (errorMsg) {
+          errorMsg.classList.add('hidden');
+        }
+      });
+      
+      input.addEventListener('change', () => {
+        // Clear error styling for checkboxes and selects
+        input.classList.remove('border-red-500', 'ring-red-500', 'ring-1');
+        const wrapper = input.closest('[input-wrapper]') || input.parentElement;
+        const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+        if (errorMsg) {
+          errorMsg.classList.add('hidden');
+        }
+
+        // Special handling for training checkboxes
+        if (input.type === 'checkbox' && input.name === 'Training of interest') {
+          const trainingErrorMsg = form?.querySelector('.training-error') as HTMLElement;
+          const trainingCheckboxes = form?.querySelectorAll('input[type="checkbox"][name="Training of interest"]');
+          const hasAnyChecked = Array.from(trainingCheckboxes || []).some((cb: HTMLInputElement) => cb.checked);
+          
+          if (hasAnyChecked && trainingErrorMsg) {
+            trainingErrorMsg.classList.add('hidden');
+            trainingCheckboxes?.forEach((cb: HTMLInputElement) => {
+              cb.classList.remove('ring-red-500', 'ring-1');
+            });
+          }
+        }
+      });
+    });
+
+    // Add real-time validation for input fields
+    const validateField = (input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
+      const wrapper = input.closest('[input-wrapper]') || input.parentElement;
+      const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+
+      if (input.hasAttribute('required') && !input.value.trim()) {
+        if (errorMsg) errorMsg.classList.remove('hidden');
+      } else if (input.type === 'email' && input.value.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(input.value.trim())) {
+          if (errorMsg) {
+            errorMsg.textContent = 'Please enter a valid email address.';
+            errorMsg.classList.remove('hidden');
+          }
+        } else {
+          if (errorMsg) errorMsg.classList.add('hidden');
+        }
+      } else {
+        if (errorMsg) errorMsg.classList.add('hidden');
+      }
+    };
+
+    // Add event listeners for real-time validation
+    form?.querySelectorAll('input[required], textarea[required], select[required]').forEach((input) => {
+      input.addEventListener('blur', () => validateField(input as any));
+      input.addEventListener('input', () => validateField(input as any));
+      input.addEventListener('change', () => validateField(input as any));
+    });
+
+    // Special handling for checkboxes
+    form?.querySelectorAll('input[type="checkbox"][required]').forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        const wrapper = checkbox.closest('div');
+        const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+        if (checkbox.checked) {
+          if (errorMsg) errorMsg.classList.add('hidden');
+        } else {
+          if (errorMsg) errorMsg.classList.remove('hidden');
+        }
+      });
+    });
+
     form?.addEventListener("submit", async (e: Event) => {
       e.preventDefault();
 
       const provider = form?.getAttribute("data-provider") || "";
       const action = form?.getAttribute("data-action") || "";
+
+      // Hide all previous error messages
+      form?.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
 
       selectTags = form?.querySelectorAll(
         "[input-wrapper]:not(.hidden) select[data-hs-select]",
@@ -618,6 +733,138 @@ form = {
 
       // Validate all preline select tags
       selectTags.forEach(validateSelectTag);
+
+      // Validate required fields and show ALL error messages at once
+      const requiredInputs = form?.querySelectorAll('input[required], textarea[required], select[required]');
+      let hasErrors = false;
+      const errors = [];
+
+      requiredInputs?.forEach((input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
+        const wrapper = input.closest('[input-wrapper]') || input.parentElement;
+        const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+        
+        // Remove previous error styling
+        input.classList.remove('border-red-500', 'ring-red-500', 'ring-1');
+        if (errorMsg) {
+          errorMsg.classList.add('hidden');
+        }
+        
+        let isValid = true;
+        let errorText = '';
+
+        // Check if field is empty
+        if (!input.value.trim()) {
+          isValid = false;
+          // Get field label for custom error message
+          const label = wrapper?.querySelector('label')?.textContent?.replace('*', '').trim() || 
+                       input.placeholder || 
+                       input.name || 
+                       'This field';
+          errorText = `${label} is required.`;
+        }
+
+        // Special validation for email
+        if (input.type === 'email' && input.value.trim()) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(input.value.trim())) {
+            isValid = false;
+            errorText = 'Please enter a valid email address.';
+          }
+        }
+
+        if (!isValid) {
+          hasErrors = true;
+          if (errorMsg) {
+            errorMsg.textContent = errorText;
+            errorMsg.classList.remove('hidden');
+          }
+          // Add red border to invalid field
+          input.classList.add('border-red-500', 'ring-red-500', 'ring-1');
+          errors.push(errorText);
+        }
+      });
+
+      // Validate checkboxes
+      const requiredCheckboxes = form?.querySelectorAll('input[type="checkbox"][required]');
+      requiredCheckboxes?.forEach((checkbox: HTMLInputElement) => {
+        const wrapper = checkbox.closest('div');
+        const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+        
+        // Remove previous error styling
+        checkbox.classList.remove('ring-red-500', 'ring-1');
+        if (errorMsg) {
+          errorMsg.classList.add('hidden');
+        }
+        
+        if (!checkbox.checked) {
+          hasErrors = true;
+          if (errorMsg) {
+            errorMsg.textContent = 'You must agree to the privacy policy to continue.';
+            errorMsg.classList.remove('hidden');
+          }
+          // Add red ring to invalid checkbox
+          checkbox.classList.add('ring-red-500', 'ring-1');
+          errors.push('Privacy policy agreement is required.');
+        }
+      });
+
+      // Special validation for "Training of interest" checkbox group
+      const trainingCheckboxes = form?.querySelectorAll('input[type="checkbox"][name="Training of interest"]');
+      const trainingErrorMsg = form?.querySelector('.training-error') as HTMLElement;
+      
+      if (trainingErrorMsg) {
+        trainingErrorMsg.classList.add('hidden');
+      }
+      
+      // Check if at least one training interest is selected
+      const hasTrainingSelected = Array.from(trainingCheckboxes || []).some((cb: HTMLInputElement) => cb.checked);
+      
+      if (!hasTrainingSelected) {
+        hasErrors = true;
+        if (trainingErrorMsg) {
+          trainingErrorMsg.classList.remove('hidden');
+        }
+        // Add red ring to all training checkboxes
+        trainingCheckboxes?.forEach((cb: HTMLInputElement) => {
+          cb.classList.add('ring-red-500', 'ring-1');
+        });
+        errors.push('At least one training area of interest must be selected.');
+      } else {
+        // Remove red ring from training checkboxes if valid
+        trainingCheckboxes?.forEach((cb: HTMLInputElement) => {
+          cb.classList.remove('ring-red-500', 'ring-1');
+        });
+      }
+
+      // Also validate dropdowns
+      selectTags?.forEach((select) => {
+        const wrapper = select.closest('[input-wrapper]');
+        const errorMsg = wrapper?.querySelector('.error-message') as HTMLElement;
+        
+        select.classList.remove('border-red-500', 'ring-red-500', 'ring-1');
+        if (errorMsg) {
+          errorMsg.classList.add('hidden');
+        }
+        
+        if (select.value === '') {
+          hasErrors = true;
+          if (errorMsg) {
+            errorMsg.textContent = 'Please select an option from the dropdown.';
+            errorMsg.classList.remove('hidden');
+          }
+          select.classList.add('border-red-500', 'ring-red-500', 'ring-1');
+          errors.push('Dropdown selection is required.');
+        }
+      });
+
+      if (hasErrors) {
+        // Show summary error message with all issues
+        const errorSummary = errors.length > 1 
+          ? `Please correct the following ${errors.length} errors:`
+          : "Please correct the error below:";
+        setMessage(`${errorSummary}\n• ${errors.join('\n• ')}`, false, false, form);
+        return;
+      }
 
       if (isFormFilled(form)) {
         // Console.log form data for debugging
