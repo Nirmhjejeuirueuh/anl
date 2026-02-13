@@ -26,7 +26,7 @@ const newsItems: NewsItem[] = strapiNews.map(news => ({
   date: news.date,
   tag: news.tag,
   url: news.url || "#",
-  image: news.image?.url.startsWith('http') ? news.image.url : `http://localhost:1337${news.image?.url || ''}`
+  image: news.image?.url.startsWith('http') ? news.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${news.image?.url || ''}`
 }));
 
 // Section header

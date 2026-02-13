@@ -3,7 +3,7 @@ import { markdownify, toSentenceCase } from "@/lib/utils/textConverter";
 import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
 import Icons from "@/helpers/Icons.astro";
 
-const { class: className, strapiUrl = 'http://localhost:1337' } = Astro.props;
+const { class: className, strapiUrl = import.meta.env.STRAPI_URL || 'http://localhost:1337' } = Astro.props;
 let { enable, testimonial } = Astro.props.content || {};
 
 const getTextColor = (bgColor: string) => {
@@ -31,7 +31,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
         <div class="t-logo mb-4">
           {testimonial.companyLogo && (
             <OptimizedImage
-              src={testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `http://localhost:1337${testimonial.companyLogo.url}`}
+              src={testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${strapiUrl}${testimonial.companyLogo.url}`}
               alt={testimonial.companyName || 'Company logo'}
               width={testimonial.companyLogo.width || 100}
               height={testimonial.companyLogo.height || 50}
@@ -84,7 +84,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
       {testimonial.avatar && testimonial.isFeatured && (
         <div class="t-avatar absolute bottom-6 right-6">
           <OptimizedImage
-            src={testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `http://localhost:1337${testimonial.avatar.url}`}
+            src={testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `${strapiUrl}${testimonial.avatar.url}`}
             alt={testimonial.personName || 'Testimonial author'}
             width={testimonial.avatar.width || 80}
             height={testimonial.avatar.height || 80}

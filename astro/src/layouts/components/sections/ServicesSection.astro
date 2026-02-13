@@ -180,7 +180,7 @@ services =
                     {service.image && (
                       <div class="aspect-[16/9] overflow-hidden">
                         <img
-                          src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                          src={service.image.url.startsWith('http') ? service.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${service.image.url}`}
                           alt={service.title}
                           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                         />
@@ -220,7 +220,7 @@ services =
                           {service.image && (
                             <div class="aspect-[16/9] overflow-hidden">
                               <img
-                                src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                                src={service.image.url.startsWith('http') ? service.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${service.image.url}`}
                                 alt={service.title}
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                               />
@@ -267,7 +267,7 @@ services =
                   {service.image && (
                     <div class="aspect-[16/9] overflow-hidden">
                       <img
-                        src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                        src={service.image.url.startsWith('http') ? service.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${service.image.url}`}
                         alt={service.title}
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                       />
@@ -307,7 +307,7 @@ services =
                         {service.image && (
                           <div class="aspect-[16/9] overflow-hidden">
                             <img
-                              src={service.image.url.startsWith('http') ? service.image.url : `http://localhost:1337${service.image.url}`}
+                              src={service.image.url.startsWith('http') ? service.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${service.image.url}`}
                               alt={service.title}
                               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-2xl"
                             />

@@ -43,7 +43,7 @@ const spotlightItems: SpotlightItem[] = strapiSpotlights
     else if (spotlight.video?.url) {
       videoUrl = spotlight.video.url.startsWith('http')
         ? spotlight.video.url
-        : `http://localhost:1337${spotlight.video.url}`;
+        : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${spotlight.video.url}`;
       isYouTube = false;
     }
 
