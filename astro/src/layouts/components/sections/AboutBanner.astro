@@ -138,7 +138,7 @@ const formattedTitle = markdownTitle.replace(
                 class:list={[
                   "px-4 h-96 md:h-112 flex-shrink-0",
                 ]}>
-                <div class="relative group cursor-pointer h-full flex items-center justify-center overflow-hidden" onclick={`openImageModal('${item.url}', '${item.caption || ''}')`}>
+                <div class="relative group cursor-pointer h-full flex items-center justify-center overflow-hidden" data-image-url={item.url} data-image-caption={item.caption || ''} onclick="openImageModal(this.dataset.imageUrl, '', '', this.dataset.imageCaption)">
                   <OptimizedImage
                     class:list={[
                       "max-h-full w-auto transition-transform group-hover:scale-105",
@@ -162,7 +162,7 @@ const formattedTitle = markdownTitle.replace(
                   "px-4 h-96 md:h-112 flex-shrink-0",
                 ]}
                 aria-hidden="true">
-                <div class="relative group cursor-pointer h-full flex items-center justify-center overflow-hidden" onclick={`openImageModal('${item.url}', '${item.caption || ''}')`}>
+                <div class="relative group cursor-pointer h-full flex items-center justify-center overflow-hidden" data-image-url={item.url} data-image-caption={item.caption || ''} onclick="openImageModal(this.dataset.imageUrl, '', '', this.dataset.imageCaption)">
                   <OptimizedImage
                     class:list={[
                       "max-h-full w-auto transition-transform group-hover:scale-105",
