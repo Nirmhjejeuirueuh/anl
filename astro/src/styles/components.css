@@ -260,7 +260,13 @@ footer {
 
     &.marquee-element-width-auto {
       --width: max-width;
-      --end-transform: translateX(calc(-1 * var(--total-width)));
+      --end-transform: translateX(calc(-1 * var(--total-width, 9999px)));
+      /* Stay put until JS measures the real width */
+      animation-play-state: paused;
+
+      &.marquee-ready {
+        animation-play-state: running;
+      }
     }
 
     width: var(--width);

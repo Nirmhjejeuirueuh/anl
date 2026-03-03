@@ -92,7 +92,7 @@ const formattedTitle = markdownTitle.replace(
 
 {
   enable && (
-    <section class="relative py-16 md:py-20 lg:py-24 overflow-hidden">
+    <section class="relative py-16 md:py-20 lg:py-24 pb-16 overflow-hidden">
       <!-- Modern Background Pattern -->
       <div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-white">
         <!-- Wave Pattern -->
@@ -123,6 +123,7 @@ const formattedTitle = markdownTitle.replace(
             data-aos-delay="200"
             set:html={markdownify(description)}
             class="prose prose-lg max-w-2xl opacity-90 xl:max-w-3xl"
+            style="text-align: center;"
           />
         )}
       </div>
@@ -149,7 +150,7 @@ const formattedTitle = markdownTitle.replace(
                     alt="Image"
                   />
                   {item.caption && (
-                    <div class="absolute bottom-0 left-0 right-0 text-white text-sm p-2" style="background-color: rgba(0, 0, 0, 0.5);">
+                    <div class="absolute bottom-0 left-0 right-0 text-white text-sm p-2 text-center line-clamp-3 flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.5); min-height: calc(3 * 1.5em + 1rem);">
                       {item.caption}
                     </div>
                   )}
@@ -173,7 +174,7 @@ const formattedTitle = markdownTitle.replace(
                     alt="Image"
                   />
                   {item.caption && (
-                    <div class="absolute bottom-0 left-0 right-0 text-white text-sm p-2" style="background-color: rgba(0, 0, 0, 0.5);">
+                    <div class="absolute bottom-0 left-0 right-0 text-white text-sm p-2 text-center line-clamp-3 flex items-center justify-center" style="background-color: rgba(0, 0, 0, 0.5); min-height: calc(3 * 1.5em + 1rem);">
                       {item.caption}
                     </div>
                   )}

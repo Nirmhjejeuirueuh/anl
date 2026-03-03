@@ -51,6 +51,23 @@ export interface ServicesServiceCard extends Struct.ComponentSchema {
   };
 }
 
+export interface TestimonialsTestimonialItem extends Struct.ComponentSchema {
+  collectionName: 'components_testimonials_testimonial_items';
+  info: {
+    description: 'A single testimonial entry';
+    displayName: 'Testimonial Item';
+  };
+  attributes: {
+    companyLogo: Schema.Attribute.Media<'images'>;
+    companyName: Schema.Attribute.String;
+    fullStory: Schema.Attribute.Text;
+    personName: Schema.Attribute.String;
+    personRole: Schema.Attribute.String;
+    role: Schema.Attribute.Enumeration<['partner', 'client']>;
+    shortTestimonial: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -58,6 +75,7 @@ declare module '@strapi/strapi' {
       'media-library.media-item': MediaLibraryMediaItem;
       'media-library.media-section': MediaLibraryMediaSection;
       'services.service-card': ServicesServiceCard;
+      'testimonials.testimonial-item': TestimonialsTestimonialItem;
     }
   }
 }

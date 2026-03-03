@@ -1,0 +1,22 @@
+{
+  "kind": "singleType",
+  "collectionName": "client_lists",
+  "info": {
+    "singularName": "client-list",
+    "pluralName": "client-lists",
+    "displayName": "Client List"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "logos": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  }
+}

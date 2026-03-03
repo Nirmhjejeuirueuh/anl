@@ -4,9 +4,16 @@ import { markdownify } from "@/lib/utils/textConverter";
 import { getSpotlights } from "@/lib/utils/strapiApi";
 
 interface SpotlightItem {
+  mediaType?: string;
+  title?: string;
+  // video fields
   videoUrl?: string;
   isYouTube?: boolean;
   videoId?: string;
+  thumbnail?: string;
+  // image fields
+  imageUrl?: string;
+  imageAlt?: string;
   originalIndex?: number;
 }
 
@@ -23,13 +30,32 @@ const strapiSpotlights = await getSpotlights();
 console.log('SpotlightCarousel: Fetched', strapiSpotlights.length, 'spotlights from Strapi');
 
 // Convert Strapi data to component format
+const STRAPI_BASE = import.meta.env.STRAPI_URL || 'http://localhost:1337';
+function resolveUrl(url: string | undefined | null): string | undefined {
+  if (!url) return undefined;
+  return url.startsWith('http') ? url : `${STRAPI_BASE}${url}`;
+}
+
 const spotlightItems: SpotlightItem[] = strapiSpotlights
   .map(spotlight => {
+    const mediaType = spotlight.mediaType || '';
+    const title = spotlight.title || undefined;
+
+    // Image type
+    if (spotlight.image?.url) {
+      return {
+        mediaType,
+        title,
+        imageUrl: resolveUrl(spotlight.image.url),
+        imageAlt: spotlight.image.alternativeText || title || 'Spotlight image',
+      };
+    }
+
+    // YouTube / direct video
     let videoUrl: string | undefined;
     let isYouTube = false;
     let videoId: string | undefined;
 
-    // Check for external video URL first (YouTube)
     if (spotlight.videoUrl) {
       videoId = getYouTubeVideoId(spotlight.videoUrl);
       if (videoId) {
@@ -38,24 +64,26 @@ const spotlightItems: SpotlightItem[] = strapiSpotlights
       } else {
         videoUrl = spotlight.videoUrl;
       }
-    }
-    // Fallback to uploaded video file
-    else if (spotlight.video?.url) {
-      videoUrl = spotlight.video.url.startsWith('http')
-        ? spotlight.video.url
-        : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${spotlight.video.url}`;
+    } else if (spotlight.video?.url) {
+      videoUrl = resolveUrl(spotlight.video.url);
       isYouTube = false;
     }
 
-    console.log('Video:', { videoUrl, isYouTube, videoId });
+    // Resolve thumbnail URL
+    const thumbnail = resolveUrl(spotlight.thumbnail?.url);
+
+    console.log('Spotlight item:', { mediaType, videoUrl, isYouTube, videoId, thumbnail });
 
     return {
+      mediaType,
+      title,
       videoUrl,
       isYouTube,
-      videoId
+      videoId,
+      thumbnail
     };
   })
-  .filter(item => item.videoUrl);
+  .filter(item => item.videoUrl || item.imageUrl);
 
 console.log('SpotlightCarousel: Filtered to', spotlightItems.length, 'items with videos');
 
@@ -65,16 +93,21 @@ const sectionSubtitle = "In The Spotlight";
 
 // Only render the section if there are spotlights to show
 const hasSpotlights = spotlightItems.length > 0;
+const isSingleVideo = spotlightItems.length === 1;
+const isTwoVideos = spotlightItems.length === 2;
 
-// Duplicate items if we have fewer than 6 to ensure smooth infinite loop
-// For loop mode to work smoothly, we need at least 6 slides
-const displayItems = spotlightItems.length < 6
-  ? [
-      ...spotlightItems.map((item, index) => ({ ...item, originalIndex: index })),
-      ...spotlightItems.map((item, index) => ({ ...item, originalIndex: index })),
-      ...spotlightItems.map((item, index) => ({ ...item, originalIndex: index }))
-    ]
-  : spotlightItems.map((item, index) => ({ ...item, originalIndex: index }));
+// - 1 video  → no carousel at all
+// - 2 videos → simple non-looping slider, no duplication
+// - 3+ videos → infinite looping carousel; duplicate to at least 6 slides
+const displayItems = isSingleVideo || isTwoVideos
+  ? spotlightItems.map((item, index) => ({ ...item, originalIndex: index }))
+  : spotlightItems.length < 6
+    ? [
+        ...spotlightItems.map((item, index) => ({ ...item, originalIndex: index })),
+        ...spotlightItems.map((item, index) => ({ ...item, originalIndex: index })),
+        ...spotlightItems.map((item, index) => ({ ...item, originalIndex: index }))
+      ]
+    : spotlightItems.map((item, index) => ({ ...item, originalIndex: index }));
 ---
 
 {hasSpotlights && (
@@ -95,19 +128,28 @@ const displayItems = spotlightItems.length < 6
       )}
     </div>
 
-    <!-- Swiper Carousel -->
-    <div class="spotlight-carousel-container w-full mx-auto relative">
+    <!-- Swiper Carousel (2+ videos) -->
+    {!isSingleVideo && (
+    <div class={`spotlight-carousel-container w-full mx-auto relative${isTwoVideos ? ' spotlight-two-videos' : ''}`}>
       <div class="swiper spotlight-swiper" data-total-videos={spotlightItems.length} data-display-count={displayItems.length}>
         <div class="swiper-wrapper">
           {displayItems.map((item, index) => (
             <div class="swiper-slide" data-video-index={item.originalIndex}>
               <div class="relative w-full bg-black rounded-2xl overflow-hidden shadow-2xl" style="aspect-ratio: 16/9;">
-                {item.isYouTube && item.videoId ? (
+                {item.imageUrl ? (
+                  <!-- Static image slide -->
+                  <img
+                    src={item.imageUrl}
+                    alt={item.imageAlt || item.title || 'Spotlight'}
+                    class="w-full h-full object-cover"
+                  />
+                ) : item.isYouTube && item.videoId ? (
                   <!-- YouTube Video with Plyr -->
                   <div
                     class="plyr__video-embed spotlight-video"
                     data-plyr-provider="youtube"
                     data-plyr-embed-id={item.videoId}
+                    data-plyr-poster={item.thumbnail || undefined}
                     data-index={index}
                     data-is-youtube="true"
                   >
@@ -118,6 +160,7 @@ const displayItems = spotlightItems.length < 6
                     class="spotlight-video plyr-video"
                     playsinline
                     loop
+                    poster={item.thumbnail || undefined}
                     data-index={index}
                     data-is-youtube="false"
                   >
@@ -145,6 +188,43 @@ const displayItems = spotlightItems.length < 6
         <div class="swiper-pagination"></div>
       </div>
     </div>
+    )}
+
+    <!-- Single Video (1 video only) -->
+    {isSingleVideo && displayItems[0] && (
+    <div class="w-full spotlight-section-single">
+      <div class="relative w-full bg-black rounded-2xl overflow-hidden shadow-2xl" style="aspect-ratio: 16/9;">
+        {displayItems[0].imageUrl ? (
+          <img
+            src={displayItems[0].imageUrl}
+            alt={displayItems[0].imageAlt || displayItems[0].title || 'Spotlight'}
+            class="w-full h-full object-cover"
+          />
+        ) : displayItems[0].isYouTube && displayItems[0].videoId ? (
+          <div
+            class="plyr__video-embed spotlight-video"
+            data-plyr-provider="youtube"
+            data-plyr-embed-id={displayItems[0].videoId}
+            data-plyr-poster={displayItems[0].thumbnail || undefined}
+            data-index={0}
+            data-is-youtube="true"
+          >
+          </div>
+        ) : (
+          <video
+            class="spotlight-video plyr-video"
+            playsinline
+            loop
+            poster={displayItems[0].thumbnail || undefined}
+            data-index={0}
+            data-is-youtube="false"
+          >
+            <source src={displayItems[0].videoUrl} type="video/mp4" />
+          </video>
+        )}
+      </div>
+    </div>
+    )}
   </div>
 </section>
 )}
@@ -222,6 +302,14 @@ const displayItems = spotlightItems.length < 6
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
+  /* Disabled state - faded and not clickable */
+  .spotlight-nav-btn:global(.swiper-button-disabled) {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+  }
+
   .spotlight-nav-btn.swiper-button-prev {
     left: 10px;
   }
@@ -257,6 +345,17 @@ const displayItems = spotlightItems.length < 6
   /* Plyr customization */
   :global(.plyr) {
     border-radius: 1rem;
+  }
+
+  /* 2-video mode: full-width slides, no scale/opacity effects */
+  .spotlight-two-videos .spotlight-swiper .swiper-slide {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+  .spotlight-two-videos .spotlight-swiper :global(.swiper-slide-next),
+  .spotlight-two-videos .spotlight-swiper :global(.swiper-slide-prev) {
+    opacity: 1 !important;
+    transform: scale(1) !important;
   }
 
   :global(.plyr__video-wrapper) {
@@ -320,6 +419,27 @@ const displayItems = spotlightItems.length < 6
 
   // Initialize when DOM is ready
   function initSpotlightCarousel() {
+    // Single item case: no swiper needed
+    const singleSection = document.querySelector('.spotlight-section-single');
+    if (singleSection) {
+      // Only init Plyr if there's actually a video inside (not an image)
+      const singleVideoElements = singleSection.querySelectorAll('.spotlight-video');
+      if (singleVideoElements.length > 0) {
+        singleVideoElements.forEach((element) => {
+          new Plyr(element, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            autoplay: false,
+            muted: false,
+            loop: { active: true },
+            clickToPlay: true,
+            youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 },
+          });
+        });
+      }
+      // Single item (video or image) — always skip carousel init
+      return;
+    }
+
     const swiperElement = document.querySelector('.spotlight-swiper') as HTMLElement;
     if (!swiperElement) {
       console.log('Swiper element not found');
@@ -331,9 +451,7 @@ const displayItems = spotlightItems.length < 6
     console.log('Initializing carousel with', totalVideos, 'videos (', displayCount, 'displayed with duplicates)');
 
     // Track state
-    let isInViewport = false;
     let currentPlayingIndex = -1;
-    let playTimeoutId: number | null = null;
     let isTransitioning = false;
 
     // Initialize Plyr for all videos
@@ -346,7 +464,7 @@ const displayItems = spotlightItems.length < 6
       const player = new Plyr(element, {
         controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
         autoplay: false,
-        muted: true, // Start muted to comply with browser autoplay policies
+        muted: false,
         loop: { active: true },
         clickToPlay: true,
         youtube: {
@@ -388,12 +506,6 @@ const displayItems = spotlightItems.length < 6
     const pauseAllVideos = () => {
       console.log('Pausing all videos');
 
-      // Clear any pending play timeout
-      if (playTimeoutId !== null) {
-        clearTimeout(playTimeoutId);
-        playTimeoutId = null;
-      }
-
       players.forEach((player, idx) => {
         try {
           if (player.playing) {
@@ -412,251 +524,94 @@ const displayItems = spotlightItems.length < 6
       currentPlayingIndex = -1;
     };
 
-    // Function to play the active video
-    const playActiveVideo = (swiperInstance: Swiper, delay = 400) => {
-      if (!isInViewport) {
-        console.log('Section not in viewport, skipping autoplay');
-        return;
-      }
-
-      if (isTransitioning) {
-        console.log('Transition in progress, skipping play');
-        return;
-      }
-
-      // Clear any previous timeout
-      if (playTimeoutId !== null) {
-        clearTimeout(playTimeoutId);
-        playTimeoutId = null;
-      }
-
-      const activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
-      if (!activeSlide) {
-        console.log('No active slide found');
-        return;
-      }
-
-      const activeVideoElement = activeSlide.querySelector('.spotlight-video') as HTMLElement;
-      if (!activeVideoElement) {
-        console.log('No video element in active slide');
-        return;
-      }
-
-      const activePlayerIndex = Array.from(videoElements).indexOf(activeVideoElement);
-      const isYouTube = activeVideoElement.getAttribute('data-is-youtube') === 'true';
-
-      console.log('Play attempt - Active player index:', activePlayerIndex, 'is YouTube:', isYouTube);
-
-      if (activePlayerIndex < 0 || !players[activePlayerIndex]) {
-        console.log('Invalid player index or player not found');
-        return;
-      }
-
-      // Don't replay if already playing
-      if (currentPlayingIndex === activePlayerIndex && players[activePlayerIndex].playing) {
-        console.log('Video already playing, skipping');
-        return;
-      }
-
-      // Schedule play after delay
-      playTimeoutId = window.setTimeout(() => {
-        try {
-          const player = players[activePlayerIndex];
-
-          // Ensure video is muted for autoplay
-          player.muted = true;
-
-          // Restart video from beginning
-          player.currentTime = 0;
-
-          // Play the video
-          player.play().then(() => {
-            console.log(`Successfully started playing video ${activePlayerIndex}`);
-            currentPlayingIndex = activePlayerIndex;
-          }).catch((e: any) => {
-            console.log(`Failed to play video ${activePlayerIndex}:`, e);
-            currentPlayingIndex = -1;
-          });
-        } catch (e: any) {
-          console.log('Error in play attempt:', e);
-        }
-
-        playTimeoutId = null;
-      }, delay);
-    };
-
-    // Calculate loop settings based on number of slides
-    const shouldLoop = displayCount >= 3;
+    // Calculate loop/carousel settings based on ACTUAL number of videos
+    const shouldLoop = totalVideos >= 3;
     const loopSlides = Math.max(3, Math.ceil(displayCount / 2));
 
-    console.log('Loop enabled:', shouldLoop, 'Loop additional slides:', loopSlides);
+    console.log('Total videos:', totalVideos, '| Loop enabled:', shouldLoop);
 
     // Initialize Swiper
-    const swiper = new Swiper('.spotlight-swiper', {
+    const swiperConfig: any = {
       modules: [Navigation, Pagination, Autoplay],
-      slidesPerView: 1.35,
-      spaceBetween: 24,
-      centeredSlides: true,
+      slidesPerView: shouldLoop ? 1.35 : 1,
+      spaceBetween: shouldLoop ? 24 : 20,
+      centeredSlides: shouldLoop,
       loop: shouldLoop,
-      loopAdditionalSlides: loopSlides,
-      loopedSlides: displayCount,
+      loopAdditionalSlides: shouldLoop ? loopSlides : 0,
+      loopedSlides: shouldLoop ? displayCount : undefined,
       watchSlidesProgress: true,
-      slideToClickedSlide: true,
+      slideToClickedSlide: shouldLoop,
       speed: 600,
-      autoplay: shouldLoop ? {
-        delay: 30000, // 30 seconds delay between slides
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true,
-      } : false,
+      autoplay: false,
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
-      pagination: {
+      pagination: shouldLoop ? {
         el: '.swiper-pagination',
         clickable: true,
         dynamicBullets: false,
-        renderBullet: function (index, className) {
-          // Only show bullets for original videos, not duplicates
+        renderBullet: function (index: number, className: string) {
           if (index < totalVideos) {
             return `<span class="${className}"></span>`;
           }
           return '';
         },
+      } : {
+        el: '.swiper-pagination',
+        clickable: true,
       },
-      breakpoints: {
-        640: {
-          slidesPerView: 1.1,
-          spaceBetween: 12,
-          loopAdditionalSlides: 2,
-        },
-        768: {
-          slidesPerView: 1.2,
-          spaceBetween: 16,
-          loopAdditionalSlides: 2,
-        },
-        1024: {
-          slidesPerView: 1.3,
-          spaceBetween: 20,
-          loopAdditionalSlides: 3,
-        },
-        1280: {
-          slidesPerView: 1.35,
-          spaceBetween: 24,
-          loopAdditionalSlides: 3,
-        },
+    };
+
+    if (shouldLoop) {
+      swiperConfig.breakpoints = {
+        640:  { slidesPerView: 1.1, spaceBetween: 12, loopAdditionalSlides: 2 },
+        768:  { slidesPerView: 1.2, spaceBetween: 16, loopAdditionalSlides: 2 },
+        1024: { slidesPerView: 1.3, spaceBetween: 20, loopAdditionalSlides: 3 },
+        1280: { slidesPerView: 1.35, spaceBetween: 24, loopAdditionalSlides: 3 },
+      };
+    }
+
+    swiperConfig.on = {
+      slideChangeTransitionStart: function(this: any) {
+        console.log('Transition started');
+        isTransitioning = true;
+        pauseAllVideos();
       },
-      on: {
-        slideChangeTransitionStart: function(this: Swiper) {
-          console.log('Transition started');
-          isTransitioning = true;
-          // Immediately pause all videos when transition starts
-          pauseAllVideos();
-        },
-        slideChangeTransitionEnd: function(this: Swiper) {
-          console.log('Transition ended - realIndex:', this.realIndex, 'activeIndex:', this.activeIndex);
-          isTransitioning = false;
+      slideChangeTransitionEnd: function(this: any) {
+        console.log('Transition ended - realIndex:', this.realIndex, 'activeIndex:', this.activeIndex);
+        isTransitioning = false;
 
-          // Find the centered/active slide
-          const activeSlide = this.slides[this.activeIndex];
-          const activeVideoIndex = activeSlide ? parseInt(activeSlide.getAttribute('data-video-index') || '0') : 0;
+        const activeSlide = this.slides[this.activeIndex];
+        const activeVideoIndex = activeSlide ? parseInt(activeSlide.getAttribute('data-video-index') || '0') : 0;
 
-          console.log('Active video index:', activeVideoIndex);
-
-          // Update pagination bullets manually
-          const bullets = document.querySelectorAll('.swiper-pagination-bullet');
-          bullets.forEach((bullet, index) => {
-            if (index === activeVideoIndex) {
-              bullet.classList.add('swiper-pagination-bullet-active');
-            } else {
-              bullet.classList.remove('swiper-pagination-bullet-active');
-            }
-          });
-
-          // Play the active video only if in viewport
-          if (isInViewport) {
-            playActiveVideo(this);
+        const bullets = document.querySelectorAll('.swiper-pagination-bullet');
+        bullets.forEach((bullet: Element, index: number) => {
+          if (index === activeVideoIndex) {
+            bullet.classList.add('swiper-pagination-bullet-active');
+          } else {
+            bullet.classList.remove('swiper-pagination-bullet-active');
           }
-        },
-        init: function(this: Swiper) {
-          console.log('Swiper initialized with', displayCount, 'slides');
-          // Set initial pagination
-          const activeSlide = this.slides[this.activeIndex];
-          const activeVideoIndex = activeSlide ? parseInt(activeSlide.getAttribute('data-video-index') || '0') : 0;
-          const bullets = document.querySelectorAll('.swiper-pagination-bullet');
-          bullets.forEach((bullet, index) => {
-            if (index === activeVideoIndex) {
-              bullet.classList.add('swiper-pagination-bullet-active');
-            } else {
-              bullet.classList.remove('swiper-pagination-bullet-active');
-            }
-          });
-        }
+        });
+      },
+      init: function(this: any) {
+        console.log('Swiper initialized with', displayCount, 'slides');
+        const activeSlide = this.slides[this.activeIndex];
+        const activeVideoIndex = activeSlide ? parseInt(activeSlide.getAttribute('data-video-index') || '0') : 0;
+        const bullets = document.querySelectorAll('.swiper-pagination-bullet');
+        bullets.forEach((bullet: Element, index: number) => {
+          if (index === activeVideoIndex) {
+            bullet.classList.add('swiper-pagination-bullet-active');
+          } else {
+            bullet.classList.remove('swiper-pagination-bullet-active');
+          }
+        });
       }
-    });
+    };
+
+    const swiper = new Swiper('.spotlight-swiper', swiperConfig);
 
     console.log('Swiper instance:', swiper);
-
-    // Set up Intersection Observer to handle autoplay on viewport entry
-    const section = document.getElementById('spotlight-carousel-section');
-    console.log('Spotlight section found:', section ? 'Yes' : 'No');
-
-    if (section) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            console.log('Intersection change - isIntersecting:', entry.isIntersecting, 'ratio:', entry.intersectionRatio.toFixed(2));
-
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
-              if (!isInViewport) {
-                console.log('Spotlight section entered viewport - starting autoplay');
-                isInViewport = true;
-                // Wait for any transitions to complete
-                setTimeout(() => {
-                  if (isInViewport && !isTransitioning) {
-                    playActiveVideo(swiper, 200);
-                  }
-                }, 300);
-              }
-            } else {
-              if (isInViewport) {
-                console.log('Spotlight section left viewport - pausing all');
-                isInViewport = false;
-                pauseAllVideos();
-              }
-            }
-          });
-        },
-        {
-          threshold: [0, 0.3, 0.5, 1], // Multiple thresholds for better detection
-          rootMargin: '0px'
-        }
-      );
-
-      observer.observe(section);
-
-      // Check if section is already in viewport on page load
-      setTimeout(() => {
-        const rect = section.getBoundingClientRect();
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        const sectionHeight = rect.height;
-        const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
-        const visibilityRatio = Math.max(0, visibleHeight / sectionHeight);
-
-        console.log('Initial visibility check - visibility ratio:', visibilityRatio.toFixed(2));
-
-        if (visibilityRatio >= 0.3) {
-          console.log('Section is already in viewport on load');
-          isInViewport = true;
-          // Wait for swiper to be fully ready
-          setTimeout(() => {
-            if (isInViewport && !isTransitioning) {
-              playActiveVideo(swiper, 800);
-            }
-          }, 500);
-        }
-      }, 200);
-    }
   }
 
   // Run initialization

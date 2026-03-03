@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { video } = Astro.props;
-let { src, provider = "youtube", poster, autoplay = true, type, id } = video;
+let { src, provider = "youtube", poster, autoplay = false, type, id } = video;
 
 // Default settings (https://github.com/sampotts/plyr?tab=readme-ov-file#options)
 const config = {

@@ -1,6 +1,6 @@
 ---
 enable: true # Control the visibility of this section across all pages where it is used
-title: "**Secure Today, Agile Tomorrow** - Our Proven Approach"
+title: "**Secure Today, Agile Tomorrow** \nOur Proven Approach"
 subtitle: "How We Work"
 bgPatternImage: "/images/line-pattern.svg"
 

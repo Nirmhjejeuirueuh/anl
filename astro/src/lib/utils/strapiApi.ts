@@ -314,6 +314,9 @@ export interface StrapiTeamPage {
 export interface StrapiSpotlight {
   id?: number;
   documentId?: string;
+  videoUrl?: string | null;
+  mediaType?: string | null;
+  title?: string | null;
   video?: {
     id: number;
     documentId: string;
@@ -334,8 +337,22 @@ export interface StrapiSpotlight {
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-  };
-  videoUrl?: string;
+  } | null;
+  image?: {
+    id: number;
+    documentId: string;
+    url: string;
+    alternativeText: string | null;
+    formats?: any;
+    mime: string;
+  } | null;
+  thumbnail?: {
+    id: number;
+    documentId: string;
+    url: string;
+    alternativeText: string | null;
+    mime: string;
+  } | null;
   createdAt?: string;
   updatedAt?: string;
   publishedAt?: string;
@@ -1213,6 +1230,28 @@ export async function getTeamPage(): Promise<StrapiTeamPage | null> {
 /**
  * Fetch all spotlights from Strapi CMS
  */
+export interface StrapiClientLogo {
+  id: number;
+  url: string;
+  alternativeText: string | null;
+  formats?: any;
+}
+
+export async function getClientList(): Promise<StrapiClientLogo[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/client-list?populate=logos`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch client list: ${response.status}`);
+    }
+    const data: any = await response.json();
+    // singleType response: data.data.logos is an array
+    return data.data?.logos || [];
+  } catch (error) {
+    console.error('Error fetching client list:', error);
+    return [];
+  }
+}
+
 export async function getSpotlights(): Promise<StrapiSpotlight[]> {
   try {
     const response = await fetch(`${STRAPI_URL}/api/spotlights?populate=*`);
@@ -1250,16 +1289,17 @@ export async function getNews(): Promise<StrapiNews[]> {
 }
 
 /**
- * Fetch all testimonials from Strapi CMS
+ * Fetch testimonials from Strapi CMS (singleType — sections JSON array)
  */
 export async function getTestimonials(): Promise<StrapiTestimonial[]> {
   try {
-    const response = await fetch(`${STRAPI_URL}/api/testimonials?populate=*&sort=order:asc`);
+    const response = await fetch(`${STRAPI_URL}/api/testimonial?populate[sections][populate][companyLogo]=true&populate[sections][populate][avatar]=true`);
     if (!response.ok) {
       throw new Error(`Failed to fetch testimonials: ${response.status}`);
     }
-    const data: StrapiResponse<StrapiTestimonial> = await response.json();
-    return data.data;
+    const data = await response.json();
+    const sections: StrapiTestimonial[] = data?.data?.sections ?? [];
+    return sections;
   } catch (error) {
     console.error('Error fetching testimonials:', error);
     return [];

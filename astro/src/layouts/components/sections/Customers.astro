@@ -6,7 +6,7 @@ import { getEntryCTM } from "@/lib/contentParser.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import Marquee from "@/components/widgets/Marquee.astro";
 import overrideObjects from "@/lib/utils/overrideObjects.ts";
-import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { getClientList } from "@/lib/utils/strapiApi";
 
 // Type for each item in the marquee list
 export type MarqueeListItem = {
@@ -45,6 +45,17 @@ let {
   list,
 } = actualContent as sectionType;
 
+// override list with Strapi logos when available
+const strapiLogos = await getClientList();
+if (strapiLogos && strapiLogos.length > 0) {
+  list = strapiLogos.map((logo) => {
+    const src = logo.url.startsWith('http')
+      ? logo.url
+      : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${logo.url}`;
+    return { src, alt: logo.alternativeText || '' };
+  });
+}
+
 if (!enable) return;
 ---
 
@@ -78,11 +89,11 @@ if (!enable) return;
                   "min-w-fit": marquee.marqueeElementWidthAuto,
                 },
               ]}>
-              <OptimizedImage
+              <img
                 src={item.src}
                 alt={item.alt}
-                height={46}
-                class:list={["h-7 min-h-8 min-w-fit"]}
+                loading="lazy"
+                class="h-10 w-auto min-w-fit object-contain"
               />
             </div>
           ))
@@ -100,11 +111,11 @@ if (!enable) return;
                   "min-w-fit": marquee.marqueeElementWidthAuto,
                 },
               ]}>
-              <OptimizedImage
+              <img
                 src={item.src}
                 alt={item.alt}
-                height={46}
-                class="h-7 min-h-8 min-w-fit"
+                loading="lazy"
+                class="h-10 w-auto min-w-fit object-contain"
               />
             </div>
           ))

@@ -52,7 +52,15 @@ const pageData = {
 <Base {...pageData}>
   <section class="pt-12">
     <div class="container">
-      <div class="mx-auto max-w-4xl">
+      <div class="mx-auto max-w-4xl relative">
+        <div class="mb-4">
+          <a href="/about" class="text-primary hover:underline flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </a>
+        </div>
         <div class="text-center">
           {member.image && (
             <div class="flex justify-center">

@@ -11,14 +11,83 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "mediaType": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "direct video",
+        "youtube video",
+        "image"
+      ]
+    },
+    "image": {
+      "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "mediaType"
+            },
+            "image"
+          ]
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
     "video": {
       "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "mediaType"
+            },
+            "direct video"
+          ]
+        }
+      },
       "multiple": false,
       "required": false,
-      "allowedTypes": ["videos"]
+      "allowedTypes": [
+        "videos"
+      ]
+    },
+    "thumbnail": {
+      "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "mediaType"
+            },
+            "direct video"
+          ]
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
     },
     "videoUrl": {
       "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "mediaType"
+            },
+            "youtube video"
+          ]
+        }
+      },
       "required": false
     }
   }

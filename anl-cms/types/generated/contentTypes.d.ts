@@ -528,6 +528,34 @@ export interface ApiBookBook extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiClientListClientList extends Struct.SingleTypeSchema {
+  collectionName: 'client_lists';
+  info: {
+    displayName: 'Client List';
+    pluralName: 'client-lists';
+    singularName: 'client-list';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::client-list.client-list'
+    > &
+      Schema.Attribute.Private;
+    logos: Schema.Attribute.Media<'images', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiConsultantConsultant extends Struct.CollectionTypeSchema {
   collectionName: 'consultants';
   info: {
@@ -809,13 +837,20 @@ export interface ApiSpotlightSpotlight extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::spotlight.spotlight'
     > &
       Schema.Attribute.Private;
+    mediaType: Schema.Attribute.Enumeration<
+      ['direct video', 'youtube video', 'image']
+    > &
+      Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    thumbnail: Schema.Attribute.Media<'images'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -891,7 +926,7 @@ export interface ApiTermsAndConditionsTermsAndConditions
   };
 }
 
-export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
+export interface ApiTestimonialTestimonial extends Struct.SingleTypeSchema {
   collectionName: 'testimonials';
   info: {
     displayName: 'Testimonial';
@@ -902,31 +937,18 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    avatar: Schema.Attribute.Media<'images'>;
-    backgroundColor: Schema.Attribute.Enumeration<
-      ['yellow', 'red', 'cyan', 'blue', 'dark-green', 'green', 'nil']
-    > &
-      Schema.Attribute.DefaultTo<'nil'>;
-    companyLogo: Schema.Attribute.Media<'images'>;
-    companyName: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    fullStory: Schema.Attribute.RichText;
-    hasStory: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    isFeatured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::testimonial.testimonial'
     > &
       Schema.Attribute.Private;
-    logoText: Schema.Attribute.String;
-    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    personName: Schema.Attribute.String;
-    personRole: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    shortTestimonial: Schema.Attribute.Text & Schema.Attribute.Required;
+    sections: Schema.Attribute.Component<'testimonials.testimonial-item', true>;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1512,6 +1534,7 @@ declare module '@strapi/strapi' {
       'api::about-page.about-page': ApiAboutPageAboutPage;
       'api::blog.blog': ApiBlogBlog;
       'api::book.book': ApiBookBook;
+      'api::client-list.client-list': ApiClientListClientList;
       'api::consultant.consultant': ApiConsultantConsultant;
       'api::course.course': ApiCourseCourse;
       'api::media-library.media-library': ApiMediaLibraryMediaLibrary;
