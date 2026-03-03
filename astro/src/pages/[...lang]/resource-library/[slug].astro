@@ -6,11 +6,13 @@ import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 import { STRAPI_URL } from "@/lib/strapiApi";
 import { markdownify } from "@/lib/utils/textConverter";
 
-export function getStaticPaths() {
-  return generatePaths();
+export async function getStaticPaths() {
+  const resources = await getResourceLibraries();
+  return generatePaths().flatMap(({ params: { lang } }) =>
+    resources.map(r => ({ params: { lang, slug: r.slug } }))
+  );
 }
 
-export const prerender = false;
 
 // Get slug from params
 const { slug } = Astro.params;

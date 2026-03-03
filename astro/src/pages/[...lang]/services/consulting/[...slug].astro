@@ -4,17 +4,18 @@ import { getConsultantBySlug, getConsultants } from "@/lib/utils/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 import { markdownify } from "@/lib/utils/textConverter";
 
-export function getStaticPaths() {
-  return generatePaths();
+export async function getStaticPaths() {
+  const consultants = await getConsultants();
+  return generatePaths().flatMap(({ params: { lang } }) =>
+    consultants.map(c => ({ params: { lang, slug: c.slug } }))
+  );
 }
 
-export const prerender = false;
 
 const { slug } = Astro.params as any;
 
 // Fetch consultant by slug
-// Pass Astro.request to enable hard refresh detection
-const consultant = await getConsultantBySlug(slug, Astro.request);
+const consultant = await getConsultantBySlug(slug);
 
 // If consultant has a URL field, redirect to it
 if (consultant?.URL) {
@@ -22,7 +23,7 @@ if (consultant?.URL) {
 }
 
 // Fetch all consultants for the ribbon
-const allConsultants = await getConsultants(Astro.request);
+const allConsultants = await getConsultants();
 
 if (!consultant) {
   throw new Error(`Consultant with slug "${slug}" not found`);

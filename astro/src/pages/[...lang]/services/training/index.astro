@@ -7,11 +7,9 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
-export const prerender = false;
 
 // Fetch trainings from Strapi
-// Pass Astro.request to enable hard refresh detection
-const strapiTrainings = await getTrainings(Astro.request);
+const strapiTrainings = await getTrainings();
 
 // Mock index page data
 const indexData = {

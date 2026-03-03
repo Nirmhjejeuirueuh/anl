@@ -11,11 +11,9 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
-export const prerender = false;
 
 // Fetch resource libraries from Strapi
-// Pass Astro.request to enable hard refresh detection
-const strapiResourceLibraries = await getResourceLibraries(Astro.request);
+const strapiResourceLibraries = await getResourceLibraries();
 
 // Separate active and archived resources
 const activeResources = strapiResourceLibraries.filter(r => !r.archive);

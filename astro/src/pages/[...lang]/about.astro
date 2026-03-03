@@ -13,7 +13,6 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
-export const prerender = false;
 export const revalidate = 300; // Revalidate every 5 minutes (300 seconds)
 
 // Fetch about page from Strapi

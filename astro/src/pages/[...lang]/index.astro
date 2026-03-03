@@ -25,11 +25,11 @@ const homepage = await getEntryCTM("homepage", "-index", Astro.currentLocale);
 
 <Base {...homepage?.data} homepage={true}>
   <HomeBanner />
+  <SpotlightCarousel />
   <BreakingNews />
   <Customers />
   <AboutUs />
   <ServicesSection content={homepage?.data.servicesSection} />
-  <SpotlightCarousel />
   <HowItWorks />
   <Testimonial />
   <CallToAction content={homepage?.data.callToActionSection} />

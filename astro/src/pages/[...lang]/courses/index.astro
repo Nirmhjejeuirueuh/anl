@@ -11,11 +11,9 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
-export const prerender = false;
 
 // Fetch courses from Strapi and convert to Astro format
-// Pass Astro.request to enable hard refresh detection
-const strapiCourses = await getCourses(Astro.request);
+const strapiCourses = await getCourses();
 const courses = strapiCourses.map(convertStrapiCourseToAstro);
 
 // Group courses by their display logic

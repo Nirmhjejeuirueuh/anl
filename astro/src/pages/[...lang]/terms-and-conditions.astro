@@ -8,12 +8,10 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
-export const prerender = false;
 export const revalidate = 300; // Revalidate every 5 minutes (300 seconds)
 
 // Fetch terms and conditions from Strapi
-// Pass Astro.request to enable hard refresh detection
-const termsAndConditions = await getTermsAndConditions(Astro.request);
+const termsAndConditions = await getTermsAndConditions();
 
 // Create entry object similar to content parser format
 const entry = {

@@ -6,8 +6,16 @@ import { STRAPI_URL } from "@/lib/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 import { markdownify } from "@/lib/utils/textConverter";
 
-// Enable SSR for dynamic Strapi content
-export const prerender = false;
+export async function getStaticPaths() {
+  const response = await fetch(`${STRAPI_URL}/api/services-page?populate[services][fields]=endpoint`);
+  const data = await response.json();
+  const services: any[] = data.data?.services || [];
+  return generatePaths().flatMap(({ params: { lang } }) =>
+    services.map(s => ({
+      params: { lang, single: s.endpoint.replace(/^\//, '') }
+    }))
+  );
+}
 
 const { single: endpoint } = Astro.params as any;
 

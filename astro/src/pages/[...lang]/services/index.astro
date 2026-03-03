@@ -14,7 +14,6 @@ export function getStaticPaths() {
   return generatePaths();
 }
 
-export const prerender = false;
 
 // Fetch services page from Strapi
 const response = await fetch(`${STRAPI_URL}/api/services-page?${new URLSearchParams({

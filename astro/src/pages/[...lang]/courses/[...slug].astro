@@ -1,14 +1,19 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getCourseBySlug, STRAPI_URL } from "@/lib/utils/strapiApi";
+import { getCourseBySlug, getCourses, STRAPI_URL } from "@/lib/utils/strapiApi";
 import CallToAction from "@/layouts/components/sections/CallToAction.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { markdownify, pluralize } from "@/lib/utils/textConverter";
 import { marked } from "marked";
 import OptimizedImage from "@/layouts/components/utilities/OptimizedImage.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 
-// Enable SSR for dynamic Strapi content
-export const prerender = false;
+export async function getStaticPaths() {
+  const courses = await getCourses();
+  return generatePaths().flatMap(({ params: { lang } }) =>
+    courses.map(course => ({ params: { lang, slug: course.slug } }))
+  );
+}
 
 const { lang, slug } = Astro.params;
 
@@ -28,11 +33,10 @@ if (/^\d+$/.test(slug)) {
 console.log('COURSE ROUTE: Route matched! Slug from URL:', slug);
 
 // Fetch course from Strapi by slug
-// Pass Astro.request to enable hard refresh detection
 let strapiCourse = null;
 try {
   console.log('Fetching Strapi course by slug:', slug);
-  strapiCourse = await getCourseBySlug(slug, Astro.request);
+  strapiCourse = await getCourseBySlug(slug);
   if (!strapiCourse) {
     console.log('Strapi course not found for slug:', slug);
   }

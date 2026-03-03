@@ -4,17 +4,18 @@ import { getTrainingBySlug, getTrainings } from "@/lib/utils/strapiApi";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 import { markdownify } from "@/lib/utils/textConverter";
 
-export function getStaticPaths() {
-  return generatePaths();
+export async function getStaticPaths() {
+  const trainings = await getTrainings();
+  return generatePaths().flatMap(({ params: { lang } }) =>
+    trainings.map(t => ({ params: { lang, slug: t.slug } }))
+  );
 }
 
-export const prerender = false;
 
 const { slug } = Astro.params as any;
 
 // Fetch training by slug
-// Pass Astro.request to enable hard refresh detection
-const training = await getTrainingBySlug(slug, Astro.request);
+const training = await getTrainingBySlug(slug);
 
 // If training has a URL field, redirect to it
 if (training?.URL) {
@@ -22,7 +23,7 @@ if (training?.URL) {
 }
 
 // Fetch all trainings for the ribbon
-const allTrainings = await getTrainings(Astro.request);
+const allTrainings = await getTrainings();
 
 if (!training) {
   throw new Error(`Training with slug "${slug}" not found`);
