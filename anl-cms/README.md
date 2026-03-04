@@ -52,7 +52,7 @@ To create a complete backup of your Strapi project including data, configuration
 npx strapi export --file backups/strapi-backup-$(date +%Y%m%d-%H%M%S).tar.gz.enc
 
 ENCRYPTION_KEY is below
-"TTuClHRZpbxJcOCEzX1kpw=="
+"TTuClHRZpbxJcOCEzX1kpw==" or "123"
 
 # Alternative: Manual backup (when CLI fails)
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
@@ -95,6 +95,12 @@ cp manual-backup-YYYYMMDD-HHMMSS/data.db .tmp/ 2>/dev/null || echo "No data.db"
 - [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
 
 ## 🔄 Data Migration to Strapi Cloud
+
+> **Superadmin credentials** (for both local and cloud instances)
+> - Email: `kavinthad03@gmail.com`
+> - Password: `Test@123`
+
+
 
 To migrate data from local development to Strapi Cloud:
 

@@ -1,7 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getCourseBySlug, getCourses, STRAPI_URL } from "@/lib/utils/strapiApi";
-import CallToAction from "@/layouts/components/sections/CallToAction.astro";
+import { getCourseBySlug, getCourses, getFtsCourseDetail, STRAPI_URL } from "@/lib/utils/strapiApi";
+import CallToAction from "@/components/sections/CallToAction.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { markdownify, pluralize } from "@/lib/utils/textConverter";
 import { marked } from "marked";
@@ -54,16 +54,20 @@ if (!strapiCourse) {
 import { convertStrapiCourseToAstro } from "@/lib/utils/strapiApi";
 const course = convertStrapiCourseToAstro(strapiCourse);
 
+// Fetch FTS detail if this is an FTS programme
+const isFts = course.data.ftsProgramme;
+const ftsDetail = isFts ? await getFtsCourseDetail() : null;
+
 // Parse markdown content to HTML
 const parsedContent = await marked.parse(course.body || '');
+const ftsEligibilityHtml = ftsDetail?.eligibilty ? markdownify(ftsDetail.eligibilty, true) : '';
+const ftsCourseFees = ftsDetail?.courseFees ? markdownify(ftsDetail.courseFees, true) : '';
 
 // Format categories
 const categories = course.data.courseFamily ? [course.data.courseFamily] : [];
 
 // Additional course details
-const tags = [];
-const learningObjectives = course.data.learningObjectives ? course.data.learningObjectives.split('\n').filter(obj => obj.trim()) : [];
-const prerequisites = [];
+const tags = course.data.tags || [];
 
 console.log('COURSE ROUTE: About to render course:', course.title);
 ---
@@ -80,7 +84,16 @@ console.log('COURSE ROUTE: About to render course:', course.title);
         <div class="max-w-full space-y-8 text-center lg:max-w-3xl">
           <div>
             <h1 class="text-h3 md:text-h2">{course.data.title}</h1>
-            
+            {tags && tags.length > 0 && (
+              <div class="flex justify-center flex-wrap gap-2 mt-2 mb-2">
+                {tags.map((tag, i) => (
+                  <span class={`text-xs px-2 py-1 rounded ${['bg-red-100 text-red-800','bg-yellow-100 text-yellow-800','bg-green-100 text-green-800','bg-cyan-100 text-cyan-800','bg-blue-100 text-blue-800'][i % 5]}`}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
             <!-- Course Info Row -->
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
               <div class="flex flex-wrap justify-center items-center gap-4 text-sm text-muted">
@@ -95,56 +108,120 @@ console.log('COURSE ROUTE: About to render course:', course.title);
         </div>
 
         <!-- Course Details -->
-        <div class="w-full max-w-full space-y-12 lg:max-w-4xl">
-          <!-- Overview -->
-          {course.data.description && (
-            <div class="space-y-4">
-              <h2 class="text-2xl font-bold">Overview</h2>
-              <div class="prose prose-lg" set:html={markdownify(course.data.description)}></div>
-            </div>
-          )}
+        <div class="w-full max-w-full lg:max-w-4xl">
+          {isFts ? (
+            <!-- FTS Programme: Tabbed layout -->
+            <div class="fts-tabs">
+              <!-- Tab buttons -->
+              <div class="flex flex-wrap gap-2 mb-8" role="tablist">
+                {['Overview', 'Eligibility & Terms', 'Course Fees'].map((label, i) => (
+                  <button
+                    class="fts-tab-btn px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200"
+                    data-tab={i}
+                    role="tab"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-          <!-- Learning Objectives -->
-          {course.data.learningObjectives && (
-            <div class="space-y-4">
-              <h2 class="text-2xl font-bold">Learning Objectives</h2>
-              <div class="prose prose-lg" set:html={markdownify(course.data.learningObjectives)}></div>
-            </div>
-          )}
+              <!-- Tab panels -->
+              <div class="fts-tab-panel space-y-12" data-panel="0">
+                {course.data.description && (
+                  <div class="space-y-4">
+                    <h2 class="text-2xl font-bold">Overview</h2>
+                    <div class="prose prose-lg" set:html={markdownify(course.data.description)}></div>
+                  </div>
+                )}
+                {course.data.learningObjectives && (
+                  <div class="space-y-4">
+                    <h2 class="text-2xl font-bold">Learning Objectives</h2>
+                    <div class="prose prose-lg" set:html={markdownify(course.data.learningObjectives)}></div>
+                  </div>
+                )}
+                {course.data.targetAudience && (
+                  <div class="space-y-4">
+                    <h2 class="text-2xl font-bold">Target Audience</h2>
+                    <div class="prose prose-lg" set:html={markdownify(course.data.targetAudience)}></div>
+                  </div>
+                )}
+                {course.data.schedule && (
+                  <div class="space-y-4">
+                    <h2 class="text-2xl font-bold">Schedule</h2>
+                    <span class="text-text-default">{course.data.schedule}</span>
+                  </div>
+                )}
+                {course.data.hyperlink && (
+                  <div class="space-y-4">
+                    <h2 class="text-2xl font-bold">Brochure</h2>
+                    <a
+                      href={course.data.hyperlink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
+                    >
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                      </svg>
+                      View Course Brochure
+                    </a>
+                  </div>
+                )}
+              </div>
 
-          <!-- Target Audience -->
-          {course.data.targetAudience && (
-            <div class="space-y-4">
-              <h2 class="text-2xl font-bold">Target Audience</h2>
-              <div class="prose prose-lg" set:html={markdownify(course.data.targetAudience)}></div>
-            </div>
-          )}
+              <div class="fts-tab-panel hidden" data-panel="1">
+                <div class="prose prose-lg max-w-none" set:html={ftsEligibilityHtml} />
+              </div>
 
-          <!-- Schedule -->
-          {course.data.schedule && (
-            <div class="space-y-4">
-              <h2 class="text-2xl font-bold">Schedule</h2>
-              <div class="flex items-center gap-3">
-                <span class="text-text-default">{course.data.schedule}</span>
+              <div class="fts-tab-panel hidden" data-panel="2">
+                <div class="prose prose-lg max-w-none" set:html={ftsCourseFees} />
               </div>
             </div>
-          )}
-
-          <!-- Brochure -->
-          {course.data.hyperlink && (
-            <div class="space-y-4">
-              <h2 class="text-2xl font-bold">Brochure</h2>
-              <a
-                href={course.data.hyperlink}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                View Course Brochure
-              </a>
+          ) : (
+            <!-- Non-FTS: existing flat layout -->
+            <div class="space-y-12">
+              {course.data.description && (
+                <div class="space-y-4">
+                  <h2 class="text-2xl font-bold">Overview</h2>
+                  <div class="prose prose-lg" set:html={markdownify(course.data.description)}></div>
+                </div>
+              )}
+              {course.data.learningObjectives && (
+                <div class="space-y-4">
+                  <h2 class="text-2xl font-bold">Learning Objectives</h2>
+                  <div class="prose prose-lg" set:html={markdownify(course.data.learningObjectives)}></div>
+                </div>
+              )}
+              {course.data.targetAudience && (
+                <div class="space-y-4">
+                  <h2 class="text-2xl font-bold">Target Audience</h2>
+                  <div class="prose prose-lg" set:html={markdownify(course.data.targetAudience)}></div>
+                </div>
+              )}
+              {course.data.schedule && (
+                <div class="space-y-4">
+                  <h2 class="text-2xl font-bold">Schedule</h2>
+                  <div class="flex items-center gap-3">
+                    <span class="text-text-default">{course.data.schedule}</span>
+                  </div>
+                </div>
+              )}
+              {course.data.hyperlink && (
+                <div class="space-y-4">
+                  <h2 class="text-2xl font-bold">Brochure</h2>
+                  <a
+                    href={course.data.hyperlink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    View Course Brochure
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -154,3 +231,36 @@ console.log('COURSE ROUTE: About to render course:', course.title);
 
   <CallToAction />
 </Base>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.fts-tab-btn');
+  const panels = document.querySelectorAll<HTMLElement>('.fts-tab-panel');
+
+  function activateTab(index: number) {
+    tabs.forEach((btn, i) => {
+      const active = i === index;
+      btn.classList.toggle('bg-[#00025d]', active);
+      btn.classList.toggle('text-white', active);
+      btn.classList.toggle('shadow-sm', active);
+      btn.classList.toggle('bg-gray-100', !active);
+      btn.classList.toggle('text-gray-600', !active);
+      btn.classList.toggle('hover:bg-gray-200', !active);
+    });
+    panels.forEach((panel, i) => {
+      panel.classList.toggle('hidden', i !== index);
+    });
+  }
+
+  tabs.forEach((btn, i) => {
+    btn.addEventListener('click', () => activateTab(i));
+  });
+
+  // Activate first tab by default
+  if (tabs.length) activateTab(0);
+
+  // Open all content links in a new tab
+  document.querySelectorAll<HTMLAnchorElement>('.fts-tab-panel a, .space-y-12 a').forEach(a => {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  });
+</script>

@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "fts_courses_details",
+  "info": {
+    "singularName": "fts-courses-detail",
+    "pluralName": "fts-courses-details",
+    "displayName": "FTS Courses Detail"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "eligibilty": {
+      "type": "richtext"
+    },
+    "courseFees": {
+      "type": "richtext"
+    }
+  }
+}

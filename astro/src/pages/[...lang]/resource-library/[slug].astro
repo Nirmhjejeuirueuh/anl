@@ -1,9 +1,8 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { getResourceLibraries } from "@/lib/utils/strapiApi";
+import { getResourceLibraries, STRAPI_URL } from "@/lib/utils/strapiApi";
 import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { STRAPI_URL } from "@/lib/strapiApi";
 import { markdownify } from "@/lib/utils/textConverter";
 
 export async function getStaticPaths() {

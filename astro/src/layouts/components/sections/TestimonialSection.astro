@@ -88,13 +88,13 @@ const { enable, title, subtitle, button, marquee } = sectionData;
           />
           <div class="relative mt-12 flex overflow-x-hidden overflow-y-visible md:mt-16">
             <Marquee
-              class="items-start overflow-visible"
+              class="items-stretch overflow-visible"
               marqueeElements={sortedTestimonials.length}
               {...marquee}
             >
               {sortedTestimonials.map((testimonial) => (
-                <div class="min-w-(--marquee-element-width-responsive) px-4 pb-4 md:min-w-(--marquee-element-width) overflow-visible">
-                  <TestimonialCard strapiUrl={STRAPI_URL} content={{
+                <div class="min-w-(--marquee-element-width-responsive) px-4 pb-4 md:min-w-(--marquee-element-width) overflow-visible flex">
+                  <TestimonialCard strapiUrl={STRAPI_URL} class="h-full" content={{
                     enable: true,
                     testimonial: processTestimonial(testimonial)
                   }} />
@@ -102,10 +102,10 @@ const { enable, title, subtitle, button, marquee } = sectionData;
               ))}
               {sortedTestimonials.map((testimonial) => (
                 <div
-                  class="min-w-(--marquee-element-width-responsive) px-4 pb-4 md:min-w-(--marquee-element-width) overflow-visible"
+                  class="min-w-(--marquee-element-width-responsive) px-4 pb-4 md:min-w-(--marquee-element-width) overflow-visible flex"
                   aria-hidden="true"
                 >
-                  <TestimonialCard strapiUrl={STRAPI_URL} content={{
+                  <TestimonialCard strapiUrl={STRAPI_URL} class="h-full" content={{
                     enable: true,
                     testimonial: processTestimonial(testimonial)
                   }} />

@@ -629,6 +629,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     dropdown: Schema.Attribute.String;
+    ftsProgramme: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     hyperlink: Schema.Attribute.String;
     learningObjectives: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -643,6 +644,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     schedule: Schema.Attribute.String & Schema.Attribute.Required;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    tags: Schema.Attribute.String;
     targetAudience: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     trainingDays: Schema.Attribute.Integer &
@@ -652,6 +654,36 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiFtsCoursesDetailFtsCoursesDetail
+  extends Struct.SingleTypeSchema {
+  collectionName: 'fts_courses_details';
+  info: {
+    displayName: 'FTS Courses Detail';
+    pluralName: 'fts-courses-details';
+    singularName: 'fts-courses-detail';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    courseFees: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    eligibilty: Schema.Attribute.RichText;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::fts-courses-detail.fts-courses-detail'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1537,6 +1569,7 @@ declare module '@strapi/strapi' {
       'api::client-list.client-list': ApiClientListClientList;
       'api::consultant.consultant': ApiConsultantConsultant;
       'api::course.course': ApiCourseCourse;
+      'api::fts-courses-detail.fts-courses-detail': ApiFtsCoursesDetailFtsCoursesDetail;
       'api::media-library.media-library': ApiMediaLibraryMediaLibrary;
       'api::news.news': ApiNewsNews;
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;

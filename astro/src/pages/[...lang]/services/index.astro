@@ -7,7 +7,7 @@ import ServicesSection from "@/components/sections/ServicesSection.astro";
 import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { STRAPI_URL } from "@/lib/strapiApi";
+import { STRAPI_URL } from "@/lib/utils/strapiApi";
 import { markdownify } from "@/lib/utils/textConverter";
 
 export function getStaticPaths() {

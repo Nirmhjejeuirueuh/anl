@@ -30,13 +30,15 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
       {(testimonial.companyLogo || testimonial.logoText || testimonial.companyName) && (
         <div class="t-logo mb-4">
           {testimonial.companyLogo && (
-            <OptimizedImage
-              src={testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${strapiUrl}${testimonial.companyLogo.url}`}
-              alt={testimonial.companyName || 'Company logo'}
-              width={testimonial.companyLogo.width || 100}
-              height={testimonial.companyLogo.height || 50}
-              class="max-h-12 w-auto object-contain"
-            />
+            <div class="inline-flex bg-gray-100 p-1 rounded w-24 h-12 items-center justify-center">
+              <OptimizedImage
+                src={testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${strapiUrl}${testimonial.companyLogo.url}`}
+                alt={testimonial.companyName || 'Company logo'}
+                width={testimonial.companyLogo.width || 80}
+                height={testimonial.companyLogo.height || 40}
+                class="max-h-full max-w-full object-contain"
+              />
+            </div>
           )}
           {testimonial.logoText && (
             <div class="t-logo-text text-xl font-bold">
@@ -52,13 +54,13 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
       )}
 
       {/* Testimonial Content */}
-      <div class="t-desc mb-6 flex-grow">
+      <div class="t-desc mb-6">
         <p class="text-base leading-relaxed" set:html={markdownify(testimonial.shortTestimonial)} />
       </div>
 
       {/* Person Info */}
       {(testimonial.personName || testimonial.personRole) && (
-        <div class="mb-4">
+        <div class="mb-4 mt-auto">
           {testimonial.personName && (
             <p class="font-bold text-lg">{testimonial.personName}</p>
           )}
@@ -69,7 +71,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
       )}
 
       {/* Read Story Button */}
-      {testimonial.hasStory && testimonial.fullStory && (
+      {testimonial.fullStory && (
         <div class="t-action mt-auto">
           <button
             class="testimonial-modal-btn text-primary hover:text-primary/80 font-semibold text-sm uppercase tracking-wide transition-colors"
@@ -136,7 +138,7 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
                 </div>
 
                 <div class="prose prose-lg max-w-none mb-6">
-                  ${testimonial.fullStory}
+                  &#8220;${testimonial.fullStory}&#8221;
                 </div>
 
                 ${testimonial.personName || testimonial.personRole ? `

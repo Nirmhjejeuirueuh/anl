@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch').default;
 
-const strapiUrl = 'http://localhost:1337/api/testimonials';
+const strapiUrl = 'http://localhost:1337/api/testimonial';
 
 const testimonialsDir = path.join(__dirname, 's3 structure', 'testimonials');
 

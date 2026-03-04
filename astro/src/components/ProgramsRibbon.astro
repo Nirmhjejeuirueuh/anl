@@ -43,7 +43,7 @@ const { programs, currentSlug, basePath, label, lang } = Astro.props;
         </svg>
       </button>
 
-      <div id="programs-container" class="flex items-center gap-4 overflow-x-auto pb-2" style="scrollbar-width: none; -ms-overflow-style: none;">
+      <div id="programs-container" class="flex items-center justify-center gap-4 overflow-x-hidden pb-2" style="scrollbar-width: none; -ms-overflow-style: none;">
         {programs && programs.map((program: any, index: number) => {
           const isActive = currentSlug === program.slug;
           // If program has a video URL or video file, use it directly, otherwise construct slug-based URL

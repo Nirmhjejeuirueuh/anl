@@ -5,9 +5,7 @@ const { hasCustomLineAnimationBg } = Astro.props;
 <div
   class:list={[
     "pointer-events-none absolute inset-0 -z-10 h-204.75 w-full overflow-hidden",
-    {
-      "bg-linear-to-t from-white to-slate-100/60": !hasCustomLineAnimationBg,
-    },
+    
   ]}>
   <svg
     class="line-animation match-brand-color mx-auto"

@@ -5,7 +5,7 @@ import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 import { markdownify } from "@/lib/utils/textConverter";
 
 export async function getStaticPaths() {
-  const trainings = await getTrainings();
+  const trainings = await getTrainings(true);
   return generatePaths().flatMap(({ params: { lang } }) =>
     trainings.map(t => ({ params: { lang, slug: t.slug } }))
   );

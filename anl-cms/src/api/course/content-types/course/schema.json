@@ -60,6 +60,13 @@
     },
     "dropdown": {
       "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    },
+    "ftsProgramme": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
