@@ -55,7 +55,8 @@
     {
       "enable": true,
       "name": "Resource Library",
-      "url": "/resource-library/"
+      "url": "/resource-library/",
+      "target": "_blank"
     }
   ],
   "footerMenu": [
