@@ -41,6 +41,7 @@
   }
 
   .page-container img {
+    width: 100%;
     max-width: 100%;
     height: auto;
     display: block;
@@ -59,6 +60,12 @@
 
   .page-container ul li {
     margin-bottom: 0.5em;
+  }
+
+  .page-container ul ul {
+    list-style-type: circle;
+    padding-left: 25px;
+    margin: 0.25em 0;
   }
 
   .page-container ol {
@@ -95,9 +102,22 @@
     color: #2563eb;
     text-decoration: none;
   }
-  
+
   .page-container a:hover {
     text-decoration: underline;
+  }
+
+  .page-container a:has(img) {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+  }
+
+  .page-container a:has(img):hover {
+    text-decoration: none;
+    transform: scale(1.05);
   }
 
   .page-container strong {
@@ -136,7 +156,7 @@
 
   .page-container details > div,
   .page-container details > *:not(summary) {
-    padding: 15px 20px;
+    padding: 15px 40px;
   }
 
   /* Tighter spacing inside dropdowns */
@@ -166,6 +186,36 @@
   .page-container details ol li {
     margin-bottom: 5px;
     padding: 10px;
+  }
+
+  .page-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 18px;
+    overflow-x: auto;
+    display: block;
+  }
+
+  .page-container thead tr {
+    background-color: #00025d;
+    color: #fff;
+    text-align: left;
+  }
+
+  .page-container th,
+  .page-container td {
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+  }
+
+  .page-container tbody tr:nth-child(even) {
+    background-color: #f4f6fb;
+  }
+
+  .page-container tbody tr:hover {
+    background-color: #e8f0fe;
   }
 
   @media (max-width: 768px) {

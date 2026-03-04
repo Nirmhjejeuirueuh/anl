@@ -18,9 +18,10 @@ interface Props {
   label: string;
   lang?: string;
   currentSlug?: string;
+  hideSubMenu?: boolean;
 }
 
-const { title, subtitle, metaDescription, description, programs, basePath, label, lang, currentSlug } = Astro.props;
+const { title, subtitle, metaDescription, description, programs, basePath, label, lang, currentSlug, hideSubMenu } = Astro.props;
 ---
 
 <Base title={title} metaDescription={metaDescription} draft={false}>
@@ -30,13 +31,15 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
   {currentSlug ? (
     <PageHeader title={title} subtitle={subtitle} />
     <!-- Programs Ribbon for Slug Pages -->
-    <ProgramsRibbon
-      programs={programs}
-      currentSlug={currentSlug}
-      basePath={basePath}
-      label={label}
-      lang={lang}
-    />
+    {!hideSubMenu && (
+      <ProgramsRibbon
+        programs={programs}
+        currentSlug={currentSlug}
+        basePath={basePath}
+        label={label}
+        lang={lang}
+      />
+    )}
 
     <!-- Individual Program Content Section -->
     <section class="relative">
@@ -87,7 +90,7 @@ const { title, subtitle, metaDescription, description, programs, basePath, label
 
     <!-- Programs Cards Section -->
     {programs && programs.length > 0 && (
-      <section class="bg-theme-light">
+      <section class="bg-theme-light pb-12">
         <div class="container">
           <div class="grid gap-8 md:grid-cols-2 lg:gap-12">
             {programs.map((program: any, index: number) => (

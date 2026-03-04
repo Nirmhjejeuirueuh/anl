@@ -156,6 +156,7 @@ export interface StrapiTraining {
     publishedAt: string;
   };
   hide?: boolean;
+  hideSubMenu?: boolean;
   keywords?: string;
   publishedAt: string;
   createdAt?: string;
@@ -197,6 +198,7 @@ export interface StrapiConsultant {
     publishedAt: string;
   };
   hide?: boolean;
+  hideSubMenu?: boolean;
   keywords?: string;
   publishedAt: string;
   createdAt?: string;

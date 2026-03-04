@@ -41,6 +41,10 @@
       "type": "boolean",
       "default": false
     },
+    "hideSubMenu": {
+      "type": "boolean",
+      "default": false
+    },
     "keywords": {
       "type": "string",
       "maxLength": 500

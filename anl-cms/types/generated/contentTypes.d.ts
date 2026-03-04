@@ -586,6 +586,7 @@ export interface ApiConsultantConsultant extends Struct.CollectionTypeSchema {
       }>;
     description: Schema.Attribute.RichText;
     hide: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    hideSubMenu: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     image: Schema.Attribute.Media<'images'>;
     keywords: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -1008,6 +1009,7 @@ export interface ApiTrainingTraining extends Struct.CollectionTypeSchema {
       }>;
     description: Schema.Attribute.RichText;
     hide: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    hideSubMenu: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     image: Schema.Attribute.Media<'images'>;
     keywords: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
