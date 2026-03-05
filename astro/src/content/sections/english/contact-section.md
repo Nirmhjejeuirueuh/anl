@@ -44,18 +44,18 @@ form:
         items:
           - label: "Request for training"
             value: "Request for training"
-          - label: "Share your testimonial"
-            value: "Share your testimonial"
+          - label: "Request for consultancy"
+            value: "Request for consultancy"
           - label: "Request for services"
             value: "Request for services"
           - label: "Report an issue"
             value: "Report an issue"
-          - label: "Request for EC Council Online Programmes"
-            value: "Request for EC Council Online Programmes"
           - label: "Provide your feedback"
             value: "Provide your feedback"
           - label: "Express interest for 'Art of Cyber Resilience' Book"
             value: "Express interest for 'Art of Cyber Resilience' Book"
+          - label: "Express interest for 'Outsmart the Insider' eBook"
+            value: "Express interest for 'Outsmart the Insider' eBook"  
     - label: "Title"
       placeholder: "Select the title"
       name: "Title"
@@ -68,6 +68,8 @@ form:
             value: "Mr."
           - label: "Ms."
             value: "Ms."
+          - label: "Miss"
+            value: "Miss"
           - label: "Mrs."
             value: "Mrs."
           - label: "Dr."
@@ -110,86 +112,26 @@ form:
     - note: info
       parentClass: "col-span-2 text-sm font-medium text-gray-700 mt-4"
       content: "Training of interest *"
-    - label: "Agile & DevOps Practice"
-      value: "Agile & DevOps Practice"
+    - label: "Anti-Money Laundering"
+      value: "Anti-Money Laundering"
       type: "checkbox"
       name: "Training of interest"
       halfWidth: true
       checked: false
-    - label: "Cybersecurity, Risks, Governance & Control"
-      value: "Cybersecurity, Risks, Governance & Control"
+    - label: "Cybersecurity"
+      value: "Cybersecurity"
       type: "checkbox"
       name: "Training of interest"
       halfWidth: true
       checked: false
-    - label: "IT Service & Operations Management"
-      value: "IT Service & Operations Management"
+    - label: "Cloud Security"
+      value: "Cloud Security"
       type: "checkbox"
       name: "Training of interest"
       halfWidth: true
       checked: false
-    - label: "Technology Services in Banking & Finance"
-      value: "Technology Services in Banking & Finance"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Adaptive Technology & Services"
-      value: "Adaptive Technology & Services"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Change Management Series"
-      value: "Change Management Series"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Cloud Computing"
-      value: "Cloud Computing"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Cloud Operations"
-      value: "Cloud Operations"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Data Analytics & Data Management"
-      value: "Data Analytics & Data Management"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Environmental, Social, and Governance Risks"
-      value: "Environmental, Social, and Governance Risks"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Fraud Risk Management"
-      value: "Fraud Risk Management"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Generative AI"
-      value: "Generative AI"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Requirement & Software Engineering"
-      value: "Requirement & Software Engineering"
-      type: "checkbox"
-      name: "Training of interest"
-      halfWidth: true
-      checked: false
-    - label: "Technology Product Management"
-      value: "Technology Product Management"
+    - label: "Fraud Risk"
+      value: "Fraud Risk"
       type: "checkbox"
       name: "Training of interest"
       halfWidth: true

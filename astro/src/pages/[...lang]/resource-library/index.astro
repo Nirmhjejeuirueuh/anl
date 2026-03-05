@@ -206,7 +206,7 @@ function getImageModalCall(resource: any): string {
                     <img
                       src={getMediaUrl(resource.media)}
                       alt={resource.title}
-                      class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                      class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 ) : (
@@ -453,16 +453,16 @@ function getImageModalCall(resource: any): string {
             (resource.media.url.startsWith('http') ? resource.media.url : `${strapiUrl}${resource.media.url}`) :
             '');
         imageHtml = `
-          <div class="aspect-[16/9] overflow-hidden">
-            <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer" class="block w-full h-full">
-              <img src="${imageUrl}" alt="${resource.title}" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" />
+          <div class="aspect-[16/9] overflow-hidden bg-gray-100 flex items-center justify-center">
+            <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
+              <img src="${imageUrl}" alt="${resource.title}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
             </a>
           </div>
         `;
       } else {
         imageHtml = `
-          <div class="aspect-[16/9] overflow-hidden">
-            <img src="${imageUrl}" alt="${resource.title}" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" />
+          <div class="aspect-[16/9] overflow-hidden bg-gray-100 flex items-center justify-center">
+            <img src="${imageUrl}" alt="${resource.title}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
           </div>
         `;
       }

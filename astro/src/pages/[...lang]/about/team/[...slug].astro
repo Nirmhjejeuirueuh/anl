@@ -53,14 +53,30 @@ const pageData = {
   <section class="pt-12">
     <div class="container">
       <div class="mx-auto max-w-4xl relative">
-        <div class="mb-4">
-          <a href="/about" class="text-primary hover:underline flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <!-- Back Navigation -->
+        <div class="mb-8">
+          <button
+            onclick="history.back()"
+            class="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-200 group"
+            aria-label="Go back to previous page"
+          >
+            <svg 
+              class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
-            Back
-          </a>
+            <span class="font-medium">Back</span>
+          </button>
         </div>
+
         <div class="text-center">
           {member.image && (
             <div class="flex justify-center">

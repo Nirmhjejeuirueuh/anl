@@ -7,7 +7,7 @@ bgPatternImage: "/images/line-pattern.svg"
 button:
   enable: true
   label: "Tous les Articles de Blog"
-  url: "/blog/"
+  url: "/blogs/"
   rel: ""
   target: ""
   showIcon: "true"

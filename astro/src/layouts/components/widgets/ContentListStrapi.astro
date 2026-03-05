@@ -52,7 +52,7 @@ if (content === "portfolio") {
     config.settings.portfolioFolder as "case-studies",
     Astro.currentLocale,
   );
-} else if (content === "blog") {
+} else if (content === "blogs") {
   // Fetch blogs from Strapi API
   console.log('ContentListStrapi: Starting to fetch blogs from Strapi API');
   console.log('ContentListStrapi: Filter provided:', filter);
@@ -87,13 +87,13 @@ if (content === "portfolio") {
   }
 }
 
-let posts = content === "blog" ? list : [];
+let posts = content === "blogs" ? list : [];
 
 // Filter out items without data
 list = list.filter((item) => item && item.data);
 
 // Filter content list based on category (only for non-Strapi content)
-if (filter?.name && content !== "blog") {
+if (filter?.name && content !== "blogs") {
   list = list.filter((item) =>
     item.data.categories
       .map((cat: string) => cat.toLowerCase())
@@ -112,7 +112,7 @@ list = sortByDate(list);
 
 // For Blog List Pagination
 let totalPages = Math.ceil(posts?.length / config.settings.pagination);
-if (content === "blog" && pagination?.enable) {
+if (content === "blogs" && pagination?.enable) {
   const indexOfLastPost = pagination?.currentPage * config.settings.pagination;
   const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
   list = posts.slice(indexOfFirstPost, indexOfLastPost);
@@ -120,7 +120,7 @@ if (content === "blog" && pagination?.enable) {
 
 // Determine if we should show the empty state
 const showEmptyState = list.length === 0;
-const contentType = content === "blog" ? "Blog" : content === "portfolio" ? "Portfolio" : "Content";
+const contentType = content === "blogs" ? "Blog" : content === "portfolio" ? "Portfolio" : "Content";
 ---
 
 {showEmptyState ? (
@@ -151,7 +151,7 @@ const contentType = content === "blog" ? "Blog" : content === "portfolio" ? "Por
         const cardProps = recursiveCloneObject(item);
         cardProps.data = recursiveCloneObject(item.data);
 
-        return content === "blog" ? (
+        return content === "blogs" ? (
           <BlogCard content={cardProps} options={options} />
         ) : content === "portfolio" ? (
           <PortfolioCard {...cardProps} />
@@ -160,11 +160,11 @@ const contentType = content === "blog" ? "Blog" : content === "portfolio" ? "Por
     </div>
 
     {
-      content === "blog" &&
+      content === "blogs" &&
       pagination?.enable &&
       totalPages > 1 && (
         <Pagination
-          collection="blog"
+          collection="blogs"
           currentPage={pagination?.currentPage}
           totalPages={totalPages}
         />

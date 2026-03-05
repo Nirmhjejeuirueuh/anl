@@ -45,7 +45,7 @@
   # - "src/content" folder
   # - "src/[...lang]/pages" folder
   # - "src/content.config.ts" collection object
-  blogFolder      = "blog" # Folder where blog posts are stored
+  blogFolder      = "blogs" # Folder where blog posts are stored
   servicesFolder  = "services" # Folder where services are stored
   coursesFolder   = "courses" # Folder where courses are stored
   portfolioFolder = "case-studies" # Folder where case-studies or projects or portfolio are stored
@@ -59,6 +59,10 @@
   contactFormAction = "https://formsubmit.co/enquiry@agilenlite.com" # https://formspree.io/f/kweoweo | https://formsubmit.co/your@email.com | "/"
   # formspree | formsubmit.co | netlify (default is formsubmit.co)
   contactFormProvider = "formsubmit.co"
+  
+  # Google reCAPTCHA v2 Site Key - Get yours at https://www.google.com/recaptcha/admin
+  # Leave empty to disable reCAPTCHA
+  recaptchaSiteKey = "YOUR_RECAPTCHA_SITE_KEY_HERE"
 
   footerDescription = "" # Check src/i18n/en.json and src/i18n/fr.json for changing the footer description in different languages or directly add value here if you are not using internationalization feature
 

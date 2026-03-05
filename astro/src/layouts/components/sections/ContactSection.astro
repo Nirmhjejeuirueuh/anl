@@ -11,7 +11,7 @@ import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 
 const {
-  settings: { contactFormProvider },
+  settings: { contactFormAction, contactFormProvider, recaptchaSiteKey },
 } = config;
 
 // Read contact email from environment variables
@@ -486,7 +486,7 @@ form = {
                               input.id ||
                               genIdFromLabel(input.label || "example-id")
                             }
-                            class="form-check-label"
+                            class="form-check-label checkbox-with-links"
                             set:html={markdownify(input.label) || "Example Label"}
                           />
                         </div>
@@ -550,6 +550,16 @@ form = {
                     Please select at least one training area of interest.
                   </p>
                 </div>
+
+                {/* Google reCAPTCHA */}
+                {recaptchaSiteKey && recaptchaSiteKey !== "YOUR_RECAPTCHA_SITE_KEY_HERE" && (
+                  <div class="col-span-2">
+                    <div class="g-recaptcha" data-sitekey={recaptchaSiteKey}></div>
+                    <p class="mt-2 hidden text-sm text-red-600 error-message recaptcha-error">
+                      Please complete the reCAPTCHA verification.
+                    </p>
+                  </div>
+                )}
 
                 {form.submitButton && (
                   <div class="col-span-2 flex flex-col">
@@ -861,6 +871,26 @@ form = {
         }
       });
 
+      // Validate reCAPTCHA if enabled
+      const recaptchaElement = form?.querySelector('.g-recaptcha');
+      const recaptchaErrorMsg = form?.querySelector('.recaptcha-error') as HTMLElement;
+      
+      if (recaptchaElement) {
+        const recaptchaResponse = (window as any).grecaptcha?.getResponse();
+        
+        if (recaptchaErrorMsg) {
+          recaptchaErrorMsg.classList.add('hidden');
+        }
+        
+        if (!recaptchaResponse || recaptchaResponse.length === 0) {
+          hasErrors = true;
+          if (recaptchaErrorMsg) {
+            recaptchaErrorMsg.classList.remove('hidden');
+          }
+          errors.push('reCAPTCHA verification is required.');
+        }
+      }
+
       if (hasErrors) {
         // Show summary error message with all issues
         const errorSummary = errors.length > 1 
@@ -915,3 +945,43 @@ form = {
     });
   });
 </script>
+
+<style is:global>
+  /* Style links in checkbox labels - classic traditional hyperlink blue */
+  .form-check-label.checkbox-with-links a,
+  .form-check .checkbox-with-links a {
+    color: #0066cc !important; /* Traditional hyperlink blue */
+    text-decoration: underline !important;
+    transition: color 0.2s ease !important;
+    cursor: pointer !important;
+  }
+  
+  .form-check-label.checkbox-with-links a:hover,
+  .form-check .checkbox-with-links a:hover {
+    color: #003399 !important; /* Darker blue on hover */
+    text-decoration: underline !important;
+  }
+</style>
+
+<script>
+  // Make links in checkbox labels open in new tab
+  document.addEventListener('DOMContentLoaded', () => {
+    const checkboxLabels = document.querySelectorAll('.checkbox-with-links');
+    checkboxLabels.forEach((label) => {
+      const links = label.querySelectorAll('a');
+      links.forEach((link) => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        // Prevent checkbox toggle when clicking links
+        link.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      });
+    });
+  });
+</script>
+
+{/* Load Google reCAPTCHA script if enabled */}
+{recaptchaSiteKey && recaptchaSiteKey !== "YOUR_RECAPTCHA_SITE_KEY_HERE" && (
+  <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
+)}

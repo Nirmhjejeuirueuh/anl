@@ -72,6 +72,31 @@ console.log('COURSE ROUTE: About to render course:', course.data.title);
 >
   <section class="py-12">
     <div class="container">
+     
+      <!-- Back Navigation -->
+      <div class="mb-8">
+        <button
+          onclick="history.back()"
+          class="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-200 group"
+          aria-label="Go back to previous page"
+        >
+          <svg 
+            class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          <span class="font-medium">Back to Courses</span>
+        </button>
+      </div>
+      
       <div class="grid grid-cols-1 justify-items-center space-y-12">
         <!-- Course Meta -->
         <div class="max-w-full space-y-8 text-center lg:max-w-3xl">

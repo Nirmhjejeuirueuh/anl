@@ -199,7 +199,7 @@ const blogCollection = defineCollection({
       excerpt: z.string().optional(),
       settings: z
         .object({
-          content: z.enum(["blog"]).optional(),
+          content: z.enum(["blogs"]).optional(),
           layout: z.enum(["grid"]).optional(),
           columns: z
             .union([z.literal(1), z.literal(2), z.literal(3)])
@@ -251,7 +251,7 @@ export const portfolioCollection = defineCollection({
             button: sharedButtonTag.optional(),
           }),
           body: z.object({
-            content: z.enum(["portfolio", "blog"]).optional(),
+            content: z.enum(["portfolio", "blogs"]).optional(),
             layout: z.enum(["masonry", "grid"]).optional(),
             card: z.object({
               layout: z.enum(["classic", "overlay"]),
@@ -336,7 +336,7 @@ const trainingCollection = defineCollection({
 
 // Export collections
 export const collections = {
-  blog: blogCollection,
+  blogs: blogCollection,
   services: serviceCollection,
   "case-studies": portfolioCollection,
   courses: courseCollection,

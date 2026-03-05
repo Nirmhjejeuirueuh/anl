@@ -2,7 +2,7 @@ import type { sharedButtonTag } from "@/content.config";
 import type { TypeOf } from "astro:schema";
 
 export type ContentListType = {
-  content?: "portfolio" | "blog"; // Define which content list to show
+  content?: "portfolio" | "blogs"; // Define which content list to show
   layout?: "masonry" | "grid"; // Define the layout of the portfolio list. Default is "grid".
   columns?: 1 | 2 | 3; // Define the number of columns for the grid layout. Default is 3.
   limit?: number | false; // Limit the number of items to be displayed. Default is false.
