@@ -47,14 +47,14 @@ if (content === "portfolio") {
     config.settings.portfolioFolder as "case-studies",
     Astro.currentLocale,
   );
-} else if (content === "blog") {
+} else if (content === "blogs") {
   list = await getCollectionCTM(
-    config.settings.blogFolder as "blog",
+    config.settings.blogFolder as "blogs",
     Astro.currentLocale,
   );
 }
 
-let posts = content === "blog" ? list : [];
+let posts = content === "blogs" ? list : [];
 
 // Filter out items without data
 list = list.filter((item) => item && item.data);
@@ -79,7 +79,7 @@ list = sortByDate(list);
 
 // For Blog List Pagination
 let totalPages = Math.ceil(posts?.length / config.settings.pagination);
-if (content === "blog" && pagination?.enable) {
+if (content === "blogs" && pagination?.enable) {
   const indexOfLastPost = pagination?.currentPage * config.settings.pagination;
   const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
   list = posts.slice(indexOfFirstPost, indexOfLastPost);
@@ -110,7 +110,7 @@ if (list.length === 0) return;
   {...rest}>
   {
     list.map((item) =>
-      content === "blog" ? (
+      content === "blogs" ? (
         <BlogCard
           class:list={[
             {
@@ -138,10 +138,10 @@ if (list.length === 0) return;
   }
 </div>
 {
-  content === "blog" && pagination?.enable && (
+  content === "blogs" && pagination?.enable && (
     <Pagination
       class="pt-8"
-      collection="blog"
+      collection="blogs"
       currentPage={pagination?.currentPage || 1}
       totalPages={totalPages}
     />

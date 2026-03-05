@@ -42,7 +42,7 @@ let {
   bgPatternImage,
 } = actualContent as sectionType;
 
-let posts = await getCollectionCTM(blogFolder as "blog", Astro.currentLocale);
+let posts = await getCollectionCTM(blogFolder as "blogs", Astro.currentLocale);
 
 // Sort posts by date
 posts = sortByDate(posts);

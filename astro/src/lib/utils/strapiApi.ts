@@ -1170,7 +1170,7 @@ export function convertStrapiBlogToAstro(blog: StrapiBlog) {
   return {
     id: blog.documentId,
     slug: blog.slug,
-    collection: "blog",
+    collection: "blogs",
     data: {
       title: blog.title,
       image: blog.image ? (blog.image.url.startsWith('http') ? blog.image.url : `${STRAPI_URL}${blog.image.url}`) : undefined,

@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 const { blogFolder } = config.settings;
 
 const postIndex = await getEntryCTM(
-  blogFolder as "blog",
+  blogFolder as "blogs",
   "-index",
   Astro.currentLocale,
 );

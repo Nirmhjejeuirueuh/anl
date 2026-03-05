@@ -45,7 +45,7 @@
   # - "src/content" folder
   # - "src/[...lang]/pages" folder
   # - "src/content.config.ts" collection object
-  blogFolder      = "blog" # Folder where blog posts are stored
+  blogFolder      = "blogs" # Folder where blog posts are stored
   servicesFolder  = "services" # Folder where services are stored
   coursesFolder   = "courses" # Folder where courses are stored
   portfolioFolder = "case-studies" # Folder where case-studies or projects or portfolio are stored

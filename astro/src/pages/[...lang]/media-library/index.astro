@@ -189,16 +189,16 @@ function getFullPhotoCaption(photo: any, index: number): string {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-8xl mx-auto">
                   {sortedPhotos.map((photo, index) => (
                     <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${(photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, index).replace(/'/g, "\\'")}', '${(photo.alternativeText || getPhotoCaption(photo, index)).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, index).replace(/'/g, "\\'")}')`}>
-                      <div class="aspect-[16/9] overflow-hidden">
+                      <div class="aspect-[4/3] overflow-hidden bg-gray-100 flex items-center justify-center">
                         <img
                           src={photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}
                           alt={photo.alternativeText || getPhotoCaption(photo, index)}
                           loading="lazy"
-                          class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                          class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <div class="p-4">
-                        <h3 class="font-medium text-gray-900 text-center text-base">
+                      <div class="p-4 min-h-[80px] flex items-center justify-center">
+                        <h3 class="font-medium text-gray-900 text-center text-sm leading-tight line-clamp-3">
                           {getPhotoCaption(photo, index)}
                         </h3>
                       </div>

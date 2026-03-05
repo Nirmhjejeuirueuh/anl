@@ -95,7 +95,7 @@
                 {
                   "enable": true,
                   "name": "Classique",
-                  "url": "/blog/"
+                  "url": "/blogs/"
                 },
                 {
                   "enable": true,
@@ -116,7 +116,7 @@
                 {
                   "enable": true,
                   "name": "Moderne",
-                  "url": "/blog/post-1/"
+                  "url": "/blogs/post-1/"
                 }
               ]
             }
@@ -251,22 +251,22 @@
             {
               "enable": true,
               "name": "Classique",
-              "url": "/blog/"
+              "url": "/blogs/"
             },
             {
               "enable": true,
               "name": "Moderne",
-              "url": "/blog/modern/"
+              "url": "/blogs/modern/"
             },
             {
               "enable": true,
               "name": "Article Minimal",
-              "url": "/blog/single-minimal/"
+              "url": "/blogs/single-minimal/"
             },
             {
               "enable": true,
               "name": "Article Moderne",
-              "url": "/blog/post-1/"
+              "url": "/blogs/post-1/"
             }
           ]
         },
@@ -367,7 +367,7 @@
     {
       "enable": true,
       "name": "Blog",
-      "url": "/blog/"
+      "url": "/blogs/"
     },
     {
       "enable": true,

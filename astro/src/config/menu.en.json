@@ -39,8 +39,8 @@
     },
     {
       "enable": true,
-      "name": "Blog",
-      "url": "/blog/"
+      "name": "Blogs",
+      "url": "/blogs/"
     },
     {
       "enable": true,
@@ -57,6 +57,7 @@
       "name": "Resource Library",
       "url": "/resource-library/",
       "target": "_blank"
+
     }
   ],
   "footerMenu": [

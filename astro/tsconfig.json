@@ -13,7 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@/components/*": [
-        "./src/layouts/components/*"
+        "./src/layouts/components/*",
+        "./src/components/*"
       ],
       "@/shortcodes/*": [
         "./src/layouts/shortcodes/*"

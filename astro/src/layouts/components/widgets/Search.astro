@@ -16,9 +16,9 @@ interface Props {
 
 const currentLocale = Astro.currentLocale;
 
-const blogFolder = config.settings.blogFolder as "blog";
+const blogFolder = config.settings.blogFolder as "blogs";
 const postIndex = await getEntryCTM(
-  blogFolder as "blog",
+  blogFolder as "blogs",
   "-index",
   currentLocale,
 );
@@ -28,7 +28,7 @@ const blogCardLayout =
   postIndex?.data.settings?.card?.layout ||
   "classic";
 
-let posts = await getCollectionCTM(blogFolder as "blog", currentLocale);
+let posts = await getCollectionCTM(blogFolder as "blogs", currentLocale);
 posts = await processPosts(posts);
 
 const postJson = sortByDate(posts).map((item) => {
