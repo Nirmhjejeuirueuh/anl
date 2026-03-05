@@ -150,7 +150,7 @@ form:
       name: "Details"
       required: true
       halfWidth: false
-    - label: "I agree to the [privacy policy](/privacy-policy/)."
+    - label: "I have read and accept the [Terms and Conditions](/terms-and-conditions/) and [Privacy Policy](/privacy-policy/)."
       name: "Agreed Privacy"
       value: "Agreed"
       checked: false
