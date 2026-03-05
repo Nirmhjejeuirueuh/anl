@@ -22,7 +22,7 @@
     },
     "excerpt": {
       "type": "text",
-      "required": true
+      "required": false
     },
     "content": {
       "type": "richtext",
@@ -32,7 +32,9 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "author": {
       "type": "string",
@@ -52,8 +54,8 @@
     },
     "featured": {
       "type": "boolean",
-      "default": false,
-      "required": false
+      "required": false,
+      "default": false
     }
   }
 }

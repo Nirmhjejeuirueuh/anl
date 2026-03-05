@@ -67,6 +67,12 @@
     "ftsProgramme": {
       "type": "boolean",
       "default": false
+    },
+    "order": {
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "configurable": false
     }
   }
 }

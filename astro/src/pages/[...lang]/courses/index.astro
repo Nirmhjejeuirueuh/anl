@@ -16,14 +16,23 @@ export function getStaticPaths() {
 const strapiCourses = await getCourses();
 const courses = strapiCourses.map(convertStrapiCourseToAstro);
 
-// Group courses by their display logic
-const popularCourses = courses.filter(course => course.data.featured === true);
-const coursesWithDropdown = courses.filter(course => course.data.dropdown && course.data.dropdown.trim() !== '');
-const pastProgrammes = courses.filter(course => 
-  course.data.featured !== true && (!course.data.dropdown || course.data.dropdown.trim() === '')
-);
+// Sort helper: each group has its own order sequence starting from 1
+const byOrder = (a: typeof courses[0], b: typeof courses[0]) =>
+  (a.data.order ?? 0) - (b.data.order ?? 0);
 
-// Group courses by dropdown value
+// Group courses by their display logic
+const popularCourses = courses
+  .filter(course => course.data.featured === true)
+  .sort(byOrder);
+
+const coursesWithDropdown = courses.filter(course => course.data.dropdown && course.data.dropdown.trim() !== '');
+const pastProgrammes = courses
+  .filter(course =>
+    course.data.featured !== true && (!course.data.dropdown || course.data.dropdown.trim() === '')
+  )
+  .sort(byOrder);
+
+// Group courses by dropdown value, sorting within each group independently
 const dropdownGroups: { [key: string]: typeof courses } = {};
 coursesWithDropdown.forEach(course => {
   const dropdown = course.data.dropdown!.trim();
@@ -31,6 +40,10 @@ coursesWithDropdown.forEach(course => {
     dropdownGroups[dropdown] = [];
   }
   dropdownGroups[dropdown].push(course);
+});
+// Sort each dropdown group by its own order sequence
+Object.keys(dropdownGroups).forEach(key => {
+  dropdownGroups[key].sort(byOrder);
 });
 
 // Get current page from URL query parameter
@@ -106,7 +119,7 @@ const indexData = {
           <h2 class="text-h2 text-primary mb-4">Search Results</h2>
           <p class="text-lg text-gray-600" id="search-term-display"></p>
         </div>
-        <div id="search-results-grid" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div id="search-results-grid" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
           <!-- Search results will be populated here -->
         </div>
         <div id="no-results" class="text-center py-12 hidden">
@@ -131,7 +144,7 @@ const indexData = {
           <h2 class="text-h2 text-primary mb-4">Popular Courses</h2>
           <p class="text-lg text-gray-600">Our most sought-after training programs</p>
         </div>
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
           {popularCourses.map((course, index) => (
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden course-card-container">
               <ServiceCard
@@ -162,7 +175,7 @@ const indexData = {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </summary>
-              <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
                 {groupCourses.map((course, index) => (
                   <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden course-card-container">
                     <ServiceCard
@@ -179,17 +192,17 @@ const indexData = {
           );
         })}
 
-        <!-- Past Programmes -->
+        <!-- All Other Programmes -->
         {pastProgrammes.length > 0 && (
           <div class="mb-12">
             <details id="dropdown-past-programmes" class="group">
               <summary class="flex items-center justify-between cursor-pointer bg-theme-light p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                <h3 class="text-xl font-semibold text-primary">Past Programmes</h3>
+                <h3 class="text-xl font-semibold text-primary">All Other Programmes</h3>
                 <svg class="w-5 h-5 text-primary group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </summary>
-              <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div class="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
                 {pastProgrammes.map((course, index) => (
                   <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden course-card-container">
                     <ServiceCard

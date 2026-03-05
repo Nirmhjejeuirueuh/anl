@@ -41,9 +41,9 @@ const duration = 'duration' in content.data ? content.data.duration : undefined;
 let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection);
 ---
 
-<div class=list={["bg-white h-full flex flex-col relative", className]} {...rest}>
+<div class:list={["bg-white h-full flex flex-col relative", className]} {...rest}>
   {tags.length > 0 && (
-    <div class="absolute top-2 right-2 flex flex-wrap gap-1 z-10">
+    <div class="absolute top-3 right-0 flex flex-wrap gap-1 z-10">
       {tags.map((tag, i) => (
         <span class={`text-xs px-2 py-1 rounded ${tagColors[i % tagColors.length]}`}>
           {tag}
@@ -64,7 +64,7 @@ let slug = getLocaleUrlCTM(content.slug, Astro.currentLocale, content.collection
       )
     }
   </div>
-  <div class="px-8 pt-10 pb-10 flex flex-col h-full">
+  <div class="px-8 pt-10 pb-10 flex flex-col flex-1">
     <div class="flex items-center gap-3 mb-4">
       {
         icon && (

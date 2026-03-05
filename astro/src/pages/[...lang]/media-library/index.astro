@@ -98,22 +98,17 @@ function getFullPhotoCaption(photo: any, index: number): string {
   {activeSections && activeSections.length > 0 ? (
     <>
       <!-- Sections Ribbon -->
-      <section class="py-6 bg-theme-light border-y border-gray-100">
+      <section class="sections-ribbon py-6 bg-theme-light border-y border-gray-100">
         <div class="container">
           <div class="flex items-center justify-between gap-4">
             {/* Active Sections - Left Side */}
-            <div class={`flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap ${activeSections.length <= 4 ? 'justify-start' : ''}`}>
+            <div class={`flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap px-4 ${activeSections.length <= 4 ? 'justify-start' : ''}`}>
               {activeSections.map((section, index: number) => {
-                const isActive = currentSection === section.id?.toString();
-                const sectionUrl = index === 0 ? '/media-library/' : `/media-library/?section=${section.id}`;
                 return (
                   <a
-                    href={sectionUrl}
-                    class={`inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
-                      isActive
-                        ? 'bg-primary text-white border border-primary shadow-md'
-                        : 'bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40'
-                    }`}
+                    href={`#section-anchor-${section.id}`}
+                    data-smooth-scroll
+                    class="ribbon-link inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40"
                     data-aos="fade-up-sm"
                     data-aos-delay={index * 50}
                   >
@@ -128,19 +123,14 @@ function getFullPhotoCaption(photo: any, index: number): string {
 
             {/* Past Highlights - Right Side */}
             {pastHighlightsSections && pastHighlightsSections.length > 0 && (
-              <div class="flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap">
+              <div class="flex items-center gap-4 overflow-x-auto pb-2 flex-nowrap px-4">
                 <span class="text-gray-500 font-medium whitespace-nowrap mr-2">Past Highlights:</span>
                 {pastHighlightsSections.map((section, index: number) => {
-                  const isActive = currentSection === section.id?.toString();
-                  const sectionUrl = `/media-library/?section=${section.id}`;
                   return (
                     <a
-                      href={sectionUrl}
-                      class={`inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer ${
-                        isActive
-                          ? 'bg-gray-600 text-white border border-gray-600 shadow-md'
-                          : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 hover:border-gray-400'
-                      }`}
+                      href={`#section-anchor-${section.id}`}
+                      data-smooth-scroll
+                      class="ribbon-link inline-flex items-center px-4 py-2 font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 hover:border-gray-400"
                       data-aos="fade-up-sm"
                       data-aos-delay={(activeSections.length + index) * 50}
                     >
@@ -157,57 +147,72 @@ function getFullPhotoCaption(photo: any, index: number): string {
         </div>
       </section>
 
-      <!-- Media Gallery -->
-      <section class="py-6 bg-gray-50">
-        <div class="container">
-          {(() => {
-            // Find current section from all sections (active + past highlights)
-            const currentSectionData = allSections?.find(s => s?.id?.toString() === currentSection) || allSections?.[0];
-
-            // If no sections available, return null
-            if (!currentSectionData) {
-              return null;
-            }
-
-            // Sort photos by date (newest first)
-            const sortedPhotos = sortPhotosByDate(currentSectionData.photos);
+      <!-- All Sections - Vertically stacked, each with looping marquee -->
+      <section class="py-8 bg-gray-50">
+        <div class="space-y-12">
+          {allSections.map((section, sectionIndex) => {
+            const sortedPhotos = sortPhotosByDate(section.photos);
+            if (!sortedPhotos || sortedPhotos.length === 0) return null;
+            const isPastHighlight = section.stage === 'pastHighlights';
+            const sectionId = `section-row-${section.id}`;
 
             return (
-              <>
-                <div class="text-center mb-12">
-                  <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                    {currentSectionData.title}
-                  </h2>
-                  {currentSectionData.description && (
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-4">{currentSectionData.description}</p>
-                  )}
-                  <p class="text-sm text-gray-500">
-                    {currentSectionData.photos?.length || 0} {(currentSectionData.photos?.length || 0) === 1 ? 'image' : 'images'} loaded
-                  </p>
+              <div id={`section-anchor-${section.id}`} class="section-row">
+                {/* Section Header */}
+                <div class="container mb-4 text-center">
+                  <div class="inline-flex flex-col items-center gap-2">
+                    <div class="flex items-center gap-3">
+                      {isPastHighlight && (
+                        <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 bg-gray-200 px-2 py-1 rounded">Past Highlight</span>
+                      )}
+                      <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
+                        {section.title}
+                        <span class="ml-2 text-lg font-normal text-gray-400">({sortedPhotos.length})</span>
+                      </h2>
+                    </div>
+                    {section.description && (
+                      <p class="text-gray-500 text-sm max-w-xl">{section.description}</p>
+                    )}
+                  </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-8xl mx-auto">
-                  {sortedPhotos.map((photo, index) => (
-                    <div class="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer" onclick={`openImageModal('${(photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, index).replace(/'/g, "\\'")}', '${(photo.alternativeText || getPhotoCaption(photo, index)).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, index).replace(/'/g, "\\'")}')`}>
-                      <div class="aspect-[16/9] overflow-hidden">
-                        <img
-                          src={photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}
-                          alt={photo.alternativeText || getPhotoCaption(photo, index)}
-                          loading="lazy"
-                          class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                        />
+                {/* Marquee Row */}
+                <div class="relative overflow-hidden group/row">
+                  {/* Left/Right fades */}
+                  <div class="pointer-events-none absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gray-50 to-transparent z-10"></div>
+                  <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-gray-50 to-transparent z-10"></div>
+
+                  {/* Marquee track: original + duplicate for seamless loop */}
+                  <div
+                    id={sectionId}
+                    class="marquee-track flex gap-4 pb-3"
+                  >
+                    {/* First set */}
+                    {sortedPhotos.map((photo, photoIndex) => (
+                      <div
+                        class="group/card flex-shrink-0 w-[560px] bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+                        onclick={`openImageModal('${(photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, photoIndex).replace(/'/g, "\\'")}', '${(photo.alternativeText || getPhotoCaption(photo, photoIndex)).replace(/'/g, "\\'")}', '${getFullPhotoCaption(photo, photoIndex).replace(/'/g, "\\'")}', ${JSON.stringify(sortedPhotos).replace(/'/g, "\\'")}, ${photoIndex})`}
+                      >
+                        <div class="aspect-[16/9] overflow-hidden">
+                          <img
+                            src={photo.url.startsWith('http') ? photo.url : `${STRAPI_URL}${photo.url}`}
+                            alt={photo.alternativeText || getPhotoCaption(photo, photoIndex)}
+                            loading="lazy"
+                            class="w-full h-full object-cover object-top group-hover/card:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <div class="px-4 py-3">
+                          <p class="font-medium text-gray-800 text-sm truncate text-center">
+                            {getPhotoCaption(photo, photoIndex)}
+                          </p>
+                        </div>
                       </div>
-                      <div class="p-4">
-                        <h3 class="font-medium text-gray-900 text-center text-base">
-                          {getPhotoCaption(photo, index)}
-                        </h3>
-                      </div>
-                    </div>
-                  )) || []}
+                    ))}
+                  </div>
                 </div>
-              </>
+              </div>
             );
-          })()}
+          })}
         </div>
       </section>
     </>
@@ -226,4 +231,58 @@ function getFullPhotoCaption(photo: any, index: number): string {
 
   <!-- Image Modal Component -->
   <ImageModal />
+
+  <style>
+    @keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll linear infinite;
+    }
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Make STRAPI_URL available globally for the modal
+      window.STRAPI_URL = '${STRAPI_URL}';
+
+      // Smooth scroll ribbon links to their section with offset for sticky ribbon
+      document.querySelectorAll('a[data-smooth-scroll]').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href')?.slice(1);
+          const target = targetId ? document.getElementById(targetId) : null;
+          if (!target) return;
+
+          // Account for sticky ribbon height
+          const ribbon = document.querySelector('.sections-ribbon');
+          const offset = ribbon ? ribbon.getBoundingClientRect().height + 16 : 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        });
+      });
+
+      // For each marquee track, duplicate its children so the loop is seamless,
+      // then set animation duration based on total width.
+      document.querySelectorAll('.marquee-track').forEach(track => {
+        const originals = Array.from(track.children);
+        // Clone each child and append
+        originals.forEach(child => {
+          const clone = child.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        });
+        // Duration: 1s per 300px of content, min 8s
+        const totalWidth = track.scrollWidth / 2; // half = one set
+        const duration = Math.max(8, totalWidth / 120);
+        track.style.animationDuration = `${duration}s`;
+      });
+    });
+  </script>
 </Base>

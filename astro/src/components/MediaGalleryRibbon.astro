@@ -1,0 +1,98 @@
+---
+import ImageModal from "@/components/utilities/ImageModal.astro";
+
+interface Props {
+  mediaItems: any[];
+  currentSlug?: string;
+  basePath: string;
+  label: string;
+  lang?: string;
+}
+
+const { mediaItems, currentSlug, basePath, label, lang } = Astro.props;
+---
+
+<section class="py-8 bg-theme-light border-y border-gray-100">
+  <div class="container">
+    <div class="px-4">
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        {mediaItems && mediaItems.map((item: any, index: number) => {
+          const isActive = currentSlug === item.slug;
+          const href = lang ? `/${lang}${basePath}/${item.slug}` : `${basePath}/${item.slug}`;
+
+          return (
+            <a
+              href={href}
+              data-image-url={item.image?.url ? (item.image.url.startsWith('http') ? item.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${item.image.url}`) : undefined}
+              data-image-title={item.title}
+              data-image-alt={item.image?.alternativeText || item.title}
+              class={`media-gallery-link group relative overflow-hidden rounded-lg transition-all duration-300 ${
+                isActive
+                  ? 'ring-2 ring-primary shadow-lg'
+                  : 'hover:shadow-lg hover:scale-105'
+              }`}
+              data-aos="fade-up-sm"
+              data-aos-delay={index * 50}
+            >
+              {item.image && (
+                <div class="aspect-video w-48 h-32 overflow-hidden">
+                  <img
+                    src={item.image.url.startsWith('http') ? item.image.url : `${import.meta.env.STRAPI_URL || 'http://localhost:1337'}${item.image.url}`}
+                    alt={item.image.alternativeText || item.title}
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                <div class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center p-2">
+                  <h3 class="font-semibold text-sm">{item.title}</h3>
+                  {item.description && (
+                    <p class="text-xs mt-1">{item.description}</p>
+                  )}
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+
+<ImageModal id="media-gallery-modal" />
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Media Gallery Modal Functionality
+    const mediaLinks = document.querySelectorAll('.media-gallery-link');
+
+    // Add click handlers to media links
+    mediaLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const imageUrl = this.getAttribute('data-image-url');
+        const imageTitle = this.getAttribute('data-image-title');
+        const imageAlt = this.getAttribute('data-image-alt');
+
+        console.log('Media gallery link clicked, imageUrl:', imageUrl, 'imageTitle:', imageTitle);
+
+        // If it has an image URL, prevent default and open modal
+        if (imageUrl) {
+          e.preventDefault();
+          console.log('Preventing default navigation for media gallery, opening image modal');
+
+          if (window.openImageModal) {
+            console.log('Calling window.openImageModal for media gallery');
+            window.openImageModal(imageUrl, imageTitle, imageAlt, 'media-gallery-modal');
+          } else {
+            console.error('window.openImageModal not found for media gallery!');
+            // Fallback to opening in new tab
+            window.open(imageUrl, '_blank');
+          }
+        } else {
+          console.log('No image URL in media gallery, allowing normal navigation');
+        }
+      });
+    });
+  });
+</script>

@@ -628,10 +628,11 @@ export async function getCourses(): Promise<StrapiCourse[]> {
 
     const allCourses: StrapiCourse[] = [];
 
-    // Fetch all pages
+    // Fetch all pages; include explicit sort by order if provided by backend
     for (let page = 1; page <= totalPages; page++) {
       console.log(`getCourses: Fetching page ${page}/${totalPages}`);
-      const response = await fetch(`${STRAPI_URL}/api/courses?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`);
+      // the `order` field should be an integer that editors can set to control display sequence
+      const response = await fetch(`${STRAPI_URL}/api/courses?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=order:asc`);
       if (!response.ok) {
         throw new Error(`Failed to fetch courses page ${page}: ${response.status}`);
       }
@@ -673,7 +674,7 @@ export async function getCourseBySlug(slug: string): Promise<StrapiCourse | null
 export async function getCoursesByCategory(category: string): Promise<StrapiCourse[]> {
   try {
     console.log('getCoursesByCategory: Searching for category:', category);
-    const response = await fetch(`${STRAPI_URL}/api/courses?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*`);
+    const response = await fetch(`${STRAPI_URL}/api/courses?filters[categories][$contains]=${encodeURIComponent(category)}&populate=*&sort[0]=order:asc`);
     if (!response.ok) {
       throw new Error(`Failed to fetch courses by category: ${response.status}`);
     }
@@ -1077,6 +1078,7 @@ export function convertStrapiCourseToAstro(course: StrapiCourse) {
       description: course.overview,
       featured: course.popular,
       dropdown: course.dropdown,
+      order: course.order || 0,
       trainingDays: course.trainingDays,
       duration: course.trainingDays ? `${course.trainingDays} ${pluralize(course.trainingDays, 'day')}` : undefined,
       courseFamily: course.courseFamily,

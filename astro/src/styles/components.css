@@ -51,6 +51,16 @@
       @apply before:content-[""];
       @apply before:bg-primary relative pl-[1.8em] before:absolute before:top-3 before:left-[5px] before:h-1 before:w-1 before:rounded-full;
     }
+
+    ul {
+      @apply pl-6 mt-1;
+
+      > li {
+        @apply after:content-[""] before:content-[""];
+        @apply after:bg-transparent after:border after:border-primary/60 relative pl-8 after:absolute after:top-2.5 after:left-0 after:h-2 after:w-2 after:rounded-full;
+        @apply before:hidden;
+      }
+    }
   }
 
   ol {

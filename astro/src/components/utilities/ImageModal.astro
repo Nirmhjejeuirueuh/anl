@@ -15,6 +15,11 @@
       &times;
     </button>
 
+    <!-- Image counter -->
+    <div id="imageCounter" class="absolute top-4 left-1/2 transform -translate-x-1/2 text-white text-lg font-medium bg-black/80 px-3 py-1 rounded-full z-10 opacity-0">
+      1 / 1
+    </div>
+
     <!-- Image container -->
     <div class="relative max-w-full max-h-[80vh]">
       <img
@@ -28,10 +33,11 @@
     <!-- Description -->
     <div id="modalDescription" class="text-white/80 text-center mt-4 max-w-4xl px-4 text-base"></div>
 
-    <!-- Navigation arrows (optional, for future carousel functionality) -->
+    <!-- Navigation arrows -->
     <button
       id="prevButton"
-      class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 z-10 w-12 h-12 flex items-center justify-center bg-black/80 rounded-full transition-colors duration-200 opacity-0"
+      onclick="navigateImage(-1)"
+      class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 z-10 w-12 h-12 flex items-center justify-center bg-black/80 rounded-full transition-colors duration-200"
       aria-label="Previous image"
     >
       &#8249;
@@ -39,7 +45,8 @@
 
     <button
       id="nextButton"
-      class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 z-10 w-12 h-12 flex items-center justify-center bg-black/80 rounded-full transition-colors duration-200 opacity-0"
+      onclick="navigateImage(1)"
+      class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 z-10 w-12 h-12 flex items-center justify-center bg-black/80 rounded-full transition-colors duration-200"
       aria-label="Next image"
     >
       &#8250;
@@ -48,20 +55,91 @@
 </div>
 
 <script is:inline>
+  // Global variables for current image gallery
+  let currentImages = [];
+  let currentImageIndex = 0;
+
   // Global functions for opening and closing the image modal
-  window.openImageModal = function(imageUrl, caption = '', altText = '', description = '') {
+  window.openImageModal = function(imageUrl, caption = '', altText = '', description = '', images = null, startIndex = 0) {
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const modalDescription = document.getElementById('modalDescription');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const imageCounter = document.getElementById('imageCounter');
 
     if (modal && modalImage && modalDescription) {
-      modalImage.src = imageUrl;
-      modalImage.alt = altText || caption || 'Image';
-      modalDescription.textContent = description;
+      // If images array is provided, set up gallery navigation
+      if (images && Array.isArray(images)) {
+        currentImages = images;
+        currentImageIndex = startIndex;
+
+        // Show navigation buttons and counter
+        if (prevButton) prevButton.style.display = 'flex';
+        if (nextButton) nextButton.style.display = 'flex';
+        if (imageCounter) {
+          imageCounter.style.opacity = '1';
+          imageCounter.textContent = `${startIndex + 1} / ${images.length}`;
+        }
+
+        // Update image to the one at startIndex
+        const currentImage = images[startIndex];
+        if (currentImage) {
+          const fullUrl = currentImage.url.startsWith('http') ? currentImage.url : `${window.STRAPI_URL || 'http://localhost:1337'}${currentImage.url}`;
+          modalImage.src = fullUrl;
+          modalImage.alt = currentImage.alternativeText || currentImage.name || 'Image';
+          modalDescription.textContent = currentImage.caption || currentImage.name || '';
+        }
+      } else {
+        // Single image mode
+        currentImages = [];
+        currentImageIndex = 0;
+
+        // Hide navigation buttons and counter
+        if (prevButton) prevButton.style.display = 'none';
+        if (nextButton) nextButton.style.display = 'none';
+        if (imageCounter) imageCounter.style.opacity = '0';
+
+        modalImage.src = imageUrl;
+        modalImage.alt = altText || caption || 'Image';
+        modalDescription.textContent = description;
+      }
+
       modal.classList.remove('hidden');
 
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
+    }
+  }
+
+  // Navigate to next/previous image in gallery
+  window.navigateImage = function(direction) {
+    if (currentImages.length === 0) return;
+
+    currentImageIndex += direction;
+
+    // Wrap around
+    if (currentImageIndex < 0) {
+      currentImageIndex = currentImages.length - 1;
+    } else if (currentImageIndex >= currentImages.length) {
+      currentImageIndex = 0;
+    }
+
+    const currentImage = currentImages[currentImageIndex];
+    const modalImage = document.getElementById('modalImage');
+    const modalDescription = document.getElementById('modalDescription');
+    const imageCounter = document.getElementById('imageCounter');
+
+    if (currentImage && modalImage && modalDescription) {
+      const fullUrl = currentImage.url.startsWith('http') ? currentImage.url : `${window.STRAPI_URL || 'http://localhost:1337'}${currentImage.url}`;
+      modalImage.src = fullUrl;
+      modalImage.alt = currentImage.alternativeText || currentImage.name || 'Image';
+      modalDescription.textContent = currentImage.caption || currentImage.name || '';
+
+      // Update counter
+      if (imageCounter) {
+        imageCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+      }
     }
   }
 
@@ -71,6 +149,9 @@
       modal.classList.add('hidden');
       // Restore body scroll
       document.body.style.overflow = 'auto';
+      // Reset gallery state
+      currentImages = [];
+      currentImageIndex = 0;
     }
   }
 
@@ -86,10 +167,14 @@
     }
   });
 
-  // Close modal with Escape key
+  // Close modal with Escape key, navigate with arrow keys
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       window.closeImageModal();
+    } else if (e.key === 'ArrowLeft' && currentImages.length > 0) {
+      window.navigateImage(-1);
+    } else if (e.key === 'ArrowRight' && currentImages.length > 0) {
+      window.navigateImage(1);
     }
   });
 </script>
