@@ -20,14 +20,34 @@
       1 / 1
     </div>
 
-    <!-- Image container -->
-    <div class="relative max-w-full max-h-[80vh]">
+    <!-- Media container (image / video / audio) -->
+    <div class="relative max-w-full max-h-[80vh] flex items-center justify-center">
       <img
         id="modalImage"
         src=""
         alt=""
-        class="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+        class="max-w-full max-h-full object-contain rounded-lg shadow-2xl hidden"
       />
+
+      <video
+        id="modalVideo"
+        controls
+        class="max-w-full max-h-full rounded-lg shadow-2xl hidden"
+      ></video>
+
+      <div id="audioWrapper" class="hidden flex flex-col items-center">
+        <img
+          id="modalAudioCover"
+          src=""
+          alt=""
+          class="mb-4 max-w-xs rounded-lg shadow-2xl"
+        />
+        <audio
+          id="modalAudio"
+          controls
+          class="w-full max-w-lg"
+        ></audio>
+      </div>
     </div>
 
     <!-- Description -->
@@ -55,90 +75,168 @@
 </div>
 
 <script is:inline>
-  // Global variables for current image gallery
-  let currentImages = [];
-  let currentImageIndex = 0;
+  // Global variables for current media gallery
+  let currentItems = [];
+  let currentItemIndex = 0;
 
-  // Global functions for opening and closing the image modal
-  window.openImageModal = function(imageUrl, caption = '', altText = '', description = '', images = null, startIndex = 0) {
+  // Helper to show/hide media elements
+  function showModalElement(type) {
+    const img = document.getElementById('modalImage');
+    const vid = document.getElementById('modalVideo');
+    const audioWrapper = document.getElementById('audioWrapper');
+    if (img) img.classList.add('hidden');
+    if (vid) vid.classList.add('hidden');
+    if (audioWrapper) audioWrapper.classList.add('hidden');
+
+    if (type === 'image' && img) img.classList.remove('hidden');
+    if (type === 'video' && vid) vid.classList.remove('hidden');
+    if (type === 'audio' && audioWrapper) audioWrapper.classList.remove('hidden');
+  }
+
+  // Global functions for opening and closing the media modal
+  window.openMediaModal = function(mediaUrl, caption = '', altText = '', description = '', items = null, startIndex = 0) {
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalAudio = document.getElementById('modalAudio');
+    const modalAudioCover = document.getElementById('modalAudioCover');
     const modalDescription = document.getElementById('modalDescription');
     const prevButton = document.getElementById('prevButton');
     const nextButton = document.getElementById('nextButton');
     const imageCounter = document.getElementById('imageCounter');
 
-    if (modal && modalImage && modalDescription) {
-      // If images array is provided, set up gallery navigation
-      if (images && Array.isArray(images)) {
-        currentImages = images;
-        currentImageIndex = startIndex;
+    if (modal && modalDescription) {
+      // If items array is provided, set up gallery navigation
+      if (items && Array.isArray(items)) {
+        currentItems = items;
+        currentItemIndex = startIndex;
 
         // Show navigation buttons and counter
         if (prevButton) prevButton.style.display = 'flex';
         if (nextButton) nextButton.style.display = 'flex';
         if (imageCounter) {
           imageCounter.style.opacity = '1';
-          imageCounter.textContent = `${startIndex + 1} / ${images.length}`;
+          imageCounter.textContent = `${startIndex + 1} / ${items.length}`;
         }
 
-        // Update image to the one at startIndex
-        const currentImage = images[startIndex];
-        if (currentImage) {
-          const fullUrl = currentImage.url.startsWith('http') ? currentImage.url : `${window.STRAPI_URL || 'http://localhost:1337'}${currentImage.url}`;
-          modalImage.src = fullUrl;
-          modalImage.alt = currentImage.alternativeText || currentImage.name || 'Image';
-          modalDescription.textContent = currentImage.caption || currentImage.name || '';
+        // Update media to the one at startIndex
+        const current = items[startIndex];
+        if (current) {
+          const fullUrl = current.url.startsWith('http') ? current.url : `${window.STRAPI_URL || 'http://localhost:1337'}${current.url}`;
+          const mime = current.mime || '';
+          if (mime.startsWith('video')) {
+            showModalElement('video');
+            modalVideo.src = fullUrl;
+            modalVideo.alt = current.alternativeText || current.name || '';
+          } else if (mime.startsWith('audio')) {
+            showModalElement('audio');
+            const coverArtData = current._coverArt || current.coverArt;
+            if (coverArtData && modalAudioCover) {
+              modalAudioCover.src = coverArtData.url.startsWith('http') ? coverArtData.url : `${window.STRAPI_URL || 'http://localhost:1337'}${coverArtData.url}`;
+              modalAudioCover.style.display = 'block';
+            } else if (modalAudioCover) {
+              modalAudioCover.style.display = 'none';
+            }
+            if (modalAudio) modalAudio.src = fullUrl;
+          } else {
+            showModalElement('image');
+            modalImage.src = fullUrl;
+            modalImage.alt = current.alternativeText || current.name || 'Image';
+          }
+          modalDescription.textContent = current.caption || current.name || '';
         }
       } else {
-        // Single image mode
-        currentImages = [];
-        currentImageIndex = 0;
+        // Single media mode
+        currentItems = [];
+        currentItemIndex = 0;
 
         // Hide navigation buttons and counter
         if (prevButton) prevButton.style.display = 'none';
         if (nextButton) nextButton.style.display = 'none';
         if (imageCounter) imageCounter.style.opacity = '0';
 
-        modalImage.src = imageUrl;
-        modalImage.alt = altText || caption || 'Image';
-        modalDescription.textContent = description;
+        let mime = '';
+        if (mediaUrl) {
+          // guess based on extension
+          if (mediaUrl.match(/\.(mp4|webm|ogg)(\?|$)/i)) mime = 'video';
+          else if (mediaUrl.match(/\.(mp3|wav|aac|flac)(\?|$)/i)) mime = 'audio';
+        }
+        if (mime === 'video') {
+          showModalElement('video');
+          modalVideo.src = mediaUrl;
+        } else if (mime === 'audio') {
+          showModalElement('audio');
+          modalAudio.src = mediaUrl;
+        } else {
+          showModalElement('image');
+          if (modalImage) modalImage.src = mediaUrl;
+        }
+        if (modalImage) modalImage.alt = altText || caption || 'Image';
+        if (modalDescription) modalDescription.textContent = description;
       }
 
       modal.classList.remove('hidden');
-
-      // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
     }
   }
 
-  // Navigate to next/previous image in gallery
-  window.navigateImage = function(direction) {
-    if (currentImages.length === 0) return;
+  // back-compat alias
+  window.openImageModal = window.openMediaModal;
 
-    currentImageIndex += direction;
+  // Helper: render a media item into the modal
+  function renderModalItem(item) {
+    const modalImage = document.getElementById('modalImage');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalAudio = document.getElementById('modalAudio');
+    const modalAudioCover = document.getElementById('modalAudioCover');
+    const modalDescription = document.getElementById('modalDescription');
+    const strapiUrl = window.STRAPI_URL || 'http://localhost:1337';
+    const fullUrl = item.url.startsWith('http') ? item.url : `${strapiUrl}${item.url}`;
+    const mime = item.mime || '';
+
+    if (mime.startsWith('video')) {
+      showModalElement('video');
+      if (modalVideo) modalVideo.src = fullUrl;
+    } else if (mime.startsWith('audio')) {
+      showModalElement('audio');
+      const coverData = item._coverArt || item.coverArt;
+      if (coverData && modalAudioCover) {
+        modalAudioCover.src = coverData.url.startsWith('http') ? coverData.url : `${strapiUrl}${coverData.url}`;
+        modalAudioCover.style.display = 'block';
+      } else if (modalAudioCover) {
+        modalAudioCover.style.display = 'none';
+      }
+      if (modalAudio) modalAudio.src = fullUrl;
+    } else {
+      showModalElement('image');
+      if (modalImage) {
+        modalImage.src = fullUrl;
+        modalImage.alt = item.alternativeText || item.name || 'Image';
+      }
+    }
+    if (modalDescription) modalDescription.textContent = item.caption || item.name || '';
+  }
+
+  // Navigate to next/previous item in gallery
+  window.navigateImage = function(direction) {
+    if (currentItems.length === 0) return;
+
+    currentItemIndex += direction;
 
     // Wrap around
-    if (currentImageIndex < 0) {
-      currentImageIndex = currentImages.length - 1;
-    } else if (currentImageIndex >= currentImages.length) {
-      currentImageIndex = 0;
+    if (currentItemIndex < 0) {
+      currentItemIndex = currentItems.length - 1;
+    } else if (currentItemIndex >= currentItems.length) {
+      currentItemIndex = 0;
     }
 
-    const currentImage = currentImages[currentImageIndex];
-    const modalImage = document.getElementById('modalImage');
-    const modalDescription = document.getElementById('modalDescription');
+    const current = currentItems[currentItemIndex];
     const imageCounter = document.getElementById('imageCounter');
 
-    if (currentImage && modalImage && modalDescription) {
-      const fullUrl = currentImage.url.startsWith('http') ? currentImage.url : `${window.STRAPI_URL || 'http://localhost:1337'}${currentImage.url}`;
-      modalImage.src = fullUrl;
-      modalImage.alt = currentImage.alternativeText || currentImage.name || 'Image';
-      modalDescription.textContent = currentImage.caption || currentImage.name || '';
-
-      // Update counter
+    if (current) {
+      renderModalItem(current);
       if (imageCounter) {
-        imageCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+        imageCounter.textContent = `${currentItemIndex + 1} / ${currentItems.length}`;
       }
     }
   }
@@ -150,8 +248,13 @@
       // Restore body scroll
       document.body.style.overflow = 'auto';
       // Reset gallery state
-      currentImages = [];
-      currentImageIndex = 0;
+      currentItems = [];
+      currentItemIndex = 0;
+      // Stop any playing media
+      const vid = document.getElementById('modalVideo');
+      const aud = document.getElementById('modalAudio');
+      if (vid) { vid.pause(); vid.src = ''; }
+      if (aud) { aud.pause(); aud.src = ''; }
     }
   }
 
@@ -171,9 +274,9 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       window.closeImageModal();
-    } else if (e.key === 'ArrowLeft' && currentImages.length > 0) {
+    } else if (e.key === 'ArrowLeft' && currentItems.length > 0) {
       window.navigateImage(-1);
-    } else if (e.key === 'ArrowRight' && currentImages.length > 0) {
+    } else if (e.key === 'ArrowRight' && currentItems.length > 0) {
       window.navigateImage(1);
     }
   });

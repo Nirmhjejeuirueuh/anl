@@ -20,15 +20,18 @@ const { slug } = Astro.params;
 const allResources = await getResourceLibraries();
 const resource = allResources.find(r => r.slug === slug);
 
-// If not found or not an article, redirect to 404
-if (!resource || resource.resourceType !== 'article') {
+// If not found, redirect to 404
+if (!resource) {
   return Astro.redirect('/404');
 }
+// NOTE: we deliberately do **not** redirect when the type isn't article;
+// the page will render an appropriate viewer per type below.
 
 // Mock page data
 const indexData = {
   title: resource.title,
-  subtitle: resource.category || '',
+  // category is optional and may not be recognized by TS here
+  subtitle: (resource as any).category || '',
   metaDescription: resource.title,
   draft: false
 };
@@ -48,21 +51,72 @@ function getYouTubeVideoId(url: string): string {
   <section class="py-16 md:py-20 lg:py-24 bg-theme-light">
     <div class="container max-w-4xl">
       <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-        <!-- Article Image -->
-        {(resource.image || resource.media || resource.resourceType === 'article') && resource.resourceType !== 'video' && (
-          <div class="aspect-[16/9] overflow-hidden">
-            <img
-              src={
-                resource.resourceType === 'article' ? '/images/articel.jpg' :
-                resource.image ?
-                  (resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`) :
-                  (resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`)
-              }
-              alt={resource.title}
-              class="w-full h-full object-cover"
-            />
+        <!-- Media preview/header for non-video types -->
+        {resource.resourceType === 'video' && resource.videoUrl ? (
+          <div class="aspect-video overflow-hidden">
+            {resource.videoUrl.includes('youtube.com') || resource.videoUrl.includes('youtu.be') ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${getYouTubeVideoId(resource.videoUrl)}`}
+                title={resource.title}
+                class="w-full h-full rounded-t-2xl"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            ) : (
+              <video
+                src={resource.videoUrl.startsWith('http') ? resource.videoUrl : `${STRAPI_URL}${resource.videoUrl}`}
+                controls
+                class="w-full h-full rounded-t-2xl"
+              ></video>
+            )}
           </div>
-        )}
+        ) : resource.resourceType === 'audio' && resource.media && resource.media.url ? (
+          <div class="aspect-[16/9] overflow-hidden bg-gray-100">
+            {resource.coverArt && resource.coverArt.url ? (
+              <img
+                src={resource.coverArt.url.startsWith('http') ? resource.coverArt.url : `${STRAPI_URL}${resource.coverArt.url}`}
+                alt={resource.title}
+                class="w-full h-full object-cover"
+              />
+            ) : resource.image ? (
+              <img
+                src={resource.image.url.startsWith('http') ? resource.image.url : `${STRAPI_URL}${resource.image.url}`}
+                alt={resource.title}
+                class="w-full h-full object-cover"
+              />
+            ) : null}
+            <div class="p-6">
+              <audio controls class="w-full">
+                <source src={resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`} type={resource.media.mime} />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+        ) : resource.resourceType === 'image' && resource.media && resource.media.url ? (
+          <div class="aspect-[16/9] overflow-hidden">
+            <a
+              href={resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`}
+                alt={resource.title}
+                class="w-full h-full object-cover"
+              />
+            </a>
+          </div>
+        ) : resource.resourceType === 'pdf' && (resource.pdfUrl || resource.externalUrl || resource.media) ? (
+          <div class="aspect-[16/9] overflow-hidden">
+            <iframe
+              src={
+                resource.pdfUrl || resource.externalUrl ||
+                (resource.media ? (resource.media.url.startsWith('http') ? resource.media.url : `${STRAPI_URL}${resource.media.url}`) : '')
+              }
+              class="w-full h-full"
+            ></iframe>
+          </div>
+        ) : null}
 
         <!-- Article Header -->
         <div class="p-6 md:p-8 lg:p-12">

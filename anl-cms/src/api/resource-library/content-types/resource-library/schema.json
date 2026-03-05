@@ -25,8 +25,9 @@
       "required": true,
       "enum": [
         "video",
-        "pdf",
-        "article"
+        "image",
+        "audio",
+        "pdf"
       ]
     },
     "videoUrl": {
@@ -61,11 +62,31 @@
       "type": "media",
       "conditions": {
         "visible": {
-          "==": [
+          "or": [
             {
-              "var": "resourceType"
+              "==": [
+                {
+                  "var": "resourceType"
+                },
+                "pdf"
+              ]
             },
-            "pdf"
+            {
+              "==": [
+                {
+                  "var": "resourceType"
+                },
+                "audio"
+              ]
+            },
+            {
+              "==": [
+                {
+                  "var": "resourceType"
+                },
+                "image"
+              ]
+            }
           ]
         }
       },
@@ -73,7 +94,8 @@
       "required": false,
       "allowedTypes": [
         "images",
-        "files"
+        "files",
+        "audios"
       ]
     },
     "category": {
@@ -97,6 +119,23 @@
     },
     "archive": {
       "type": "boolean"
+    },
+    "coverArt": {
+      "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "resourceType"
+            },
+            "audio"
+          ]
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

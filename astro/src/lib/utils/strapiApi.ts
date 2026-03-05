@@ -209,23 +209,21 @@ export interface StrapiResourceLibrary {
   documentId?: string;
   title: string;
   slug: string;
-  resourceType: 'video' | 'pdf' | 'document' | 'article' | 'other';
+  category?: string;
+  description?: string;
+  content?: string;
+  resourceType: 'video' | 'pdf' | 'document' | 'article' | 'other' | 'audio' | 'image';
   videoUrl?: string;
   pdfUrl?: string;
   externalUrl?: string;
-  image?: {
+  archive?: boolean;
+  media?: {
     id: number;
-    documentId: string;
     name: string;
-    alternativeText: string;
-    caption: string;
-    width: number;
-    height: number;
-    formats: {
-      thumbnail: StrapiImageFormat;
-      medium: StrapiImageFormat;
-      small: StrapiImageFormat;
-    };
+    alternativeText?: string;
+    caption?: string;
+    width?: number;
+    height?: number;
     hash: string;
     ext: string;
     mime: string;
@@ -238,23 +236,22 @@ export interface StrapiResourceLibrary {
     updatedAt: string;
     publishedAt: string;
   };
-  featured?: boolean;
-  keywords?: string;
-  publishedAt: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-export interface StrapiResourceLibrary {
-  id?: number;
-  documentId?: string;
-  title: string;
-  slug: string;
-  description: string;
-  content?: string;
-  resourceType: 'video' | 'pdf' | 'document' | 'article' | 'other';
-  videoUrl?: string;
-  pdfUrl?: string;
-  externalUrl?: string;
+  coverArt?: {
+    id: number;
+    name: string;
+    alternativeText?: string;
+    width?: number;
+    height?: number;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string | null;
+    provider: string;
+    provider_metadata: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
   image?: {
     id: number;
     documentId: string;
@@ -1366,7 +1363,10 @@ export interface StrapiMediaSection {
   title: string;
   description?: string;
   stage?: string;
-  photos: StrapiMedia[];
+  // new field: general media items (images, videos, audios)
+  media: StrapiMedia[];
+  // keep photos property for backwards compatibility in case older entries still use it
+  photos?: StrapiMedia[];
 }
 
 export interface StrapiMediaLibrary {
@@ -1380,13 +1380,13 @@ export interface StrapiMediaLibrary {
   publishedAt?: string;
 }
 
-export async function getMediaLibrary(): Promise<StrapiMediaLibrary[] | null> {
+export async function getMediaLibrary(): Promise<StrapiMediaLibrary | null> {
   try {
-    const response = await fetch(`${STRAPI_URL}/api/media-library?populate[sections][populate]=photos`);
+    const response = await fetch(`${STRAPI_URL}/api/media-library?populate[sections][populate]=media`);
     if (!response.ok) {
       throw new Error(`Failed to fetch media library: ${response.status}`);
     }
-    const data: StrapiResponse<StrapiMediaLibrary> = await response.json();
+    const data: { data: StrapiMediaLibrary } = await response.json();
     return data.data;
   } catch (error) {
     console.error('Error fetching media library:', error);

@@ -803,6 +803,7 @@ export interface ApiResourceLibraryResourceLibrary
     archive: Schema.Attribute.Boolean;
     article: Schema.Attribute.RichText;
     category: Schema.Attribute.String;
+    coverArt: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -813,10 +814,12 @@ export interface ApiResourceLibraryResourceLibrary
       'api::resource-library.resource-library'
     > &
       Schema.Attribute.Private;
-    media: Schema.Attribute.Media<'images' | 'files'>;
+    media: Schema.Attribute.Media<'images' | 'files' | 'audios'>;
     pdfUrl: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    resourceType: Schema.Attribute.Enumeration<['video', 'pdf', 'article']> &
+    resourceType: Schema.Attribute.Enumeration<
+      ['video', 'image', 'audio', 'pdf']
+    > &
       Schema.Attribute.Required;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;

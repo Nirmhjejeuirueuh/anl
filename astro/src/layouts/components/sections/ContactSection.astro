@@ -11,8 +11,12 @@ import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 
 const {
-  settings: { contactFormAction, contactFormProvider },
+  settings: { contactFormProvider },
 } = config;
+
+// Read contact email from environment variables
+const contactEmail = import.meta.env.CONTACT_EMAIL || 'enquiry@agilenlite.com';
+const contactFormAction = `https://formsubmit.co/${contactEmail}`;
 
 type ContactItem = {
   icon: string;

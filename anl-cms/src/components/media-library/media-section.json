@@ -10,12 +10,14 @@
       "type": "string",
       "required": true
     },
-    "photos": {
+    "media": {
       "type": "media",
       "multiple": true,
       "required": false,
       "allowedTypes": [
-        "images"
+        "images",
+        "videos",
+        "audios"
       ]
     },
     "stage": {

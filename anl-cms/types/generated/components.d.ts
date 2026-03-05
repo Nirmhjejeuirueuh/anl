@@ -32,7 +32,7 @@ export interface MediaLibraryMediaSection extends Struct.ComponentSchema {
     displayName: 'Media Section';
   };
   attributes: {
-    photos: Schema.Attribute.Media<'images', true>;
+    media: Schema.Attribute.Media<'images' | 'videos' | 'audios', true>;
     stage: Schema.Attribute.Enumeration<['active', 'pastHighlights']>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
