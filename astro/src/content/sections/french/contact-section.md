@@ -37,7 +37,7 @@ form:
     hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
   # This note will show at the end of form
   # note: |
-  #   Vos données sont en sécurité avec nous. Nous respectons votre vie privée et ne partageons jamais vos informations. <br /> Lisez notre [Politique de confidentialité](/privacy-policy/).
+  #   Vos données sont en sécurité avec nous. Nous respectons votre vie privée et ne partageons jamais vos informations. <br /> Lisez notre <a href='/privacy-policy/' target='_blank' rel='noopener noreferrer' style='color:#8af3ff'>Politique de confidentialité</a>.
   inputs:
     - label: ""
       placeholder: "Nom complet"

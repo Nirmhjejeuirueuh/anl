@@ -208,7 +208,7 @@ form:
       name: "Details"
       required: true
       halfWidth: false
-    - label: "I agree to the [privacy policy](/privacy-policy/)."
+    - label: "I agree to the <a href='/privacy-policy/' target='_blank' rel='noopener noreferrer' style='color:#8af3ff;text-decoration:underline'>privacy policy</a>."
       name: "Agreed Privacy"
       value: "Agreed"
       checked: false
