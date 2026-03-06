@@ -68,7 +68,7 @@ form:
             value: "Mr."
           - label: "Ms."
             value: "Ms."
-          - label: "Miss"
+          - label: "Miss."
             value: "Miss"
           - label: "Mrs."
             value: "Mrs."

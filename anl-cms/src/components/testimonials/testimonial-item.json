@@ -4,8 +4,18 @@
     "displayName": "Testimonial Item",
     "description": "A single testimonial entry"
   },
-  "options": {},
+  "options": {
+    "mainField": "companyName"
+  },
   "attributes": {
+    "personName": {
+      "type": "string",
+      "required": false
+    },
+    "companyName": {
+      "type": "string",
+      "required": false
+    },
     "shortTestimonial": {
       "type": "text",
       "required": true
@@ -14,15 +24,7 @@
       "type": "text",
       "required": false
     },
-    "personName": {
-      "type": "string",
-      "required": false
-    },
     "personRole": {
-      "type": "string",
-      "required": false
-    },
-    "companyName": {
       "type": "string",
       "required": false
     },

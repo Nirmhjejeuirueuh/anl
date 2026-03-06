@@ -57,6 +57,9 @@ export interface TestimonialsTestimonialItem extends Struct.ComponentSchema {
     description: 'A single testimonial entry';
     displayName: 'Testimonial Item';
   };
+  options: {
+    mainField: 'companyName';
+  };
   attributes: {
     companyLogo: Schema.Attribute.Media<'images'>;
     companyName: Schema.Attribute.String;

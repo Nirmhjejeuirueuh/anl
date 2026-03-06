@@ -1278,8 +1278,22 @@ export async function getClientList(): Promise<StrapiClientLogo[]> {
       throw new Error(`Failed to fetch client list: ${response.status}`);
     }
     const data: any = await response.json();
-    // singleType response: data.data.logos is an array
-    return data.data?.logos || [];
+    
+    // Strapi v5 Single Type response structure:
+    // data.data.logos might be the array we need
+    const logos = data.data?.logos;
+
+    if (!Array.isArray(logos)) {
+      return [];
+    }
+
+    // Map the Strapi image objects to our StrapiClientLogo interface
+    return logos.map((logo: any) => ({
+      id: logo.id,
+      // If the URL is already absolute, use it; otherwise prepend STRAPI_URL
+      url: logo.url || "",
+      alternativeText: logo.alternativeText || "",
+    }));
   } catch (error) {
     console.error('Error fetching client list:', error);
     return [];

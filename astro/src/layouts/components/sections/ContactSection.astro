@@ -11,10 +11,11 @@ import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 
 const {
-  settings: { contactFormProvider, recaptchaSiteKey },
+  settings: { contactFormProvider },
 } = config;
 
-// Read contact email from environment variables
+// Read config from environment variables
+const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || config.settings.recaptchaSiteKey;
 const contactEmail = import.meta.env.CONTACT_EMAIL || 'enquiry@agilenlite.com';
 const contactFormAction = `https://formsubmit.co/${contactEmail}`;
 
@@ -545,15 +546,15 @@ form = {
                 ))}
 
                 {/* Training of interest group error message */}
-                <div class="col-span-2">
-                  <p class="mt-2 hidden text-sm text-red-600 error-message training-error">
+                <div class="col-span-2 hidden training-error-container">
+                  <p class="mt-2 text-sm text-red-600 error-message">
                     Please select at least one training area of interest.
                   </p>
                 </div>
 
                 {/* Google reCAPTCHA */}
                 {recaptchaSiteKey && recaptchaSiteKey !== "YOUR_RECAPTCHA_SITE_KEY_HERE" && (
-                  <div class="col-span-2">
+                  <div class="col-span-2 recaptcha-container">
                     <div class="g-recaptcha" data-sitekey={recaptchaSiteKey}></div>
                     <p class="mt-2 hidden text-sm text-red-600 error-message recaptcha-error">
                       Please complete the reCAPTCHA verification.
@@ -824,10 +825,10 @@ form = {
 
       // Special validation for "Training of interest" checkbox group
       const trainingCheckboxes = form?.querySelectorAll('input[type="checkbox"][name="Training of interest"]');
-      const trainingErrorMsg = form?.querySelector('.training-error') as HTMLElement;
+      const trainingErrorContainer = form?.querySelector('.training-error-container') as HTMLElement;
       
-      if (trainingErrorMsg) {
-        trainingErrorMsg.classList.add('hidden');
+      if (trainingErrorContainer) {
+        trainingErrorContainer.classList.add('hidden');
       }
       
       // Check if at least one training interest is selected
@@ -835,8 +836,8 @@ form = {
       
       if (!hasTrainingSelected) {
         hasErrors = true;
-        if (trainingErrorMsg) {
-          trainingErrorMsg.classList.remove('hidden');
+        if (trainingErrorContainer) {
+          trainingErrorContainer.classList.remove('hidden');
         }
         // Add red ring to all training checkboxes
         trainingCheckboxes?.forEach((cb: HTMLInputElement) => {

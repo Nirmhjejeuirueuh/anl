@@ -966,12 +966,21 @@ export interface ApiTermsAndConditionsTermsAndConditions
 export interface ApiTestimonialTestimonial extends Struct.SingleTypeSchema {
   collectionName: 'testimonials';
   info: {
+    description: '';
     displayName: 'Testimonial';
     pluralName: 'testimonials';
     singularName: 'testimonial';
   };
   options: {
     draftAndPublish: true;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    'content-type-builder': {
+      visible: true;
+    };
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;

@@ -278,7 +278,7 @@ function getImageModalCall(resource: any): string {
                   )}
                 </div>
               )}
-              <div class="flex flex-col flex-1 p-6 md:p-8">
+              <div class="flex flex-col flex-1 p-2 md:p-4">
                 <div class="flex items-center justify-between mb-3">
                   <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                     resource.resourceType === 'video' ? 'bg-red-100 text-red-800' :
@@ -592,7 +592,7 @@ function getImageModalCall(resource: any): string {
 
     card.innerHTML = `
       ${imageHtml}
-        <div class="flex flex-col flex-1 p-6 md:p-8">
+        <div class="flex flex-col flex-1 p-2 md:p-4">
         <div class="flex items-center justify-between mb-3">
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${typeClass}">
             ${resource.resourceType === 'video' ? '<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/></svg>' : ''}

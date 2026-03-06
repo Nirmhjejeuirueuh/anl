@@ -4,12 +4,20 @@
   "info": {
     "singularName": "testimonial",
     "pluralName": "testimonials",
-    "displayName": "Testimonial"
+    "displayName": "Testimonial",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "content-type-builder": {
+      "visible": true
+    }
+  },
   "attributes": {
     "title": {
       "type": "string",

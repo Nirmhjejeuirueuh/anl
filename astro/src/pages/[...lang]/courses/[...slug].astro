@@ -72,13 +72,13 @@ console.log('COURSE ROUTE: About to render course:', course.data.title);
 >
   <section class="py-12">
     <div class="container">
-     
+      
       <!-- Back Navigation -->
       <div class="mb-8">
-        <button
-          onclick="history.back()"
+        <a
+          href={`${lang ? `/${lang}` : ''}/courses`}
           class="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-200 group"
-          aria-label="Go back to previous page"
+          aria-label="Back to courses list"
         >
           <svg 
             class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1" 
@@ -94,7 +94,7 @@ console.log('COURSE ROUTE: About to render course:', course.data.title);
             />
           </svg>
           <span class="font-medium">Back to Courses</span>
-        </button>
+        </a>
       </div>
       
       <div class="grid grid-cols-1 justify-items-center space-y-12">
