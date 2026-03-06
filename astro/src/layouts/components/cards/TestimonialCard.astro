@@ -130,15 +130,16 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
           modal.innerHTML = `
             <div class="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
               <div class="p-6">
-                <button onclick="this.closest('.fixed').remove()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+                <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
 
                 <div class="mb-6">
-                  ${testimonial.companyLogo ? `<img src="${testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${strapiUrl}${testimonial.companyLogo.url}`}" alt="${testimonial.companyName || 'Company logo'}" class="max-h-12 w-auto object-contain mb-4">` : ''}
-                  ${testimonial.companyName ? `<h3 class="text-xl font-bold mb-2">${testimonial.companyName}</h3>` : ''}
+                  ${testimonial.companyLogo 
+                    ? `<img src="${testimonial.companyLogo.url.startsWith('http') ? testimonial.companyLogo.url : `${strapiUrl}${testimonial.companyLogo.url}`}" alt="${testimonial.companyName || 'Company logo'}" class="max-h-12 w-auto object-contain mb-4">` 
+                    : (testimonial.companyName ? `<h3 class="text-xl font-bold mb-2">${testimonial.companyName}</h3>` : '')}
                 </div>
 
                 <div class="prose prose-lg max-w-none mb-6">
-                  &#8220;${testimonial.fullStory}&#8221;
+                  ${testimonial.fullStory}
                 </div>
 
                 ${testimonial.personName || testimonial.personRole ? `
@@ -156,6 +157,11 @@ const bgClass = bgColor !== 'nil' ? `bg-${bgColor}` : 'bg-white';
               </div>
             </div>
           `;
+
+          // Close modal when clicking close button
+          modal.querySelector('.modal-close').addEventListener('click', () => {
+             modal.remove();
+          });
 
           // Close modal when clicking outside
           modal.addEventListener('click', (e) => {

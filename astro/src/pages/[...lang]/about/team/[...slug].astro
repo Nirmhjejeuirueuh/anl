@@ -55,10 +55,10 @@ const pageData = {
       <div class="mx-auto max-w-4xl relative">
         <!-- Back Navigation -->
         <div class="mb-8">
-          <button
-            onclick="history.back()"
+          <a
+            href={`${lang ? `/${lang}` : ""}/about`}
             class="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-200 group"
-            aria-label="Go back to previous page"
+            aria-label="Go back to about page"
           >
             <svg 
               class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1" 
@@ -74,7 +74,7 @@ const pageData = {
               />
             </svg>
             <span class="font-medium">Back</span>
-          </button>
+          </a>
         </div>
 
         <div class="text-center">

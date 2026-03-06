@@ -97,10 +97,10 @@ console.log('🚀 BLOG ROUTE: Parsed content preview:', parsedContent.substring(
     <div class="container">
       <!-- Back Navigation -->
       <div class="mb-8">
-        <button
-          onclick="history.back()"
+        <a
+          href={`${lang ? `/${lang}` : ""}/blogs`}
           class="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors duration-200 group"
-          aria-label="Go back to previous page"
+          aria-label="Go back to blogs listing"
         >
           <svg 
             class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1" 
@@ -116,7 +116,7 @@ console.log('🚀 BLOG ROUTE: Parsed content preview:', parsedContent.substring(
             />
           </svg>
           <span class="font-medium">Back to Blogs</span>
-        </button>
+        </a>
       </div>
 
       <div class="grid grid-cols-1 justify-items-center space-y-12">
