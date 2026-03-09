@@ -7,23 +7,15 @@ import ServicesSection from "@/components/sections/ServicesSection.astro";
 import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { generatePaths } from "@/lib/utils/i18nUtils.ts";
-import { STRAPI_URL } from "@/lib/utils/strapiApi";
+import { getServicesPage, STRAPI_URL } from "@/lib/utils/strapiApi";
 import { markdownify } from "@/lib/utils/textConverter";
 
 export function getStaticPaths() {
   return generatePaths();
 }
 
-
-// Fetch services page from Strapi
-const response = await fetch(`${STRAPI_URL}/api/services-page?${new URLSearchParams({
-  'populate[services][populate]': 'image'
-}).toString()}`);
-if (!response.ok) {
-  throw new Error(`Failed to fetch services page: ${response.status}`);
-}
-const strapiData = await response.json();
-const pageData = strapiData.data;
+// Fetch services page from Strapi (cached — only one HTTP request across all language paths)
+const pageData = await getServicesPage();
 ---
 
 <Base title="Our Services" fitToScreen={false}>

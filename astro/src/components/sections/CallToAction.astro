@@ -1,5 +1,5 @@
 ---
-import { getEntry } from "astro:content";
+import { getEntryCTM } from "@/lib/contentParser.astro";
 import CustomButton from "@/components/CustomButton.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 
@@ -9,8 +9,9 @@ interface Props {
 
 const { content } = Astro.props;
 
-// Get default content from MD file if no content prop is provided
-const defaultContent = content || (await getEntry("sections", `${Astro.currentLocale || 'english'}/call-to-action`));
+// Get default content from MD file if no content prop is provided.
+// getEntryCTM maps the locale code ("en") to the contentDir ("english") correctly.
+const defaultContent = content || (await getEntryCTM("sections", "call-to-action", Astro.currentLocale));
 
 // Extract data from content
 const {

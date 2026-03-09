@@ -222,47 +222,6 @@ const blogCollection = defineCollection({
   ),
 });
 
-// Portfolio Collection
-export const portfolioCollection = defineCollection({
-  schema: page.merge(
-    z.object({
-      categories: z.array(z.string()).optional(),
-      masonryImage: z.string().optional(),
-      information: z
-        .array(
-          z.object({
-            icon: z.string(),
-            label: z.string(),
-            value: z.string(),
-          }),
-        )
-        .optional(),
-      indexPortfolioSection: z
-        .object({
-          enable: z.boolean(),
-          uniqueId: z.boolean().optional(),
-          headType: z.enum(["filter", "heading"]),
-          filter: z.object({
-            layout: z.enum(["classic", "boxed", "modern"]),
-          }),
-          head: z.object({
-            title: z.string(),
-            subtitle: z.string(),
-            button: sharedButtonTag.optional(),
-          }),
-          body: z.object({
-            content: z.enum(["portfolio", "blogs"]).optional(),
-            layout: z.enum(["masonry", "grid"]).optional(),
-            card: z.object({
-              layout: z.enum(["classic", "overlay"]),
-            }),
-          }),
-        })
-        .optional(),
-    }),
-  ),
-});
-
 // Course collection schema
 const courseSection = z.object({
   enable: z.boolean().optional(),
@@ -338,7 +297,6 @@ const trainingCollection = defineCollection({
 export const collections = {
   blogs: blogCollection,
   services: serviceCollection,
-  "case-studies": portfolioCollection,
   courses: courseCollection,
   trainings: trainingCollection,
 
@@ -350,9 +308,7 @@ export const collections = {
   "team-members": defineCollection({
     schema: page,
   }),
-  pricing: defineCollection({}),
   homepage: defineCollection({}),
   author: defineCollection({}),
-  career: defineCollection({}),
   widgets: defineCollection({}),
 };

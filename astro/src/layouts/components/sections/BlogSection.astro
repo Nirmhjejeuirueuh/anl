@@ -4,11 +4,11 @@ import BlogCard from "@/layouts/components/cards/BlogCard.astro";
 import overrideObjects from "@/lib/utils/overrideObjects.ts";
 import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
 import { markdownify } from "@/lib/utils/textConverter";
-import { getCollectionCTM } from "@/lib/contentParser.astro";
 import config from ".astro/config.generated.json" assert { type: "json" };
 import { getEntryCTM } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import CustomButton from "../CustomButton.astro";
+import { getBlogs, convertStrapiBlogToAstro } from "@/lib/utils/strapiApi";
 
 const { blogFolder } = config.settings;
 
@@ -42,7 +42,7 @@ let {
   bgPatternImage,
 } = actualContent as sectionType;
 
-let posts = await getCollectionCTM(blogFolder as "blogs", Astro.currentLocale);
+let posts = (await getBlogs()).map(convertStrapiBlogToAstro) as any[];
 
 // Sort posts by date
 posts = sortByDate(posts);

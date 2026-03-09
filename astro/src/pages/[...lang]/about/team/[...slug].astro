@@ -9,30 +9,20 @@ import { generatePaths } from "@/lib/utils/i18nUtils.ts";
 export async function getStaticPaths() {
   const members = await getAllTeamMembers();
   return generatePaths().flatMap(({ params: { lang } }) =>
-    members.map(member => ({ params: { lang, slug: member.slug } }))
+    members.map(member => ({ 
+      params: { lang, slug: member.slug },
+      props: { member }
+    }))
   );
 }
 
 const { lang, slug } = Astro.params;
+const { member } = Astro.props;
 
 // Handle missing slug parameter
 if (!slug) {
   console.log('No slug provided, redirecting to 404');
   return Astro.redirect('/404');
-}
-
-console.log('TEAM MEMBER ROUTE: Route matched! Slug from URL:', slug);
-
-// Fetch team member from Strapi by slug
-let member = null;
-try {
-  console.log('Fetching Strapi team member by slug:', slug);
-  member = await getTeamMemberBySlug(slug);
-  if (!member) {
-    console.log('Strapi team member not found for slug:', slug);
-  }
-} catch (error) {
-  console.error('Error fetching Strapi team member:', error);
 }
 
 // Handle 404 if team member not found

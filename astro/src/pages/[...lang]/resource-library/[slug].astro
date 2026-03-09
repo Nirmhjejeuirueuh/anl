@@ -8,17 +8,17 @@ import { markdownify } from "@/lib/utils/textConverter";
 export async function getStaticPaths() {
   const resources = await getResourceLibraries();
   return generatePaths().flatMap(({ params: { lang } }) =>
-    resources.map(r => ({ params: { lang, slug: r.slug } }))
+    resources.map(resource => ({ 
+      params: { lang, slug: resource.slug },
+      props: { resource }
+    }))
   );
 }
 
 
-// Get slug from params
+// Get slug and resource from props/params
 const { slug } = Astro.params;
-
-// Fetch all resources and find the one with matching slug
-const allResources = await getResourceLibraries();
-const resource = allResources.find(r => r.slug === slug);
+const { resource } = Astro.props;
 
 // If not found, redirect to 404
 if (!resource) {
