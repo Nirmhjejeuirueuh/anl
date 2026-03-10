@@ -40,14 +40,6 @@ const { name, role, image, social, slug } = content as TeamMember;
           />
         )
       }
-      {
-        role && (
-          <p
-            class="mt-1 text-sm text-inherit opacity-80"
-            set:html={markdownify(role)}
-          />
-        )
-      }
     </div>
   </div>
 </a>
