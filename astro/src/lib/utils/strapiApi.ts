@@ -559,7 +559,8 @@ export async function getBlogs(): Promise<StrapiBlog[]> {
     _blogsCache = data.data;
     return _blogsCache;
   } catch (error) {
-    throw new Error(`Strapi unavailable - failed to fetch blogs: ${error}`);
+    console.error(`Strapi unavailable - failed to fetch blogs: ${error}`);
+    return [];
   }
 }
 
@@ -676,7 +677,8 @@ export async function getCourses(): Promise<StrapiCourse[]> {
     _coursesCache = allCourses;
     return allCourses;
   } catch (error) {
-    throw new Error(`Strapi unavailable - failed to fetch courses: ${error}`);
+    console.error(`Strapi unavailable - failed to fetch courses: ${error}`);
+    return [];
   }
 }
 
@@ -746,7 +748,8 @@ export async function getTrainings(includeHidden = false): Promise<StrapiTrainin
     _trainingsCache = allTrainings;
     return includeHidden ? allTrainings : allTrainings.filter(training => !training.hide);
   } catch (error) {
-    throw new Error(`Strapi unavailable - failed to fetch trainings: ${error}`);
+    console.error(`Strapi unavailable - failed to fetch trainings: ${error}`);
+    return [];
   }
 }
 
@@ -861,7 +864,8 @@ export async function getConsultants(): Promise<StrapiConsultant[]> {
     });
     return _consultantsCache;
   } catch (error) {
-    throw new Error(`Strapi unavailable - failed to fetch consultants: ${error}`);
+    console.error(`Strapi unavailable - failed to fetch consultants: ${error}`);
+    return [];
   }
 }
 
@@ -968,7 +972,8 @@ export async function getResourceLibraries(): Promise<StrapiResourceLibrary[]> {
     _resourceCache = data.data;
     return _resourceCache;
   } catch (error) {
-    throw new Error(`Strapi unavailable - failed to fetch resource libraries: ${error}`);
+    console.error(`Strapi unavailable - failed to fetch resource libraries: ${error}`);
+    return [];
   }
 }
 
@@ -1261,7 +1266,8 @@ export async function getAllTeamMembers(): Promise<TeamMember[]> {
     _teamCache = (data.data || []).map(convertStrapiTeamMember).filter((member: TeamMember | null) => member !== null);
     return _teamCache;
   } catch (error) {
-    throw new Error(`Strapi unavailable - failed to fetch team members: ${error}`);
+    console.error(`Strapi unavailable - failed to fetch team members: ${error}`);
+    return [];
   }
 }
 
